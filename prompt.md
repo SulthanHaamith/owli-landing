@@ -1,81 +1,108 @@
-Read CLAUDE.md — refer to Sections 7 (bilingual support), 9.1 (header/nav), 9.13 (floating buttons), and 15 (design direction).
+Read CLAUDE.md — refer to Sections 9.7 (testimonials), 9.8 (gallery), 9.11 (contact/booking), and 17 (contact links reference).
 
-Build Phase 4: JavaScript — Navigation (js/main.js) and Internationalization (js/i18n.js).
-
-FILE 1: js/main.js — Navigation and scroll behavior
-
-1. Mobile hamburger menu:
-   - Toggle a class (e.g. .nav-open) on the nav drawer when hamburger is clicked
-   - Close drawer when any nav link inside it is clicked
-   - Close drawer when clicking outside the drawer (overlay click)
-   - Trap focus inside drawer when open (accessibility)
-   - Prevent body scroll when drawer is open (overflow: hidden on body)
-
-2. Sticky header:
-   - Add .scrolled class to header when window.scrollY > 50
-   - Remove it when scrolled back to top
-   - Use passive scroll listener for performance
-
-3. Smooth scroll:
-   - All anchor links (a[href^="#"]) scroll smoothly to their target section
-   - Offset scroll position by header height so content isn't hidden behind sticky nav
-
-4. Active nav highlighting:
-   - Use IntersectionObserver to detect which section is in view
-   - Add .active class to the corresponding nav link
-   - Remove .active from all others
-   - Threshold: 0.3 (section 30% visible triggers active state)
-
-5. Scroll-triggered animations:
-   - Use IntersectionObserver on elements with class .animate-on-scroll
-   - When element enters viewport, add class .visible (CSS handles the animation via opacity/transform transition)
-   - Once visible, unobserve the element (animate only once)
-   - Add .animate-on-scroll class to: service cards, doctor cards, about section content, why-us items, blog cards
-
-6. DOMContentLoaded:
-   - Initialize all of the above when DOM is ready
-   - No jQuery, no libraries
+Build Phase 5: JavaScript — Testimonials (js/testimonials.js), Lightbox (js/lightbox.js), and Contact Form (js/contact.js).
 
 
-FILE 2: js/i18n.js — Bilingual toggle (English / Tamil)
+FILE 1: js/testimonials.js — Carousel
 
-1. Create a complete translations object:
-   const translations = { en: { ... }, ta: { ... } }
+1. Core carousel logic:
+   - Track current slide index
+   - showSlide(index) function: hides all slides, shows the target slide with a CSS transition (opacity or translateX)
+   - Wrap around: after last slide → go to first, before first → go to last
 
-   Include EVERY key used by data-i18n attributes in index.html. This means:
-   - Nav items (home, about, services, doctors, gallery, blog, contact, book_now)
-   - Hero heading, subheading, both CTA button texts
-   - About section: heading, all paragraphs, vision, mission
-   - All 15 service names and their 1-line descriptions
-   - Why Choose Us: all 4 item titles and descriptions
-   - Doctors section: heading, all 3 doctor names/roles/qualifications/specializations
-   - Testimonials: heading, all 5 quotes, patient names, treatment types
-   - Gallery: heading
-   - Blog: heading, all 3 post titles, excerpts, "Read More" text
-   - CTA Banner: heading text, both button texts
-   - Contact: heading, all form labels, placeholder texts, submit button, all info labels
-   - Footer: about text, "Quick Links" heading, "Our Services" heading, all listed items, copyright text
-   - Floating button tooltips: "Chat on WhatsApp", "Call us now"
-   - Language toggle label
-   
-   Tamil translations must be real, proper Tamil — not transliterated English. This is for a clinic in Tamil Nadu.
+2. Auto-rotation:
+   - Advance to next slide every 5 seconds using setInterval
+   - Pause auto-rotation when user hovers over the testimonial section
+   - Resume auto-rotation when hover leaves
+   - Reset the timer whenever user manually clicks prev/next
 
-2. Toggle function:
-   - Read current language from localStorage (default: 'en')
-   - Switch to the other language
-   - Find all elements with [data-i18n] attribute
-   - Replace their textContent with translations[newLang][key]
-   - For elements with data-i18n-placeholder, update the placeholder attribute instead
-   - For elements with data-i18n-aria, update aria-label instead
-   - Update the toggle button text (show the OTHER language option)
-   - Save new language to localStorage
-   - Update <html lang=""> attribute
+3. Controls:
+   - Previous button: go to previous slide
+   - Next button: go to next slide
+   - Dot indicators: clicking a dot jumps to that slide
+   - Update active dot to match current slide (add/remove .active class)
 
-3. On page load:
-   - Check localStorage for saved language
-   - If Tamil was saved, apply Tamil translations immediately
-   - If no preference saved, default to English (no action needed since HTML is already in English)
+4. Touch/swipe support (mobile):
+   - Detect touchstart and touchend events
+   - If swipe left (deltaX > 50px): next slide
+   - If swipe right (deltaX > 50px): previous slide
+   - Prevent accidental swipes during vertical scroll
 
-4. When Tamil is active, add class .lang-ta to <body> so CSS can apply Noto Sans Tamil font-family
+5. Initialize on DOMContentLoaded. Bail gracefully if testimonial elements don't exist on the page.
 
-Document every function with thorough JSDoc comments. Explain the i18n system so a beginner can add new translations. Follow Section 13 standards.
+
+FILE 2: js/lightbox.js — Gallery lightbox
+
+1. Opening:
+   - Click any gallery image → open fullscreen overlay
+   - Overlay: dark semi-transparent background (rgba(0,0,0,0.9))
+   - Display clicked image centered and scaled to fit viewport (max-width: 90vw, max-height: 85vh, object-fit: contain)
+   - CSS transition: fade in overlay + scale up image
+   - Add body class to prevent background scroll (overflow: hidden)
+
+2. Navigation inside lightbox:
+   - Previous / Next arrow buttons on left and right sides
+   - Navigate through gallery images in order
+   - Wrap around at beginning/end
+   - Show image counter: "3 / 8"
+
+3. Closing:
+   - Click the X close button
+   - Click anywhere on the dark overlay background (not on the image itself)
+   - Press Escape key
+   - Remove body scroll lock on close
+
+4. Keyboard support:
+   - ArrowLeft: previous image
+   - ArrowRight: next image
+   - Escape: close lightbox
+
+5. Accessibility:
+   - Trap focus inside lightbox when open (tab cycles between prev, next, close buttons)
+   - aria-label on all lightbox buttons
+   - role="dialog" and aria-modal="true" on the lightbox overlay
+   - Return focus to the gallery image that was clicked when lightbox closes
+
+6. Create lightbox DOM elements dynamically via JS (don't require extra HTML markup — build the overlay, image container, buttons, and counter in JS and append to body). Initialize on DOMContentLoaded.
+
+
+FILE 3: js/contact.js — Form validation and WhatsApp submission
+
+1. Form field validation rules:
+   - Name: required, minimum 2 characters, trim whitespace
+   - Phone: required, valid Indian mobile number (10 digits, starts with 6/7/8/9, strip any +91 or 0 prefix the user might add)
+   - Email: required, standard email regex validation
+   - Service: required, must select a value (not the default "Select a service" option)
+   - Message: optional, no validation needed
+
+2. Inline error display:
+   - Each field has a corresponding error message element below it
+   - On invalid: add .error class to the input (red border) + show error message text
+   - On valid: remove .error class + hide error message
+   - Validate on form submit AND on blur (when user leaves a field)
+   - Clear error when user starts typing in that field (input event)
+
+3. On valid submit:
+   - Gather all field values
+   - URL-encode each value for WhatsApp
+   - Build WhatsApp URL per Section 17:
+     https://wa.me/916379610554?text=Name: [name]%0APhone: [phone]%0AEmail: [email]%0AService: [service]%0AMessage: [message]
+   - Open the URL in a new tab: window.open(url, '_blank')
+   - Show a brief success message: "Opening WhatsApp... If it doesn't open, click here to email us instead."
+   - The "click here" links to: mailto:owli2026@gmail.com?subject=Appointment Request&body=Name: [name]...
+   - Do NOT actually submit the form (preventDefault)
+
+4. Service dropdown:
+   - Populated with all 15 services from CLAUDE.md Section 9.4
+   - First option: "Select a service" with empty value (acts as placeholder)
+   - The dropdown options must also be bilingual — update options when language toggles
+   - In i18n.js, add service names to translations if not already there
+
+5. Rate limiting:
+   - After successful submit, disable the submit button for 10 seconds to prevent spam
+   - Show countdown text on button: "Please wait (8s)..."
+   - Re-enable after timer completes
+
+6. Initialize on DOMContentLoaded. Bail gracefully if form doesn't exist.
+
+All three files: thorough JSDoc comments on every function, explain the logic step by step, follow Section 13 documentation standards. A beginner should understand every line.

@@ -979,8 +979,8 @@ p {
 }
 
 /* Lightbox overlay — fullscreen dark background.
-   Hidden by default (aria-hidden="true"). */
-.lightbox {
+   Built dynamically by lightbox.js. Hidden by default. */
+.lightbox-overlay {
   display: none;
   position: fixed;
   top: 0;
@@ -991,24 +991,53 @@ p {
   z-index: 9999;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* When lightbox is open, display it as a flex container */
-.lightbox[aria-hidden="false"] {
+.lightbox-overlay.active {
   display: flex;
+  opacity: 1;
 }
 
-/* Lightbox image — centered and responsive */
+/* Prevent body scroll when lightbox is open */
+body.lightbox-open {
+  overflow: hidden;
+}
+
+/* Lightbox image container — centered */
 .lightbox-content {
-  max-width: 90%;
+  max-width: 90vw;
   max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* The full-size image inside the lightbox */
 .lightbox-image {
   max-width: 100%;
   max-height: 85vh;
   object-fit: contain;
   border-radius: 8px;
+}
+
+/* Placeholder display for when real images aren't loaded yet */
+.lightbox-placeholder {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 300px;
+  min-height: 200px;
+}
+
+.lightbox-placeholder-text {
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 /* Lightbox close button — top right corner */
@@ -1023,6 +1052,7 @@ p {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  z-index: 2;
 }
 
 .lightbox-close:hover {
@@ -1042,6 +1072,7 @@ p {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+  z-index: 2;
 }
 
 .lightbox-prev {
@@ -1055,6 +1086,17 @@ p {
 .lightbox-prev:hover,
 .lightbox-next:hover {
   transform: translateY(-50%) scale(1.2);
+}
+
+/* Image counter — "1 / 6" text at the bottom */
+.lightbox-counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 
@@ -1273,6 +1315,41 @@ p {
   color: #c0392b;
   font-size: 0.8rem;
   margin-top: 4px;
+}
+
+/* Error state — red border on invalid fields.
+   Added by contact.js when validation fails. */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+/* Success message — shown after form is submitted via WhatsApp */
+.form-success {
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background-color: rgba(91, 140, 90, 0.1);
+  border: 1px solid var(--color-secondary);
+  border-radius: 8px;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.form-success a {
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Disabled submit button state (during rate limit countdown) */
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Submit button — full width */
