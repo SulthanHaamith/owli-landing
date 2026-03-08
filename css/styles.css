@@ -1627,16 +1627,97 @@ p {
   }
 }
 
-/* Fade-in on scroll — applied by IntersectionObserver in main.js.
-   Elements start invisible and slide up when scrolled into view. */
-.fade-in {
+/* Scroll-triggered animation — applied by IntersectionObserver in main.js.
+   Elements with .animate-on-scroll start invisible and slide up
+   when scrolled into view. JS adds .visible class to trigger it. */
+.animate-on-scroll {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 /* When the element enters the viewport, JS adds this class */
-.fade-in.visible {
+.animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Stagger animation delay for grid items — each card fades in
+   slightly after the previous one for a cascading effect */
+.animate-on-scroll:nth-child(2) { transition-delay: 0.1s; }
+.animate-on-scroll:nth-child(3) { transition-delay: 0.2s; }
+.animate-on-scroll:nth-child(4) { transition-delay: 0.3s; }
+.animate-on-scroll:nth-child(5) { transition-delay: 0.4s; }
+.animate-on-scroll:nth-child(6) { transition-delay: 0.5s; }
+
+
+/* ──────────────────────────────────────────────
+   20. NAVIGATION OVERLAY + BODY SCROLL LOCK
+   The overlay sits behind the mobile nav drawer.
+   Clicking it closes the drawer. Body scroll is
+   locked when the drawer is open.
+   ────────────────────────────────────────────── */
+
+/* Dark semi-transparent overlay behind the mobile nav drawer */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+/* Show overlay when mobile nav is open */
+.nav-overlay.active {
+  display: block;
+}
+
+/* Prevent body from scrolling when mobile nav drawer is open */
+body.nav-open {
+  overflow: hidden;
+}
+
+
+/* ──────────────────────────────────────────────
+   21. ACTIVE NAV LINK
+   Highlights the nav link for the section currently
+   in view. Applied by IntersectionObserver in main.js.
+   ────────────────────────────────────────────── */
+
+/* Active nav link — green text + underline */
+.nav-links a.active {
+  color: var(--color-secondary);
+}
+
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* When header is scrolled, active link stays green */
+#header.scrolled .nav-links a.active {
+  color: var(--color-secondary);
+}
+
+
+/* ──────────────────────────────────────────────
+   22. TAMIL LANGUAGE FONT
+   When the language is switched to Tamil, JS adds
+   .lang-ta class to the body. This swaps the font
+   to Noto Sans Tamil for proper Tamil rendering.
+   ────────────────────────────────────────────── */
+
+body.lang-ta {
+  font-family: 'Noto Sans Tamil', 'Poppins', sans-serif;
+}
+
+body.lang-ta h1,
+body.lang-ta h2,
+body.lang-ta h3,
+body.lang-ta h4,
+body.lang-ta h5,
+body.lang-ta h6 {
+  font-family: 'Noto Sans Tamil', 'Poppins', sans-serif;
 }
