@@ -11,10 +11,32 @@
    controlled from one place. To change a color
    across the entire site, just edit the hex value
    in :root.
+
+   TABLE OF CONTENTS:
+   1.  CSS Custom Properties (Variables)
+   2.  CSS Reset / Normalize
+   3.  Base / Typography
+   4.  Utility Classes (Container, Buttons, etc.)
+   5.  Skip Link (Accessibility)
+   6.  Header / Navigation
+   7.  Hero Section
+   8.  About Section
+   9.  Services Section
+   10. Why Choose Us Section
+   11. Doctors Section
+   12. Testimonials Section
+   13. Gallery Section
+   14. Blog Section
+   15. CTA Banner Section
+   16. Contact Section
+   17. Footer
+   18. Floating Action Buttons
+   19. Keyframe Animations
    ────────────────────────────────────────────── */
 
+
 /* ──────────────────────────────────────────────
-   CSS CUSTOM PROPERTIES (Variables)
+   1. CSS CUSTOM PROPERTIES (Variables)
    These are the "Forest Calm" color palette and
    are used throughout the site instead of hard-
    coded hex values. To change a color site-wide,
@@ -46,4 +68,1575 @@
 
   /* Light/subtle text — used for secondary or muted text */
   --color-light-text: #6B7B6B;
+}
+
+
+/* ──────────────────────────────────────────────
+   2. CSS RESET / NORMALIZE
+   Removes default browser styling so every browser
+   starts from the same baseline. This prevents
+   inconsistencies between Chrome, Firefox, Safari, etc.
+   ────────────────────────────────────────────── */
+
+/* Remove default margin and padding from all elements.
+   Use border-box so padding is included in width/height. */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Enable smooth scrolling when clicking anchor links
+   (e.g., clicking "Services" scrolls smoothly to that section) */
+html {
+  scroll-behavior: smooth;
+  /* Prevent font size from changing on mobile when rotating device */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Base body styles — sets the default font, colors, and background */
+body {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-dark-text);
+  background-color: var(--color-background);
+  /* Ensures text renders smoothly on all screens */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove list bullets/numbers by default */
+ul, ol {
+  list-style: none;
+}
+
+/* Make images responsive — they won't overflow their container */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Remove default link underline and inherit color */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+/* Remove default button styling so we can style from scratch */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Remove default fieldset/legend styles */
+fieldset {
+  border: none;
+}
+
+/* Make sure form elements inherit the site font */
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+
+/* ──────────────────────────────────────────────
+   3. BASE / TYPOGRAPHY
+   Sets the typographic scale for the site.
+   Headings use Poppins at 600-700 weight (bold).
+   Body text uses Poppins at 300-400 weight (light/regular).
+   Tamil text uses "Noto Sans Tamil" — applied
+   automatically when the language is switched.
+   ────────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-primary);
+}
+
+/* Main page heading (used in Hero) */
+h1 {
+  font-size: 3rem;
+}
+
+/* Section headings (About, Services, etc.) */
+h2 {
+  font-size: 2.25rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Sub-headings within sections */
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Body text */
+p {
+  margin-bottom: 1rem;
+  font-weight: 300;
+  color: var(--color-dark-text);
+}
+
+/* Subtitle text that appears below section headings */
+.section-subtitle {
+  text-align: center;
+  color: var(--color-light-text);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+
+/* ──────────────────────────────────────────────
+   4. UTILITY CLASSES
+   Reusable classes used across multiple sections:
+   - .container: centers content with a max width
+   - .btn: base button styles
+   - .image-placeholder: grey box for placeholder images
+   ────────────────────────────────────────────── */
+
+/* Container — wraps content to a max width and centers it */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Base button style — shared by all buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  border: none;
+}
+
+/* Primary button — green background, white text */
+.btn-primary {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* Primary button hover — slightly darker green */
+.btn-primary:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
+}
+
+/* Secondary button — outlined style with green border */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
+}
+
+/* Secondary button hover — fills with white, text turns green */
+.btn-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+/* Image placeholder — grey box shown where real images will go.
+   Displays a centered icon and label text. */
+.image-placeholder {
+  background-color: #e0d8ce;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--color-light-text);
+  border-radius: 12px;
+  min-height: 250px;
+  width: 100%;
+}
+
+/* Visible focus indicator for keyboard navigation.
+   A clear green outline appears when elements are
+   focused via Tab key (accessibility requirement). */
+*:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+
+/* ──────────────────────────────────────────────
+   5. SKIP LINK (Accessibility)
+   A hidden link at the very top of the page that
+   becomes visible when focused. Lets keyboard users
+   skip the navigation and jump straight to content.
+   ────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 12px 24px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  z-index: 10000;
+  transition: top 0.3s ease;
+}
+
+/* When the skip link receives keyboard focus, slide it into view */
+.skip-link:focus {
+  top: 0;
+}
+
+
+/* ──────────────────────────────────────────────
+   6. HEADER / NAVIGATION
+   The top navigation bar. It starts transparent
+   and sticks to the top when the user scrolls.
+   A ".scrolled" class (added by JS later) gives
+   it a white background and subtle shadow.
+   ────────────────────────────────────────────── */
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  /* Starts transparent — background added via .scrolled class */
+  background-color: transparent;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* When the user scrolls down, JS adds this class to give
+   the header a solid white background and a subtle shadow */
+#header.scrolled {
+  background-color: var(--color-white);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Nav container — holds logo, links, and actions in a row */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px;
+}
+
+/* Logo — displays the clinic name with leaf icon */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-white);
+  transition: color 0.3s ease;
+}
+
+/* When header is scrolled, logo text turns dark green */
+#header.scrolled .logo {
+  color: var(--color-primary);
+}
+
+/* Logo leaf icon inherits the text color */
+.logo-icon {
+  flex-shrink: 0;
+}
+
+/* Navigation links — horizontal list on desktop */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Individual nav link styling */
+.nav-links a {
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--color-white);
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.3s ease;
+}
+
+/* When header is scrolled, nav links turn dark */
+#header.scrolled .nav-links a {
+  color: var(--color-dark-text);
+}
+
+/* Hover underline effect on nav links — a small green line
+   slides in from the left when hovered */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-secondary);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Right side of nav — language toggle + Book Now button */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Language toggle button */
+.lang-toggle {
+  padding: 6px 14px;
+  border: 1px solid var(--color-white);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-white);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* When header is scrolled, toggle button border turns green */
+#header.scrolled .lang-toggle {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.lang-toggle:hover {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+}
+
+#header.scrolled .lang-toggle:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* "Book Now" CTA in the nav */
+.nav-cta {
+  padding: 10px 22px;
+  font-size: 0.9rem;
+}
+
+/* Hamburger menu button — hidden on desktop, visible on mobile.
+   Three horizontal lines that can animate into an X. */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  z-index: 1001;
+}
+
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-white);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+}
+
+/* When header has scrolled, hamburger lines turn dark */
+#header.scrolled .hamburger-line {
+  background-color: var(--color-dark-text);
+}
+
+
+/* ──────────────────────────────────────────────
+   7. HERO SECTION
+   Full-screen welcome banner with a dark overlay
+   over a background image (placeholder for now).
+   Centered heading, subtitle, and two CTA buttons.
+   Fade-in animation plays when the page loads.
+   ────────────────────────────────────────────── */
+
+#hero {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Placeholder gradient — will be replaced with a real photo.
+     This gradient mimics a nature/forest background. */
+  background: linear-gradient(135deg, #2D5A3D 0%, #3a7a52 30%, #5B8C5A 60%, #A8C5A0 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Dark overlay — sits on top of the background image/gradient
+   to make the white text readable */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hero content — centered text and buttons */
+.hero-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 20px;
+  /* Fade-in animation on page load */
+  animation: fadeInUp 1s ease forwards;
+}
+
+/* Hero heading — large white text */
+.hero-content h1 {
+  color: var(--color-white);
+  font-size: 3.2rem;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Hero subtitle — lighter white text below the heading */
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hero CTA buttons container — side by side */
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+
+/* ──────────────────────────────────────────────
+   8. ABOUT SECTION
+   Two-column layout: text on the left, image
+   placeholder on the right. Cream background.
+   ────────────────────────────────────────────── */
+
+#about {
+  padding: 80px 0;
+  background-color: var(--color-background);
+}
+
+/* Two-column grid — text left, image right */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* About text column */
+.about-text h2 {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.about-text h3 {
+  color: var(--color-secondary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-text p {
+  color: var(--color-dark-text);
+  line-height: 1.8;
+}
+
+/* About image placeholder — tall rectangle */
+.about-image .image-placeholder {
+  min-height: 400px;
+  border-radius: 16px;
+}
+
+
+/* ──────────────────────────────────────────────
+   9. SERVICES SECTION
+   3-column responsive grid of service cards.
+   White background. Each card has an icon, title,
+   and one-line description. Cards lift slightly
+   on hover with a shadow transition.
+   ────────────────────────────────────────────── */
+
+#services {
+  padding: 80px 0;
+  background-color: var(--color-white);
+}
+
+/* 3-column grid for service cards */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Individual service card */
+.service-card {
+  background-color: var(--color-white);
+  border: 1px solid rgba(168, 197, 160, 0.3);
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect — card lifts up slightly with a shadow */
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(45, 90, 61, 0.12);
+}
+
+/* Service icon container — circular green-tinted background */
+.service-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: rgba(168, 197, 160, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--color-secondary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* On card hover, icon background becomes more vivid */
+.service-card:hover .service-icon {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* Service title */
+.service-card h3 {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+/* Service description */
+.service-card p {
+  font-size: 0.9rem;
+  color: var(--color-light-text);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+
+/* ──────────────────────────────────────────────
+   10. WHY CHOOSE US SECTION
+   Four feature highlights in a row on a light
+   green background. Each has an icon, title, and
+   short description.
+   ────────────────────────────────────────────── */
+
+#why-us {
+  padding: 80px 0;
+  background-color: var(--color-light-green);
+}
+
+/* Override heading color for better contrast on green bg */
+#why-us h2 {
+  color: var(--color-primary);
+}
+
+/* 4-column grid */
+.why-us-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-top: 3rem;
+}
+
+/* Individual feature card */
+.why-us-card {
+  text-align: center;
+  padding: 32px 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.why-us-card:hover {
+  transform: translateY(-4px);
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Feature icon */
+.why-us-icon {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+}
+
+/* Feature title */
+.why-us-card h3 {
+  color: var(--color-primary);
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+/* Feature description */
+.why-us-card p {
+  font-size: 0.9rem;
+  color: var(--color-dark-text);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+
+/* ──────────────────────────────────────────────
+   11. DOCTORS SECTION
+   Profile cards for the clinic's doctors.
+   Cream background. Each card has a circular
+   avatar, name, role, qualifications, and
+   specialization.
+   ────────────────────────────────────────────── */
+
+#doctors {
+  padding: 80px 0;
+  background-color: var(--color-background);
+}
+
+/* 3-column grid for doctor cards */
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+/* Individual doctor card */
+.doctor-card {
+  background-color: var(--color-white);
+  border-radius: 16px;
+  padding: 40px 24px 32px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* Doctor photo — circular container */
+.doctor-photo {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* Make the placeholder circular too */
+.doctor-photo .image-placeholder {
+  border-radius: 50%;
+  min-height: 140px;
+  width: 140px;
+  height: 140px;
+}
+
+/* Doctor info text */
+.doctor-info h3 {
+  color: var(--color-primary);
+  margin-bottom: 4px;
+  font-size: 1.15rem;
+}
+
+.doctor-role {
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.doctor-qualification {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.doctor-experience {
+  color: var(--color-light-text);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.doctor-specialization {
+  color: var(--color-light-text);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+
+/* ──────────────────────────────────────────────
+   12. TESTIMONIALS SECTION
+   Carousel of patient testimonials. White background.
+   Only one testimonial is visible at a time; the
+   rest are hidden via overflow:hidden. Prev/next
+   buttons and dot indicators allow navigation.
+   ────────────────────────────────────────────── */
+
+#testimonials {
+  padding: 80px 0;
+  background-color: var(--color-white);
+}
+
+/* Carousel wrapper — hides overflow so only one slide shows */
+.testimonial-carousel {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Track — holds all slides in a horizontal row.
+   JS will shift this left/right to show different slides. */
+.testimonial-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+/* Individual testimonial slide — takes full width of carousel */
+.testimonial-slide {
+  min-width: 100%;
+  padding: 40px 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Star rating display */
+.testimonial-stars {
+  color: var(--color-accent);
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  letter-spacing: 4px;
+}
+
+/* Quote text */
+.testimonial-slide blockquote p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-dark-text);
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+/* Citation — patient name and treatment type */
+.testimonial-slide cite {
+  display: block;
+  font-style: normal;
+}
+
+.testimonial-name {
+  display: block;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.testimonial-treatment {
+  display: block;
+  color: var(--color-light-text);
+  font-size: 0.85rem;
+}
+
+/* Prev/Next arrow buttons — positioned on left/right of carousel */
+.testimonial-prev,
+.testimonial-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  z-index: 2;
+}
+
+.testimonial-prev {
+  left: 0;
+}
+
+.testimonial-next {
+  right: 0;
+}
+
+.testimonial-prev:hover,
+.testimonial-next:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+/* Dot indicators — small circles below the carousel */
+.testimonial-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* Individual dot */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-light-green);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Active dot — darker green and slightly larger */
+.dot.active {
+  background-color: var(--color-secondary);
+  transform: scale(1.2);
+}
+
+.dot:hover {
+  background-color: var(--color-secondary);
+}
+
+
+/* ──────────────────────────────────────────────
+   13. GALLERY SECTION
+   3-column photo grid. Cream background.
+   Each image has a subtle zoom on hover.
+   Clicking opens a lightbox (handled by lightbox.js).
+   ────────────────────────────────────────────── */
+
+#gallery {
+  padding: 80px 0;
+  background-color: var(--color-background);
+}
+
+/* 3-column grid for gallery images */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Individual gallery item */
+.gallery-item {
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Gallery placeholder — maintains aspect ratio */
+.gallery-placeholder {
+  aspect-ratio: 4 / 3;
+  min-height: auto;
+  border-radius: 0;
+  transition: transform 0.4s ease;
+}
+
+/* Hover effect — subtle zoom in */
+.gallery-item:hover .gallery-placeholder {
+  transform: scale(1.05);
+}
+
+/* Lightbox overlay — fullscreen dark background.
+   Hidden by default (aria-hidden="true"). */
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+/* When lightbox is open, display it as a flex container */
+.lightbox[aria-hidden="false"] {
+  display: flex;
+}
+
+/* Lightbox image — centered and responsive */
+.lightbox-content {
+  max-width: 90%;
+  max-height: 85vh;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Lightbox close button — top right corner */
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.lightbox-close:hover {
+  transform: scale(1.2);
+}
+
+/* Lightbox prev/next buttons */
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.lightbox-prev {
+  left: 20px;
+}
+
+.lightbox-next {
+  right: 20px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  transform: translateY(-50%) scale(1.2);
+}
+
+
+/* ──────────────────────────────────────────────
+   14. BLOG SECTION
+   3-column card layout. White background.
+   Each card has an image on top, then title,
+   excerpt, and a "Read More" link.
+   ────────────────────────────────────────────── */
+
+#blog {
+  padding: 80px 0;
+  background-color: var(--color-white);
+}
+
+/* 3-column grid for blog cards */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* Individual blog card */
+.blog-card {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Blog image container */
+.blog-image {
+  overflow: hidden;
+}
+
+.blog-image .image-placeholder {
+  min-height: 200px;
+  border-radius: 0;
+}
+
+/* Blog text content area */
+.blog-content {
+  padding: 24px;
+}
+
+.blog-content h3 {
+  color: var(--color-primary);
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.blog-content p {
+  color: var(--color-light-text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* "Read More" link — green with arrow */
+.blog-read-more {
+  display: inline-block;
+  color: var(--color-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.blog-read-more:hover {
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+
+/* ──────────────────────────────────────────────
+   15. CTA BANNER SECTION
+   Full-width dark green banner that encourages
+   visitors to book. White centered text with
+   two side-by-side action buttons.
+   ────────────────────────────────────────────── */
+
+#cta-banner {
+  padding: 80px 0;
+  background-color: var(--color-primary);
+  text-align: center;
+}
+
+#cta-banner h2 {
+  color: var(--color-white);
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+/* CTA buttons container — side by side */
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Primary CTA button — white bg, green text */
+.btn-cta-primary {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-cta-primary:hover {
+  background-color: var(--color-light-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Secondary CTA button — outlined white */
+.btn-cta-secondary {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: transparent;
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-cta-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+
+/* ──────────────────────────────────────────────
+   16. CONTACT SECTION
+   Two-column layout: form on the left, contact
+   info + Google Maps on the right. Cream background.
+   ────────────────────────────────────────────── */
+
+#contact {
+  padding: 80px 0;
+  background-color: var(--color-background);
+}
+
+/* Two-column grid — form left, info right */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Form wrapper */
+.contact-form-wrapper {
+  background-color: var(--color-white);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Form field group — label + input + error message */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Form labels */
+.form-group label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: var(--color-dark-text);
+}
+
+/* Form inputs (text, email, tel, select, textarea) */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d4cec4;
+  border-radius: 8px;
+  background-color: var(--color-white);
+  color: var(--color-dark-text);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus state — green border with subtle glow */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(91, 140, 90, 0.15);
+}
+
+/* Textarea — resizable only vertically */
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Form error message — hidden by default, shown when invalid */
+.form-error {
+  display: none;
+  color: #c0392b;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+/* Submit button — full width */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+/* Fallback email text below the form */
+.form-fallback {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--color-light-text);
+}
+
+.form-fallback a {
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.form-fallback a:hover {
+  color: var(--color-primary);
+}
+
+/* Contact info column (right side) */
+.contact-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Individual contact info item — icon + text side by side */
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+/* Contact icon circle */
+.contact-info-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(168, 197, 160, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+}
+
+/* Contact info text */
+.contact-info-item h3 {
+  font-size: 0.95rem;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.contact-info-item p {
+  font-size: 0.9rem;
+  color: var(--color-dark-text);
+  margin-bottom: 2px;
+  line-height: 1.5;
+}
+
+.contact-info-item a {
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.contact-info-item a:hover {
+  color: var(--color-primary);
+}
+
+/* Google Maps embed — rounded corners */
+.contact-map {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.contact-map iframe {
+  display: block;
+}
+
+
+/* ──────────────────────────────────────────────
+   17. FOOTER
+   Dark green background with light text.
+   4-column grid: about + social, quick links,
+   services, and contact info. A bottom bar
+   shows the copyright notice.
+   ────────────────────────────────────────────── */
+
+#footer {
+  background-color: var(--color-primary);
+  padding: 60px 0 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 4-column grid layout */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding-bottom: 40px;
+}
+
+/* Footer logo — white version */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 12px;
+}
+
+.footer-logo .logo-icon {
+  color: var(--color-light-green);
+}
+
+/* Brief about text in footer */
+.footer-about {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* Social media icon links */
+.footer-social {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-social a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.footer-social a:hover {
+  background-color: var(--color-secondary);
+  transform: translateY(-2px);
+}
+
+/* Footer column headings */
+.footer-col h3 {
+  color: var(--color-white);
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+/* Small green underline below footer column headings */
+.footer-col h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background-color: var(--color-light-green);
+}
+
+/* Footer link lists */
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+/* Hover — link shifts right slightly and brightens */
+.footer-links a:hover {
+  color: var(--color-white);
+  padding-left: 6px;
+}
+
+/* Footer contact info (address element) */
+.footer-contact {
+  font-style: normal;
+}
+
+.footer-contact p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.footer-contact a {
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+  color: var(--color-white);
+}
+
+/* Copyright bottom bar */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+
+/* ──────────────────────────────────────────────
+   18. FLOATING ACTION BUTTONS (WhatsApp + Phone)
+   Two fixed buttons in the bottom-right corner.
+   Phone on top, WhatsApp below. Both are circles
+   with pulse animations and tooltips on hover.
+   ────────────────────────────────────────────── */
+
+/* Container — stacks buttons vertically, fixed position */
+.floating-buttons {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9000;
+}
+
+/* Base floating action button style */
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  color: var(--color-white);
+}
+
+/* Hover effect — scale up slightly with deeper shadow */
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Phone button — uses secondary green color */
+.fab-phone {
+  background-color: var(--color-secondary);
+  animation: pulse-phone 3s infinite;
+}
+
+/* WhatsApp button — uses official WhatsApp green */
+.fab-whatsapp {
+  background-color: #25D366;
+  animation: pulse-whatsapp 2s infinite;
+}
+
+/* Tooltip — hidden by default, appears on hover.
+   Shows to the left of the button. */
+.fab-tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--color-dark-text);
+  color: var(--color-white);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+
+/* Show tooltip on button hover */
+.fab:hover .fab-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* ──────────────────────────────────────────────
+   19. KEYFRAME ANIMATIONS
+   CSS animations used throughout the site:
+   - fadeInUp: hero content fades in + slides up
+   - pulse-whatsapp: WhatsApp button pulsing glow
+   - pulse-phone: Phone button pulsing glow (slower)
+   ────────────────────────────────────────────── */
+
+/* Fade in and slide up — used for hero content on load */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulse animation for WhatsApp button — a green glow ring
+   expands outward from the button to draw attention */
+@keyframes pulse-whatsapp {
+  0% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(37, 211, 102, 0.4);
+  }
+  70% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 12px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* Pulse animation for Phone button — slower rhythm
+   with a green glow to avoid visual noise with WhatsApp pulse */
+@keyframes pulse-phone {
+  0% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(91, 140, 90, 0.35);
+  }
+  70% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 10px rgba(91, 140, 90, 0);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(91, 140, 90, 0);
+  }
+}
+
+/* Fade-in on scroll — applied by IntersectionObserver in main.js.
+   Elements start invisible and slide up when scrolled into view. */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* When the element enters the viewport, JS adds this class */
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
