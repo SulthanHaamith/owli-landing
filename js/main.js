@@ -281,9 +281,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }, {
     /* rootMargin offsets for the sticky header height.
-       Negative top margin means the "viewport" starts below the header. */
-    rootMargin: '-80px 0px -50% 0px',
-    threshold: 0.3
+       Negative top margin means the "viewport" starts below the header.
+       Bottom margin of -35% keeps detection in the upper portion of
+       the viewport so the highlight changes before you scroll too far. */
+    rootMargin: '-80px 0px -35% 0px',
+    threshold: 0.05
   });
 
   /* Observe all sections that have matching nav links */
