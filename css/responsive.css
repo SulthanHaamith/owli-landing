@@ -1,187 +1,332 @@
 /* ──────────────────────────────────────────────
    RESPONSIVE.CSS — Owl I Health and Wellness Center
-   Contains all media queries for mobile, tablet,
-   and desktop breakpoints.
 
-   APPROACH: The base styles in styles.css target
-   desktop (1200px max-width). This file uses
-   max-width queries to scale DOWN for smaller
-   screens: tablet (~768px) and mobile (~375px).
+   PURPOSE: Makes the website look great on every
+   screen size — from small phones to large desktops.
+
+   APPROACH: Mobile-first. The base styles.css file
+   defines desktop-width grids and layouts. This file
+   first overrides those to be mobile-friendly (single
+   column, smaller fonts, tighter spacing), then uses
+   min-width media queries to progressively enhance
+   the layout as the screen gets wider.
 
    BREAKPOINTS:
-   - 1024px and below: Tablet landscape adjustments
-   - 768px and below:  Tablet portrait (major layout shifts)
-   - 480px and below:  Small mobile devices
+   ┌────────────────────┬──────────────┐
+   │ Name               │ Query        │
+   ├────────────────────┼──────────────┤
+   │ Small mobile       │ base (≤480)  │
+   │ Tablet             │ min: 481px   │
+   │ Small desktop      │ min: 769px   │
+   │ Desktop            │ min: 1025px  │
+   │ Large desktop      │ min: 1280px  │
+   └────────────────────┴──────────────┘
+
+   HOW TO READ THIS FILE:
+   - Start at the top: "MOBILE BASE OVERRIDES" sets
+     everything to single-column, small fonts, etc.
+   - Each @media block below adds layout complexity
+     as the screen gets wider.
+   - The final result at 1025px+ matches the full
+     desktop design from styles.css.
 
    TEST WIDTHS: 375px (mobile), 768px (tablet), 1440px (desktop)
    ────────────────────────────────────────────── */
 
 
 /* ──────────────────────────────────────────────
-   TABLET LANDSCAPE (1024px and below)
-   Minor adjustments: reduce grid columns, smaller
-   font sizes, tighter spacing.
+   MOBILE BASE OVERRIDES (up to 480px)
+   These rules override the desktop defaults in
+   styles.css so the site looks good on the smallest
+   screens first. Everything is single-column,
+   fonts are smaller, and spacing is tighter.
    ────────────────────────────────────────────── */
-@media (max-width: 1024px) {
 
-  /* Why Choose Us: 4 columns → 2x2 grid */
-  .why-us-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* --- TYPOGRAPHY ---
+   Scale down heading sizes for small screens so
+   text doesn't overflow or look oversized. */
+h1 {
+  font-size: 1.75rem;
+}
 
-  /* Footer: 4 columns → 2x2 grid */
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+/* Subtitle text — slightly smaller on mobile */
+.section-subtitle {
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* --- CONTAINER ---
+   Tighter horizontal padding on small screens
+   to maximize content width. */
+.container {
+  padding: 0 16px;
+}
+
+/* --- SECTION SPACING ---
+   Reduce vertical padding on all sections so
+   mobile users don't scroll through too much
+   empty space between sections. */
+#about,
+#services,
+#why-us,
+#doctors,
+#testimonials,
+#gallery,
+#blog,
+#cta-banner,
+#contact {
+  padding: 40px 0;
+}
+
+/* --- HEADER / NAVIGATION ---
+   On mobile, hide the horizontal nav links and
+   the nav actions (lang toggle + Book Now). Show
+   the hamburger button instead. The nav links
+   become a slide-in drawer from the right side. */
+
+/* Show hamburger menu button (hidden by default in styles.css) */
+.hamburger {
+  display: flex;
+}
+
+/* Hide the horizontal nav links — they'll appear
+   in a slide-in drawer when the hamburger is tapped */
+.nav-links {
+  /* Start hidden off-screen to the right */
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 280px;
+  height: 100vh;
+  background-color: var(--color-white);
+  flex-direction: column;
+  padding: 80px 32px 32px;
+  gap: 0;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  /* Smooth slide-in animation when JS toggles .active class */
+  transition: right 0.3s ease;
+  overflow-y: auto;
+}
+
+/* When the hamburger is clicked, JS adds .active class
+   which slides the drawer into view from the right */
+.nav-links.active {
+  right: 0;
+}
+
+/* Nav links inside mobile drawer — stacked vertically
+   with borders between them for clear separation */
+.nav-links li {
+  width: 100%;
+}
+
+.nav-links a {
+  color: var(--color-dark-text);
+  font-size: 1.05rem;
+  padding: 14px 0;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Remove the hover underline effect inside mobile drawer
+   since it doesn't work well on touch devices */
+.nav-links a::after {
+  display: none;
+}
+
+/* Hide nav actions (lang toggle + Book Now) from the
+   top nav bar on mobile — they'll be in the drawer */
+.nav-actions {
+  display: none;
+}
+
+/* --- HERO ---
+   Smaller heading and subtitle text. CTA buttons
+   stack vertically so they're easier to tap. */
+.hero-content h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Stack CTA buttons vertically on small screens */
+.hero-ctas {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Make each CTA button full width (up to 280px) */
+.hero-ctas .btn {
+  width: 100%;
+  max-width: 280px;
+}
+
+/* --- ABOUT ---
+   Single column — text on top, image below */
+.about-grid {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* Center the heading on mobile (it's left-aligned on desktop) */
+.about-text h2 {
+  text-align: center;
+}
+
+/* Reduce minimum height of the about image placeholder */
+.about-image .image-placeholder {
+  min-height: 250px;
+}
+
+/* --- SERVICES ---
+   Single column — one card per row */
+.services-grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Slightly less padding inside cards on mobile */
+.service-card {
+  padding: 24px 20px;
+}
+
+/* --- WHY CHOOSE US ---
+   Single column — features stack vertically */
+.why-us-grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 2rem;
+}
+
+/* --- DOCTORS ---
+   Single column — doctor cards stack vertically */
+.doctors-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* --- TESTIMONIALS ---
+   Tighter padding inside slides. Smaller quote text. */
+.testimonial-slide {
+  padding: 24px 40px;
+}
+
+.testimonial-slide blockquote p {
+  font-size: 0.95rem;
+}
+
+/* Bring prev/next arrows closer to the edges on small screens */
+.testimonial-prev {
+  left: 0;
+}
+
+.testimonial-next {
+  right: 0;
+}
+
+/* --- GALLERY ---
+   Two columns on mobile (stays compact but not too narrow) */
+.gallery-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* --- BLOG ---
+   Single column — blog cards stack vertically */
+.blog-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* --- CTA BANNER ---
+   Smaller heading. Buttons stack vertically. */
+#cta-banner h2 {
+  font-size: 1.3rem;
+}
+
+.cta-buttons {
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-cta-primary,
+.btn-cta-secondary {
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+}
+
+/* --- CONTACT ---
+   Single column — form on top, info below */
+.contact-grid {
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+/* Less padding inside the form card on mobile */
+.contact-form-wrapper {
+  padding: 24px 20px;
+}
+
+/* --- FOOTER ---
+   Single column — all footer columns stack vertically */
+.footer-grid {
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+/* --- FLOATING BUTTONS ---
+   Slightly smaller buttons on mobile (48px vs 56px)
+   so they don't obstruct content. Position adjusted
+   to avoid overlapping browser UI elements. */
+.fab {
+  width: 48px;
+  height: 48px;
+}
+
+.floating-buttons {
+  bottom: 16px;
+  right: 16px;
+}
+
+/* Hide tooltips on mobile since there's no hover on touch */
+.fab-tooltip {
+  display: none;
+}
+
+/* --- IMAGE PLACEHOLDERS ---
+   Reduce minimum height on mobile so placeholders
+   don't take up too much vertical space. */
+.image-placeholder {
+  min-height: 180px;
 }
 
 
 /* ──────────────────────────────────────────────
-   TABLET PORTRAIT (768px and below)
-   Major layout changes: multi-column grids become
-   2-column or single-column. Navigation switches
-   to hamburger menu.
+   TABLET (481px and above)
+   Screen is wide enough for 2-column grids.
+   Typography can be slightly larger. Navigation
+   is still hamburger-based.
    ────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (min-width: 481px) {
 
-  /* --- HEADER / NAV --- */
-
-  /* Hide desktop nav links — replaced by hamburger menu */
-  .nav-links {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 280px;
-    height: 100vh;
-    background-color: var(--color-white);
-    flex-direction: column;
-    padding: 80px 32px 32px;
-    gap: 0;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-
-  /* When menu is open (JS adds .active class), show nav links */
-  .nav-links.active {
-    display: flex;
-  }
-
-  /* Nav links in mobile drawer are always dark */
-  .nav-links a {
-    color: var(--color-dark-text);
-    font-size: 1.1rem;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  /* Show the hamburger button on mobile */
-  .hamburger {
-    display: flex;
-  }
-
-  /* Hide the nav actions (lang toggle + Book Now) on mobile nav bar.
-     They'll appear inside the mobile drawer instead. */
-  .nav-actions {
-    display: none;
-  }
-
-  /* --- HERO --- */
-
-  .hero-content h1 {
-    font-size: 2.2rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-
-  /* --- ABOUT --- */
-
-  /* Two columns → single column (text on top, image below) */
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .about-text h2 {
-    text-align: center;
-  }
-
-  /* --- SERVICES --- */
-
-  /* 3 columns → 2 columns */
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
-  /* --- DOCTORS --- */
-
-  /* 3 columns → single column (cards stack) */
-  .doctors-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  /* --- GALLERY --- */
-
-  /* 3 columns → 2 columns */
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  /* --- BLOG --- */
-
-  /* 3 columns → single column */
-  .blog-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  /* --- CTA BANNER --- */
-
-  #cta-banner h2 {
-    font-size: 1.5rem;
-  }
-
-  /* --- CONTACT --- */
-
-  /* Two columns → single column */
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .contact-form-wrapper {
-    padding: 28px 24px;
-  }
-
-  /* --- SECTION SPACING --- */
-
-  /* Reduce vertical padding on all sections for mobile */
-  #about,
-  #services,
-  #why-us,
-  #doctors,
-  #testimonials,
-  #gallery,
-  #blog,
-  #cta-banner,
-  #contact {
-    padding: 60px 0;
-  }
-
-  /* --- TYPOGRAPHY --- */
-
+  /* --- TYPOGRAPHY ---
+     Bump up heading sizes slightly for tablets */
   h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 
   h2 {
@@ -191,124 +336,15 @@
   .section-subtitle {
     font-size: 1rem;
   }
-}
 
-
-/* ──────────────────────────────────────────────
-   SMALL MOBILE (480px and below)
-   Final adjustments for the smallest screens.
-   Single-column everything, smaller fonts,
-   tighter padding.
-   ────────────────────────────────────────────── */
-@media (max-width: 480px) {
-
-  /* --- HERO --- */
-
-  .hero-content h1 {
-    font-size: 1.75rem;
-  }
-
-  .hero-subtitle {
-    font-size: 0.9rem;
-  }
-
-  /* Stack CTA buttons vertically on small screens */
-  .hero-ctas {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-ctas .btn {
-    width: 100%;
-    max-width: 280px;
-  }
-
-  /* --- SERVICES --- */
-
-  /* 2 columns → 1 column */
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* --- WHY CHOOSE US --- */
-
-  /* 2x2 → single column */
-  .why-us-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* --- GALLERY --- */
-
-  /* 2 columns → 1 column */
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* --- CTA BANNER --- */
-
-  .cta-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .btn-cta-primary,
-  .btn-cta-secondary {
-    width: 100%;
-    max-width: 280px;
-    text-align: center;
-  }
-
-  #cta-banner h2 {
-    font-size: 1.3rem;
-  }
-
-  /* --- FOOTER --- */
-
-  /* 2x2 → single column */
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  /* --- TESTIMONIALS --- */
-
-  .testimonial-slide {
-    padding: 24px 16px;
-  }
-
-  .testimonial-slide blockquote p {
-    font-size: 0.95rem;
-  }
-
-  /* Position prev/next arrows tighter on small screens */
-  .testimonial-prev {
-    left: -4px;
-  }
-
-  .testimonial-next {
-    right: -4px;
-  }
-
-  /* --- FLOATING BUTTONS --- */
-
-  /* Slightly smaller buttons on mobile */
-  .fab {
-    width: 48px;
-    height: 48px;
-  }
-
-  .floating-buttons {
-    bottom: 20px;
-    right: 16px;
-  }
-
-  /* --- GENERAL --- */
-
+  /* --- CONTAINER ---
+     Wider padding now that there's more screen space */
   .container {
-    padding: 0 16px;
+    padding: 0 20px;
   }
 
-  /* Section padding even tighter on very small screens */
+  /* --- SECTION SPACING ---
+     A bit more breathing room between sections */
   #about,
   #services,
   #why-us,
@@ -318,10 +354,487 @@
   #blog,
   #cta-banner,
   #contact {
-    padding: 48px 0;
+    padding: 56px 0;
+  }
+
+  /* --- HERO ---
+     Larger heading, horizontal CTA buttons */
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  /* CTA buttons can sit side-by-side on tablet */
+  .hero-ctas {
+    flex-direction: row;
+  }
+
+  .hero-ctas .btn {
+    width: auto;
+    max-width: none;
+  }
+
+  /* --- SERVICES ---
+     2-column grid — two cards per row */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* --- WHY CHOOSE US ---
+     2x2 grid layout */
+  .why-us-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* --- DOCTORS ---
+     2-column grid. The third card will naturally
+     flow to the next row and center itself. */
+  .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  /* Center the third (last) doctor card when it's
+     alone on its row in a 2-column layout */
+  .doctor-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    justify-self: center;
+  }
+
+  /* --- BLOG ---
+     2-column grid. Third card centered below. */
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  /* Center the third blog card on its own row */
+  .blog-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    justify-self: center;
+  }
+
+  /* --- CTA BANNER ---
+     Buttons can sit side-by-side */
+  #cta-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .cta-buttons {
+    flex-direction: row;
+  }
+
+  .btn-cta-primary,
+  .btn-cta-secondary {
+    width: auto;
+    max-width: none;
+  }
+
+  /* --- FOOTER ---
+     2-column grid */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  /* --- TESTIMONIALS ---
+     More padding for wider testimonial text */
+  .testimonial-slide {
+    padding: 32px 48px;
+  }
+
+  .testimonial-slide blockquote p {
+    font-size: 1rem;
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   SMALL DESKTOP (769px and above)
+   Wide enough to show horizontal navigation
+   instead of the hamburger menu. Two-column
+   layouts for About and Contact sections.
+   ────────────────────────────────────────────── */
+@media (min-width: 769px) {
+
+  /* --- HEADER / NAVIGATION ---
+     Show the horizontal nav links and hide the
+     hamburger button. This is the "desktop" nav. */
+
+  /* Hide the hamburger button — no longer needed */
+  .hamburger {
+    display: none;
+  }
+
+  /* Restore horizontal nav links (undo mobile drawer) */
+  .nav-links {
+    position: static;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    flex-direction: row;
+    padding: 0;
+    gap: 28px;
+    box-shadow: none;
+    /* Reset the mobile slide-in transition */
+    transition: none;
+    right: auto;
+    overflow-y: visible;
+    display: flex;
+  }
+
+  /* Nav links return to their header styling
+     (white text on transparent header) */
+  .nav-links a {
+    color: var(--color-white);
+    font-size: 0.95rem;
+    padding: 4px 0;
+    display: inline;
+    border-bottom: none;
+  }
+
+  /* When header has .scrolled class, links turn dark */
+  #header.scrolled .nav-links a {
+    color: var(--color-dark-text);
+  }
+
+  /* Restore the hover underline effect on desktop */
+  .nav-links a::after {
+    display: block;
+  }
+
+  /* Show the nav actions (lang toggle + Book Now) */
+  .nav-actions {
+    display: flex;
+  }
+
+  /* --- HERO ---
+     Larger heading for wider screens */
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  /* --- ABOUT ---
+     Two-column layout restored — text left, image right */
+  .about-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  /* Heading back to left-aligned on desktop */
+  .about-text h2 {
+    text-align: left;
+  }
+
+  /* Taller image placeholder on desktop */
+  .about-image .image-placeholder {
+    min-height: 350px;
+  }
+
+  /* --- CONTACT ---
+     Two-column layout restored — form left, info right */
+  .contact-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  /* More padding inside the form card */
+  .contact-form-wrapper {
+    padding: 36px;
+  }
+
+  /* --- SECTION SPACING ---
+     More vertical breathing room */
+  #about,
+  #services,
+  #why-us,
+  #doctors,
+  #testimonials,
+  #gallery,
+  #blog,
+  #cta-banner,
+  #contact {
+    padding: 64px 0;
+  }
+
+  /* --- GALLERY ---
+     3-column grid now that screen is wide enough */
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* --- IMAGE PLACEHOLDERS ---
+     Restore standard height on wider screens */
+  .image-placeholder {
+    min-height: 250px;
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   DESKTOP (1025px and above)
+   Full desktop layout. All multi-column grids
+   at their maximum column count. Full spacing
+   and typography. Floating buttons at full size.
+   ────────────────────────────────────────────── */
+@media (min-width: 1025px) {
+
+  /* --- TYPOGRAPHY ---
+     Full desktop font sizes matching styles.css defaults */
+  h1 {
+    font-size: 3rem;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 2.25rem;
   }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+
+  /* --- HERO ---
+     Full-size hero heading and subtitle */
+  .hero-content h1 {
+    font-size: 3.2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* --- HEADER ---
+     Wider gap between nav links */
+  .nav-links {
+    gap: 32px;
+  }
+
+  /* --- SERVICES ---
+     3-column grid — the full desktop layout */
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* Restore full padding on service cards */
+  .service-card {
+    padding: 32px 24px;
+  }
+
+  /* --- WHY CHOOSE US ---
+     4 columns in a single row */
+  .why-us-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-top: 3rem;
+  }
+
+  /* --- DOCTORS ---
+     3-column grid — all three doctors in a row */
+  .doctors-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  /* Remove the centering rule for the 3rd card since
+     all three fit in one row at this width */
+  .doctor-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    max-width: none;
+    justify-self: auto;
+  }
+
+  /* --- GALLERY ---
+     3-column grid with wider gaps */
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* --- BLOG ---
+     3-column grid — all three posts in a row */
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  /* Remove the centering rule for the 3rd card */
+  .blog-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    max-width: none;
+    justify-self: auto;
+  }
+
+  /* --- CTA BANNER ---
+     Full-size heading */
+  #cta-banner h2 {
+    font-size: 2rem;
+  }
+
+  /* --- ABOUT ---
+     Wider gap between text and image columns */
+  .about-grid {
+    gap: 60px;
+  }
+
+  /* Full-height image placeholder */
+  .about-image .image-placeholder {
+    min-height: 400px;
+  }
+
+  /* --- CONTACT ---
+     Wider gap between form and info columns */
+  .contact-grid {
+    gap: 48px;
+  }
+
+  /* Full padding inside form card */
+  .contact-form-wrapper {
+    padding: 40px;
+  }
+
+  /* --- FOOTER ---
+     4-column grid — the full desktop layout */
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  /* --- FLOATING BUTTONS ---
+     Full 56px size on desktop */
+  .fab {
+    width: 56px;
+    height: 56px;
+  }
+
+  .floating-buttons {
+    bottom: 24px;
+    right: 20px;
+  }
+
+  /* Show tooltips on desktop (hover is available) */
+  .fab-tooltip {
+    display: block;
+  }
+
+  /* --- SECTION SPACING ---
+     Full 80px vertical padding on desktop */
+  #about,
+  #services,
+  #why-us,
+  #doctors,
+  #testimonials,
+  #gallery,
+  #blog,
+  #cta-banner,
+  #contact {
+    padding: 80px 0;
+  }
+
+  /* --- TESTIMONIALS ---
+     Full padding and font size */
+  .testimonial-slide {
+    padding: 40px 32px;
+  }
+
+  .testimonial-slide blockquote p {
+    font-size: 1.1rem;
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   LARGE DESKTOP (1280px and above)
+   No layout changes — the container is already
+   max-width 1200px and centered. This breakpoint
+   just ensures extra breathing room on very wide
+   monitors and prevents content from stretching
+   too wide.
+   ────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+
+  /* The .container class in styles.css already has
+     max-width: 1200px and margin: 0 auto, so content
+     is centered with equal space on both sides.
+
+     No additional layout changes needed — the site
+     looks the same at 1280px as it does at 1440px
+     or wider. The extra space becomes margin. */
+
+  /* Slightly larger container padding for ultra-wide screens
+     to give just a bit more breathing room */
+  .container {
+    padding: 0 24px;
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   ACCESSIBILITY: REDUCED MOTION
+   Some users have a system preference to reduce
+   animations (e.g., people with vestibular disorders).
+   This media query respects that preference by
+   disabling all transitions and animations.
+   ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+  /* Remove all transitions and animations globally */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ──────────────────────────────────────────────
+   TOUCH TARGET SAFETY
+   Ensures all interactive elements (buttons, links,
+   form inputs) have a minimum touch target of
+   44x44px on mobile, as required by WCAG 2.1
+   accessibility guidelines.
+   ────────────────────────────────────────────── */
+
+/* All clickable elements get a minimum 44px touch target */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex] {
+  min-height: 44px;
+}
+
+/* Inline links within paragraphs shouldn't force 44px height
+   on the text — instead we add padding to the tap area */
+p a,
+.footer-links a,
+.footer-contact a,
+.contact-info-item a {
+  min-height: auto;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

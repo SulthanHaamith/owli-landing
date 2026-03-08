@@ -1,35 +1,65 @@
-Read CLAUDE.md — refer to Sections 5 (colors), 6 (typography), 15 (design direction).
+Read CLAUDE.md — refer to Sections 11 (accessibility) and 15 (design direction).
 
-Build Phase 2: Core CSS styling in css/styles.css.
+Build Phase 3: Responsive CSS in css/responsive.css.
 
-Style every section in index.html. Design direction: organic, natural, calming — like a peaceful forest clinic. Professional but warm. Generous whitespace.
+Mobile-first approach — base styles in styles.css already target a reasonable default. This file adds min-width media queries to adapt layout at each breakpoint.
 
-1. CSS reset/normalize at the top
-2. :root already has custom properties — use them everywhere, zero hardcoded colors
-3. Typography scale using Poppins (headings 600/700 weight, body 300/400)
-4. Alternating section backgrounds for visual rhythm: cream → white → light green → cream (per Section 8 table)
+Breakpoints:
+- Small mobile: up to 480px (base — fix anything that breaks)
+- Tablet: min-width 481px
+- Small desktop: min-width 769px
+- Desktop: min-width 1025px
+- Large desktop: min-width 1280px
 
-Section-by-section:
-- Header: sticky, transparent initially, gains white background + subtle box-shadow on scroll (via .scrolled class that JS will add later)
-- Hero: 100vh, dark gradient overlay over background placeholder, centered text, CSS fade-in keyframe animation on load
-- About: two-column layout (text left, image placeholder right), vertically centered
-- Services: 3-column grid, cards with rounded corners + hover effect (translateY -5px + box-shadow transition)
-- Why Choose Us: 4-column icon stats row on light green background
-- Doctors: profile cards with circular avatar placeholder, centered text
-- Testimonials: carousel container with overflow hidden, individual slides, dot indicators styled
-- Gallery: 3-column grid with aspect-ratio maintained, hover overlay with subtle zoom
-- Blog: 3-column card layout (image top, title, excerpt, read-more link)
-- CTA Banner: full-width dark green, centered white text, two side-by-side buttons
-- Contact: two-column (form left with styled inputs/focus states, info right)
-- Footer: 4-column grid on dark green, light text, bottom copyright bar
-- Floating buttons (WhatsApp + Phone): fixed bottom-right, stacked vertically with 12px gap, 56px circles, box-shadow, pulse keyframe animation, hover scale(1.1)
+Key responsive changes at each level:
 
-General:
-- Buttons: rounded (border-radius 8px), padding 12px 28px, transition on hover (darken background)
-- Links: no underline by default, color transition on hover
-- Section padding: generous (80px top/bottom desktop)
-- Max content width: 1200px centered with auto margins
-- Smooth scroll: html { scroll-behavior: smooth }
-- Focus indicators: visible outline for keyboard accessibility
+MOBILE (base / small screens):
+- Nav: hide horizontal links, show hamburger button. Nav drawer slides in from right (transform + transition — JS will toggle a class)
+- Hero: smaller heading font, stack CTA buttons vertically, reduce padding
+- About: single column, image below text
+- Services grid: 1 column
+- Why Choose Us: single column, stacked
+- Doctors: single column, stacked cards
+- Gallery: 2 columns
+- Blog: single column
+- Contact: single column, form on top, info below
+- Footer: single column, stacked
+- Floating buttons: 48px circles, bottom: 16px, right: 16px
+- All font sizes scaled down comfortably for small screens
+- All section padding reduced (40px top/bottom)
+- Ensure touch targets are minimum 44×44px
 
-Add thorough beginner-friendly comments on every style block per Section 13 documentation standards. Do NOT touch any JS files yet.
+TABLET (481px+):
+- Services grid: 2 columns
+- Why Choose Us: 2×2 grid
+- Doctors: 2 columns (third card centered below or full-width)
+- Blog: 2 columns (third card centered or hidden)
+- Footer: 2 columns
+
+SMALL DESKTOP (769px+):
+- Nav: show horizontal links, hide hamburger
+- About: two-column layout restored
+- Contact: two-column restored
+
+DESKTOP (1025px+):
+- Services grid: 3 columns
+- Why Choose Us: 4 columns in a row
+- Doctors: 3 columns
+- Gallery: 3 columns
+- Blog: 3 columns
+- Footer: 4 columns
+- Floating buttons: 56px circles
+- Section padding: 80px top/bottom
+
+LARGE DESKTOP (1280px+):
+- Max-width container centered, no layout changes — just breathing room
+
+Also handle:
+- Images: max-width 100%, height auto at all sizes
+- Tables or wide content: horizontal scroll wrapper if needed
+- Form inputs: full-width on mobile, comfortable sizing on desktop
+- Testimonial carousel: works at all widths, text doesn't overflow
+
+Comment every media query block — explain what changes and why. Follow Section 13 documentation standards.
+
+Do NOT touch JS files yet.
