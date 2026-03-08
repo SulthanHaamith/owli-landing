@@ -241,11 +241,17 @@ h3 {
    Buttons stay centered below the card on mobile. */
 .testimonial-slide {
   padding: 24px 16px;
-  min-height: 220px;
+  min-height: 240px;
 }
 
 .testimonial-slide blockquote p {
   font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.testimonial-stars {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
 }
 
 /* --- GALLERY ---
@@ -473,12 +479,18 @@ h3 {
   /* --- TESTIMONIALS ---
      More padding for wider testimonial text */
   .testimonial-slide {
-    padding: 32px 48px;
-    min-height: 260px;
+    padding: 32px 40px;
+    min-height: 270px;
   }
 
   .testimonial-slide blockquote p {
     font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .testimonial-stars {
+    font-size: 1.3rem;
+    margin-bottom: 18px;
   }
 }
 
@@ -582,21 +594,25 @@ h3 {
   }
 
   /* --- TESTIMONIALS ---
-     On tablet/desktop, position prev/next buttons on the
-     sides of the carousel instead of below it. The wrapper
-     is the positioning context. */
+     On tablet/desktop, move prev/next buttons to the sides.
+     The .testimonial-nav collapses so it doesn't push dots down.
+     Buttons are positioned relative to .testimonial-wrapper. */
   .testimonial-wrapper {
     max-width: 600px;
   }
 
   .testimonial-nav {
-    position: static;
+    /* Remove from flow — buttons are absolutely positioned */
+    margin: 0;
+    padding: 0;
+    height: 0;
+    overflow: visible;
   }
 
   .testimonial-prev,
   .testimonial-next {
     position: absolute;
-    top: 45%;
+    top: 50%;
     transform: translateY(-50%);
     z-index: 2;
   }
@@ -822,12 +838,17 @@ h3 {
   }
 
   .testimonial-slide {
-    padding: 40px 32px;
+    padding: 48px 40px;
     min-height: 300px;
   }
 
   .testimonial-slide blockquote p {
     font-size: 1.1rem;
+  }
+
+  .testimonial-stars {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
   }
 
   .testimonial-prev {

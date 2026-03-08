@@ -834,49 +834,49 @@ p {
 }
 
 /* Testimonial wrapper — provides positioning context for
-   side-positioned prev/next buttons on tablet/desktop */
+   side-positioned prev/next buttons on tablet/desktop.
+   Single source of max-width for the entire testimonial area. */
 .testimonial-wrapper {
   position: relative;
   max-width: 700px;
   margin: 0 auto;
 }
 
-/* Carousel wrapper — hides overflow so only one slide shows.
-   On mobile, prev/next buttons sit below the card instead
-   of on the sides, so we use static positioning by default. */
+/* Carousel — hides overflow so only one slide shows */
 .testimonial-carousel {
-  position: relative;
-  max-width: 700px;
-  margin: 0 auto;
   overflow: hidden;
+  width: 100%;
 }
 
 /* Track — holds all slides in a horizontal row.
-   JS will shift this left/right to show different slides. */
+   JS shifts this left/right via translateX to show slides. */
 .testimonial-track {
   display: flex;
   transition: transform 0.5s ease;
 }
 
-/* Individual testimonial slide — takes full width of carousel.
-   Uses flexbox column to center content vertically and
-   min-height to prevent layout shift between slides. */
+/* Individual testimonial slide — uses flex: 0 0 100% for
+   reliable full-width sizing. Flexbox column centers all
+   content vertically and horizontally. Box-sizing ensures
+   padding doesn't cause overflow. */
 .testimonial-slide {
-  min-width: 100%;
+  flex: 0 0 100%;
+  width: 100%;
   min-height: 280px;
   padding: 40px 32px;
   text-align: center;
-  flex-shrink: 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-/* Quote text — centered with comfortable max-width */
+/* Quote text — stretches to full slide width, capped at
+   650px for comfortable reading on wide screens */
 .testimonial-slide blockquote {
+  width: 100%;
   max-width: 650px;
-  margin: 0 auto;
 }
 
 /* Star rating display */
@@ -917,9 +917,9 @@ p {
   font-size: 0.85rem;
 }
 
-/* Prev/Next arrow buttons — on mobile, positioned below
-   the carousel content as inline buttons. On tablet/desktop,
-   they move to left/right sides via responsive.css. */
+/* Prev/Next arrow buttons — on mobile, centered below the
+   carousel. On tablet/desktop, positioned on the sides
+   via responsive.css. */
 .testimonial-nav {
   display: flex;
   justify-content: center;
@@ -933,6 +933,7 @@ p {
   height: 44px;
   border-radius: 50%;
   background-color: var(--color-white);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
@@ -952,7 +953,7 @@ p {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 /* Individual dot */
