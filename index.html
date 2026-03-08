@@ -127,7 +127,7 @@
           <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
           </svg>
-          <span data-i18n="logo_text">Owl I</span>
+          <span data-i18n="logo_text">Owl I Healthcare</span>
         </a>
 
         <!-- Main navigation links — each scrolls to its section -->
@@ -180,7 +180,10 @@
                 Dark overlay ensures text is readable.
          ============================================ -->
     <section id="hero" aria-label="Welcome banner">
-      <!-- [PLACEHOLDER] Replace background with real hero image (1920x800px, JPG) in images/hero/ -->
+      <!-- [PLACEHOLDER] Replace hero-video.mp4 with real clinic video (recommended: 15-30 seconds, 1920x1080, under 10MB) -->
+      <video autoplay muted loop playsinline preload="metadata" class="hero-video" poster="images/hero/hero-poster.jpg">
+        <source src="images/hero/hero-video.mp4" type="video/mp4">
+      </video>
       <div class="hero-overlay">
         <div class="hero-content">
           <!-- Main headline -->
@@ -626,6 +629,9 @@
       <div class="container">
         <h2 id="testimonials-heading" data-i18n="testimonials_heading">What Our Patients Say</h2>
 
+        <!-- Wrapper provides positioning context for side buttons on desktop -->
+        <div class="testimonial-wrapper">
+
         <div class="testimonial-carousel" aria-label="Patient testimonials carousel">
 
           <!-- Testimonial slides container -->
@@ -708,7 +714,12 @@
 
           </div>
 
-          <!-- Carousel navigation buttons -->
+        </div>
+
+        <!-- Carousel navigation buttons — outside the overflow container
+             so they're always visible. Centered below on mobile,
+             positioned on sides on tablet/desktop via responsive.css. -->
+        <div class="testimonial-nav">
           <button class="testimonial-prev" aria-label="Previous testimonial">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <polyline points="15 18 9 12 15 6"/>
@@ -719,15 +730,16 @@
               <polyline points="9 18 15 12 9 6"/>
             </svg>
           </button>
+        </div>
 
-          <!-- Carousel dots / indicators -->
-          <div class="testimonial-dots" aria-label="Testimonial navigation">
-            <button class="dot active" aria-label="Go to testimonial 1" aria-current="true"></button>
-            <button class="dot" aria-label="Go to testimonial 2"></button>
-            <button class="dot" aria-label="Go to testimonial 3"></button>
-            <button class="dot" aria-label="Go to testimonial 4"></button>
-            <button class="dot" aria-label="Go to testimonial 5"></button>
-          </div>
+        <!-- Carousel dots / indicators -->
+        <div class="testimonial-dots" aria-label="Testimonial navigation">
+          <button class="dot active" aria-label="Go to testimonial 1" aria-current="true"></button>
+          <button class="dot" aria-label="Go to testimonial 2"></button>
+          <button class="dot" aria-label="Go to testimonial 3"></button>
+          <button class="dot" aria-label="Go to testimonial 4"></button>
+          <button class="dot" aria-label="Go to testimonial 5"></button>
+        </div>
 
         </div>
       </div>
@@ -1116,7 +1128,7 @@
             <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
             </svg>
-            <span data-i18n="logo_text">Owl I</span>
+            <span data-i18n="logo_text">Owl I Healthcare</span>
           </a>
           <p class="footer-about" data-i18n="footer_about">Tirunelveli's trusted naturopathy and wellness center. Holistic, drug-free healing for body, mind, and soul.</p>
 

@@ -49,7 +49,7 @@ const translations = {
     skip_to_content: 'Skip to main content',
 
     /* --- Logo --- */
-    logo_text: 'Owl I',
+    logo_text: 'Owl I Healthcare',
 
     /* --- Navigation --- */
     nav_home: 'Home',
@@ -242,7 +242,7 @@ const translations = {
     skip_to_content: 'முதன்மை உள்ளடக்கத்திற்குச் செல்லவும்',
 
     /* --- சின்னம் --- */
-    logo_text: 'Owl I',
+    logo_text: 'Owl I Healthcare',
 
     /* --- வழிசெலுத்தல் --- */
     nav_home: 'முகப்பு',

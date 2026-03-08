@@ -469,10 +469,11 @@ p {
 
 /* ──────────────────────────────────────────────
    7. HERO SECTION
-   Full-screen welcome banner with a dark overlay
-   over a background image (placeholder for now).
-   Centered heading, subtitle, and two CTA buttons.
-   Fade-in animation plays when the page loads.
+   Full-screen welcome banner with a looping MP4
+   video background. A dark overlay sits on top of
+   the video for text contrast. Text content sits
+   above the overlay. Falls back to a CSS gradient
+   if the video cannot load.
    ────────────────────────────────────────────── */
 
 #hero {
@@ -482,14 +483,26 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Placeholder gradient — will be replaced with a real photo.
-     This gradient mimics a nature/forest background. */
+  overflow: hidden;
+  /* Fallback gradient — shown if video can't load */
   background: linear-gradient(135deg, #2D5A3D 0%, #3a7a52 30%, #5B8C5A 60%, #A8C5A0 100%);
   background-size: cover;
   background-position: center;
 }
 
-/* Dark overlay — sits on top of the background image/gradient
+/* Background video — covers entire hero section.
+   Sits behind the overlay (z-index 1). */
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Dark overlay — sits on top of the video (z-index 2)
    to make the white text readable */
 .hero-overlay {
   position: absolute;
@@ -501,13 +514,16 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
-/* Hero content — centered text and buttons */
+/* Hero content — centered text and buttons (z-index 3) */
 .hero-content {
+  position: relative;
   text-align: center;
   max-width: 800px;
   padding: 20px;
+  z-index: 3;
   /* Fade-in animation on page load */
   animation: fadeInUp 1s ease forwards;
 }
@@ -817,7 +833,17 @@ p {
   background-color: var(--color-white);
 }
 
-/* Carousel wrapper — hides overflow so only one slide shows */
+/* Testimonial wrapper — provides positioning context for
+   side-positioned prev/next buttons on tablet/desktop */
+.testimonial-wrapper {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Carousel wrapper — hides overflow so only one slide shows.
+   On mobile, prev/next buttons sit below the card instead
+   of on the sides, so we use static positioning by default. */
 .testimonial-carousel {
   position: relative;
   max-width: 700px;
@@ -832,12 +858,25 @@ p {
   transition: transform 0.5s ease;
 }
 
-/* Individual testimonial slide — takes full width of carousel */
+/* Individual testimonial slide — takes full width of carousel.
+   Uses flexbox column to center content vertically and
+   min-height to prevent layout shift between slides. */
 .testimonial-slide {
   min-width: 100%;
+  min-height: 280px;
   padding: 40px 32px;
   text-align: center;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Quote text — centered with comfortable max-width */
+.testimonial-slide blockquote {
+  max-width: 650px;
+  margin: 0 auto;
 }
 
 /* Star rating display */
@@ -878,12 +917,18 @@ p {
   font-size: 0.85rem;
 }
 
-/* Prev/Next arrow buttons — positioned on left/right of carousel */
+/* Prev/Next arrow buttons — on mobile, positioned below
+   the carousel content as inline buttons. On tablet/desktop,
+   they move to left/right sides via responsive.css. */
+.testimonial-nav {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
 .testimonial-prev,
 .testimonial-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -894,15 +939,6 @@ p {
   justify-content: center;
   color: var(--color-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
-  z-index: 2;
-}
-
-.testimonial-prev {
-  left: 0;
-}
-
-.testimonial-next {
-  right: 0;
 }
 
 .testimonial-prev:hover,

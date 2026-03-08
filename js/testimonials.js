@@ -43,14 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
   /** @type {NodeListOf<HTMLElement>} All individual slides */
   var slides = carousel.querySelectorAll('.testimonial-slide');
 
+  /** @type {HTMLElement} The wrapper around carousel, nav, and dots */
+  var wrapper = document.querySelector('.testimonial-wrapper');
+
   /** @type {HTMLElement} Previous slide button */
-  var prevBtn = carousel.querySelector('.testimonial-prev');
+  var prevBtn = wrapper.querySelector('.testimonial-prev');
 
   /** @type {HTMLElement} Next slide button */
-  var nextBtn = carousel.querySelector('.testimonial-next');
+  var nextBtn = wrapper.querySelector('.testimonial-next');
 
   /** @type {NodeListOf<HTMLElement>} All dot indicator buttons */
-  var dots = carousel.querySelectorAll('.dot');
+  var dots = wrapper.querySelectorAll('.dot');
 
   /** @type {number} Total number of slides */
   var totalSlides = slides.length;
@@ -159,10 +162,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* Pause auto-rotation on hover (user is reading) */
-  carousel.addEventListener('mouseenter', stopAutoRotate);
+  wrapper.addEventListener('mouseenter', stopAutoRotate);
 
   /* Resume auto-rotation when hover leaves */
-  carousel.addEventListener('mouseleave', startAutoRotate);
+  wrapper.addEventListener('mouseleave', startAutoRotate);
 
   /* Start auto-rotation on page load */
   startAutoRotate();

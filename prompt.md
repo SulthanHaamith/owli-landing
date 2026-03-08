@@ -1,152 +1,54 @@
-Read CLAUDE.md — refer to Sections 10 (SEO), 11 (accessibility), 13 (documentation), and 14 (placeholder checklist).
-
-Build Phase 6: SEO files, README, and full project review.
+Read CLAUDE.md for reference. I have 3 specific issues to fix. All changes must be fully responsive across mobile (375px), tablet (768px), and desktop (1440px).
 
 
-PART 1: sitemap.xml
+FIX 1: Hero Section — Replace solid background with MP4 video background
 
-Create sitemap.xml with:
-- XML declaration and urlset namespace
-- Single entry: https://owlihealthcare.com/
-- lastmod: today's date (2026-03-08)
-- changefreq: weekly
-- priority: 1.0
+The hero section currently has a solid/gradient background behind "Heal Naturally. Live Fully." — replace it with a looping background video.
 
+Implementation:
+- Add a <video> element inside the hero section, behind all text content:
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="images/hero/hero-video.mp4" type="video/mp4">
+  </video>
+- Style the video: position absolute, top 0, left 0, width 100%, height 100%, object-fit cover, z-index 1
+- Keep the existing dark overlay ON TOP of the video (z-index 2) so white text remains readable
+- Hero text content sits above the overlay (z-index 3)
+- Add a fallback: if video can't load, show a CSS gradient or background color so the section isn't blank
+- Add a poster attribute on the video tag pointing to a placeholder image: poster="images/hero/hero-poster.jpg"
+- Mark with <!-- [PLACEHOLDER] Replace hero-video.mp4 with real clinic video (recommended: 15-30 seconds, 1920x1080, under 10MB) -->
+- Performance: add preload="metadata" to avoid loading full video on slow connections
+- Mobile consideration: some mobile browsers block autoplay video — ensure the poster image and dark overlay still look good as fallback. Keep autoplay muted loop playsinline attributes (playsinline is required for iOS)
+- Update responsive.css: on very small screens (under 481px), optionally hide the video and show just the poster image as a background-image instead, to save bandwidth on mobile
 
-PART 2: robots.txt
-
-Create robots.txt:
-- User-agent: *
-- Allow: /
-- Sitemap: https://owlihealthcare.com/sitemap.xml
-
-
-PART 3: README.md
-
-Write a comprehensive, beginner-friendly README with these sections:
-
-1. Project Overview
-   - What this site is, who it's for, what tech it uses
-   - Note: this is a static site, no server or build step needed
-
-2. File Structure
-   - List every file and folder with a 1-line description of what it does
-
-3. How to View Locally
-   - Just open index.html in a browser — that's it
-   - Or use VS Code Live Server extension for auto-reload
-
-4. How to Edit Text Content
-   - All display text lives in js/i18n.js inside the translations object
-   - Explain the data-i18n system: how to find a key, how to change text, how to add new translatable text
-   - Step-by-step example: changing the hero heading
-
-5. How to Replace Placeholder Images
-   - Full list of every placeholder from Section 14 of CLAUDE.md
-   - For each: file path, recommended dimensions, format
-   - Explain: just replace the file with the same filename, or update the src in index.html
-
-6. How to Update Doctor Information
-   - Where doctor data lives (index.html + translations in i18n.js)
-   - Search for [PLACEHOLDER] comments to find all doctor-related content
-   - Step-by-step: replacing a placeholder doctor with real details
-
-7. How to Add/Edit Services
-   - Where the service list lives in HTML
-   - Where service translations live in i18n.js
-   - Where the contact form dropdown is populated in contact.js
-
-8. How to Deploy to Hostinger
-   - Step 1: Purchase Hostinger Premium Web Hosting
-   - Step 2: Claim free domain (owlihealthcare.com) during checkout
-   - Step 3: Open hPanel → Files → File Manager
-   - Step 4: Navigate to public_html/
-   - Step 5: Delete any default files
-   - Step 6: Upload all project files (index.html, css/, js/, images/, sitemap.xml, robots.txt)
-   - Step 7: Visit your domain to verify
-   - Step 8: Enable free SSL in hPanel → Security → SSL
-   - Note about DNS propagation (can take up to 48 hours)
-
-9. How to Update the Site After Changes
-   - Edit files locally
-   - Re-upload changed files via File Manager or FTP
-   - Explain Hostinger FTP credentials location in hPanel
-
-10. Complete Placeholder Checklist
-    - Table listing every single item that needs to be replaced before going live
-    - Columns: Item, File Location, What to Replace With, Size/Format
-
-11. Browser Support
-    - Works in all modern browsers (Chrome, Firefox, Safari, Edge)
-    - Note about IE11 not being supported
-
-12. Troubleshooting
-    - "Site not loading" → check file paths, ensure index.html is in public_html root
-    - "Styles not working" → check css file paths in <head>
-    - "Language toggle broken" → check that data-i18n keys match between HTML and i18n.js
-    - "WhatsApp not opening" → check phone number format in links
-    - "Images not showing" → check file paths and filenames match src attributes
+Update i18n.js if any new translatable text is added.
 
 
-PART 4: Full Project Review and Fixes
+FIX 2: Header Logo — Change "Owl I" to "Owl I Healthcare"
 
-Now review the ENTIRE project and fix every issue you find. Check:
+The header currently shows only "Owl I" — change it to "Owl I Healthcare".
 
-1. HTML Validation:
-   - All tags properly closed
-   - No duplicate IDs
-   - All <img> tags have alt attributes
-   - All form inputs have associated <label> elements
-   - Semantic structure: header > nav > main > sections > footer
+- Update the logo text in index.html
+- Update both en and ta translation keys in i18n.js (Tamil: "Owl I மருத்துவமனை" or the appropriate Tamil term for healthcare — use what makes sense for a naturopathy clinic brand name. If the clinic prefers "Owl I Healthcare" in English even in Tamil mode, keep it as-is in both languages.)
+- Check alignment: the longer text should still sit properly next to the nav links on desktop and not overlap or wrap awkwardly
+- On mobile: verify the logo text doesn't overflow or push the hamburger button off screen. If it's too long, consider slightly reducing logo font-size on mobile breakpoints in responsive.css
+- The leaf/owl SVG icon should still be next to the text, properly vertically aligned
 
-2. i18n Completeness:
-   - Every element with data-i18n in HTML has a matching key in BOTH en and ta objects in i18n.js
-   - No orphaned keys (keys in JS with no matching HTML element)
-   - Contact form service dropdown options are included in translations
-   - Floating button tooltips are in translations
 
-3. CSS Consistency:
-   - No hardcoded color values — all using var(--color-*)
-   - All sections have the correct background color per Section 8 table in CLAUDE.md
-   - Focus indicators visible on all interactive elements (links, buttons, inputs)
-   - .animate-on-scroll elements have initial hidden state (opacity: 0, translateY) and .visible state
+FIX 3: Testimonials Section — Fix "What Our Patients Say" review card alignment
 
-4. JavaScript:
-   - No console errors — wrap risky operations in try/catch or null checks
-   - All event listeners use correct selectors matching the actual HTML
-   - Mobile menu opens and closes correctly
-   - Carousel auto-rotates, pauses on hover, prev/next work
-   - Lightbox opens, navigates, closes via button/overlay/escape
-   - Form validation catches all invalid inputs
-   - WhatsApp URL generates correctly with proper encoding
-   - Language toggle switches ALL text including form labels, placeholders, button text, tooltips
+The testimonial/review cards are not properly aligned. Fix the layout:
 
-5. Links:
-   - All WhatsApp links use correct number: 916379610554
-   - Phone links use: tel:+916379610554
-   - Email links use: mailto:owli2026@gmail.com
-   - All nav anchor links point to correct section IDs
-   - No broken href="#" where a real anchor should be
+- Ensure all testimonial slides have consistent height — use min-height or flexbox to prevent layout shift between slides
+- Center the testimonial content vertically and horizontally within the carousel container
+- Quote text: centered, with comfortable max-width (600-700px) so lines aren't too long on desktop
+- Star rating: centered below the quote
+- Patient name and treatment type: centered below stars
+- Dot indicators: centered below the testimonial card with consistent spacing
+- Prev/Next buttons: vertically centered on left and right sides of the carousel, or centered below content on mobile
+- On mobile: ensure text doesn't overflow, reduce font size if needed, prev/next buttons below the card (not on sides — not enough room)
+- On tablet and desktop: prev/next arrows on left/right sides, vertically centered to the quote
+- Check that transitioning between slides doesn't cause content to jump or shift — all slides should occupy the same space
 
-6. Accessibility:
-   - Skip-to-content link present and functional
-   - ARIA labels on: hamburger button, lightbox, carousel controls, language toggle, floating buttons
-   - Tab order logical through the page
-   - Lightbox traps focus when open
-   - Mobile menu traps focus when open
-   - Color contrast: white text on dark green, dark text on cream — both passing WCAG AA
+Test mentally at 375px, 768px, and 1440px. Make sure nothing breaks.
 
-7. SEO:
-   - <title> tag matches Section 10
-   - Meta description present and correct
-   - JSON-LD structured data valid (check syntax, commas, brackets)
-   - Open Graph tags all present
-   - Canonical URL set
-   - All images have descriptive alt text
-
-8. Placeholders:
-   - Every placeholder image/content has a <!-- [PLACEHOLDER] --> comment
-   - No real patient names or data accidentally included
-   - Doctor names are clearly marked as placeholder
-
-Fix every issue you find. Then confirm what was fixed.
+After all 3 fixes, review the changes and confirm each fix is working correctly.

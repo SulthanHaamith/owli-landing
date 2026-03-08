@@ -149,9 +149,27 @@ h3 {
   display: none;
 }
 
+/* --- LOGO ---
+   Reduce logo font size on mobile so "Owl I Healthcare"
+   doesn't overflow or push the hamburger off screen. */
+.logo {
+  font-size: 1.15rem;
+}
+
 /* --- HERO ---
-   Smaller heading and subtitle text. CTA buttons
-   stack vertically so they're easier to tap. */
+   On mobile, hide the video to save bandwidth and
+   show the poster image as a background instead.
+   Smaller heading and subtitle. CTA buttons stack. */
+.hero-video {
+  display: none;
+}
+
+#hero {
+  background-image: url('../images/hero/hero-poster.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
 .hero-content h1 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
@@ -219,22 +237,15 @@ h3 {
 }
 
 /* --- TESTIMONIALS ---
-   Tighter padding inside slides. Smaller quote text. */
+   Tighter padding inside slides. Smaller quote text.
+   Buttons stay centered below the card on mobile. */
 .testimonial-slide {
-  padding: 24px 40px;
+  padding: 24px 16px;
+  min-height: 220px;
 }
 
 .testimonial-slide blockquote p {
   font-size: 0.95rem;
-}
-
-/* Bring prev/next arrows closer to the edges on small screens */
-.testimonial-prev {
-  left: 0;
-}
-
-.testimonial-next {
-  right: 0;
 }
 
 /* --- GALLERY ---
@@ -357,8 +368,23 @@ h3 {
     padding: 56px 0;
   }
 
+  /* --- LOGO ---
+     Restore logo font size on wider screens */
+  .logo {
+    font-size: 1.35rem;
+  }
+
   /* --- HERO ---
-     Larger heading, horizontal CTA buttons */
+     Restore video on tablet and above */
+  .hero-video {
+    display: block;
+  }
+
+  #hero {
+    background-image: none;
+  }
+
+  /* Larger heading, horizontal CTA buttons */
   .hero-content h1 {
     font-size: 2.2rem;
   }
@@ -448,6 +474,7 @@ h3 {
      More padding for wider testimonial text */
   .testimonial-slide {
     padding: 32px 48px;
+    min-height: 260px;
   }
 
   .testimonial-slide blockquote p {
@@ -554,6 +581,38 @@ h3 {
     padding: 36px;
   }
 
+  /* --- TESTIMONIALS ---
+     On tablet/desktop, position prev/next buttons on the
+     sides of the carousel instead of below it. The wrapper
+     is the positioning context. */
+  .testimonial-wrapper {
+    max-width: 600px;
+  }
+
+  .testimonial-nav {
+    position: static;
+  }
+
+  .testimonial-prev,
+  .testimonial-next {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .testimonial-prev {
+    left: -56px;
+  }
+
+  .testimonial-next {
+    right: -56px;
+  }
+
+  .testimonial-slide {
+    min-height: 280px;
+  }
+
   /* --- SECTION SPACING ---
      More vertical breathing room */
   #about,
@@ -608,6 +667,12 @@ h3 {
   .section-subtitle {
     font-size: 1.1rem;
     margin-bottom: 3rem;
+  }
+
+  /* --- LOGO ---
+     Full desktop logo font size */
+  .logo {
+    font-size: 1.5rem;
   }
 
   /* --- HERO ---
@@ -751,13 +816,26 @@ h3 {
   }
 
   /* --- TESTIMONIALS ---
-     Full padding and font size */
+     Full padding and font size. Wider wrapper on desktop. */
+  .testimonial-wrapper {
+    max-width: 700px;
+  }
+
   .testimonial-slide {
     padding: 40px 32px;
+    min-height: 300px;
   }
 
   .testimonial-slide blockquote p {
     font-size: 1.1rem;
+  }
+
+  .testimonial-prev {
+    left: -64px;
+  }
+
+  .testimonial-next {
+    right: -64px;
   }
 }
 
