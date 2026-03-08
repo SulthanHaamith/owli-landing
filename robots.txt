@@ -1,0 +1,13 @@
+# ──────────────────────────────────────────────
+# ROBOTS.TXT
+# Tells search engine crawlers which pages they
+# can and cannot access on this website.
+# We allow all crawlers to access everything.
+# ──────────────────────────────────────────────
+
+# Allow all search engines to crawl the entire site
+User-agent: *
+Allow: /
+
+# Point crawlers to our sitemap for better indexing
+Sitemap: https://owlihealthcare.com/sitemap.xml

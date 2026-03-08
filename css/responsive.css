@@ -1,0 +1,8 @@
+/* ──────────────────────────────────────────────
+   RESPONSIVE.CSS
+   Contains all media queries for mobile, tablet,
+   and desktop breakpoints. Mobile-first approach:
+   base styles target mobile, then we enhance for
+   larger screens using min-width queries.
+   Will be built in a later phase.
+   ────────────────────────────────────────────── */

@@ -1,0 +1,49 @@
+/* ──────────────────────────────────────────────
+   STYLES.CSS — Owl I Health and Wellness Center
+   Main stylesheet for the clinic's landing page.
+
+   This file contains all base styles, layout rules,
+   and component styles. Responsive (mobile/tablet/
+   desktop) overrides live in responsive.css.
+
+   COLOR PALETTE: "Forest Calm" — defined as CSS
+   custom properties below so every color is
+   controlled from one place. To change a color
+   across the entire site, just edit the hex value
+   in :root.
+   ────────────────────────────────────────────── */
+
+/* ──────────────────────────────────────────────
+   CSS CUSTOM PROPERTIES (Variables)
+   These are the "Forest Calm" color palette and
+   are used throughout the site instead of hard-
+   coded hex values. To change a color site-wide,
+   just update the value here.
+
+   Usage example:  color: var(--color-primary);
+   ────────────────────────────────────────────── */
+:root {
+  /* Primary dark green — used for headers, nav, footer backgrounds */
+  --color-primary: #2D5A3D;
+
+  /* Secondary green — used for buttons, CTAs, interactive elements */
+  --color-secondary: #5B8C5A;
+
+  /* Light green — used for highlighted sections, subtle accents */
+  --color-light-green: #A8C5A0;
+
+  /* Cream background — the main page background color */
+  --color-background: #F4EDE4;
+
+  /* Warm brown — used for small accent details */
+  --color-accent: #8B6F47;
+
+  /* White — used for cards, alternating section backgrounds */
+  --color-white: #FFFFFF;
+
+  /* Dark text — the primary body text color */
+  --color-dark-text: #1A1A1A;
+
+  /* Light/subtle text — used for secondary or muted text */
+  --color-light-text: #6B7B6B;
+}

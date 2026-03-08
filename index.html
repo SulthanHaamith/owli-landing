@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================
+       HEAD SECTION
+       PURPOSE: Contains metadata, SEO tags, fonts,
+                stylesheets, and structured data.
+       NOTES: All meta tags follow Section 10 of
+              CLAUDE.md for maximum SEO benefit.
+       ============================================ -->
+
+  <!-- Character encoding — UTF-8 supports English, Tamil, and special characters -->
+  <meta charset="UTF-8">
+
+  <!-- Makes the site responsive on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Page title — appears in browser tab and search results -->
+  <title>Owl I Health and Wellness Center | Naturopathy Clinic in Tirunelveli</title>
+
+  <!-- SEO: Description shown in search engine results (under the title) -->
+  <meta name="description" content="Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.">
+
+  <!-- SEO: Keywords help search engines understand the page topic -->
+  <meta name="keywords" content="naturopathy clinic tirunelveli, natural healing, yoga therapy, hydrotherapy, mud therapy, wellness center tirunelveli, BNYS doctor tirunelveli">
+
+  <!-- SEO: Canonical URL tells search engines the "official" URL for this page -->
+  <link rel="canonical" href="https://owlihealthcare.com/">
+
+  <!-- Open Graph tags — control how the page appears when shared on Facebook, LinkedIn, etc. -->
+  <meta property="og:title" content="Owl I Health and Wellness Center | Naturopathy Clinic in Tirunelveli">
+  <meta property="og:description" content="Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.">
+  <!-- [PLACEHOLDER] Replace with real OG image (1200x630px) -->
+  <meta property="og:image" content="https://owlihealthcare.com/images/og-image.jpg">
+  <meta property="og:url" content="https://owlihealthcare.com/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card tags — control how the page appears when shared on Twitter/X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Owl I Health and Wellness Center | Naturopathy Clinic in Tirunelveli">
+  <meta name="twitter:description" content="Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.">
+  <!-- [PLACEHOLDER] Replace with real Twitter image (1200x630px) -->
+  <meta name="twitter:image" content="https://owlihealthcare.com/images/og-image.jpg">
+
+  <!-- Favicon — the small icon shown in the browser tab -->
+  <!-- [PLACEHOLDER] Replace with real favicon file -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+  <!-- Google Fonts — Poppins for English text, Noto Sans Tamil for Tamil text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN — fallback icon library for any icons not using inline SVG -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- Main stylesheet — colors, layout, components -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Responsive stylesheet — media queries for mobile/tablet/desktop -->
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- ============================================
+       STRUCTURED DATA (JSON-LD)
+       PURPOSE: Helps Google understand this is a
+                medical business and display rich
+                results (address, hours, phone, etc.)
+       NOTES: Schema type is MedicalBusiness.
+              Update details if clinic info changes.
+       ============================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    "name": "Owl I Health and Wellness Center",
+    "description": "Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.",
+    "url": "https://owlihealthcare.com/",
+    "telephone": "+916379610554",
+    "email": "owli2026@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli",
+      "addressLocality": "Tirunelveli",
+      "addressRegion": "Tamil Nadu",
+      "postalCode": "627604",
+      "addressCountry": "IN"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "09:00",
+        "closes": "21:00"
+      }
+    ],
+    "priceRange": "₹₹"
+  }
+  </script>
+</head>
+
+<body>
+  <!-- ============================================
+       SKIP TO MAIN CONTENT LINK
+       PURPOSE: Accessibility feature that lets keyboard
+                users skip past the navigation and jump
+                straight to the main content.
+       NOTES: This link is visually hidden but appears
+              when focused (via keyboard Tab key).
+       ============================================ -->
+  <a href="#main-content" class="skip-link" data-i18n="skip_to_content">Skip to main content</a>
+
+  <!-- ============================================
+       SECTION 1: HEADER / NAVIGATION
+       PURPOSE: Site logo, navigation links, language
+                toggle, and "Book Now" CTA button.
+       NOTES: Becomes sticky on scroll with a subtle
+              box-shadow. Mobile uses a hamburger menu
+              that opens a slide-in drawer.
+       ============================================ -->
+  <header id="header" role="banner">
+    <nav aria-label="Main navigation">
+      <div class="nav-container">
+
+        <!-- Logo — text-based with a small leaf SVG icon -->
+        <a href="#hero" class="logo" aria-label="Owl I Health and Wellness Center - Home">
+          <!-- Inline SVG leaf icon next to logo text -->
+          <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
+          </svg>
+          <span data-i18n="logo_text">Owl I</span>
+        </a>
+
+        <!-- Main navigation links — each scrolls to its section -->
+        <ul class="nav-links" id="nav-links" role="menubar">
+          <li role="none"><a href="#hero" role="menuitem" data-i18n="nav_home">Home</a></li>
+          <li role="none"><a href="#about" role="menuitem" data-i18n="nav_about">About</a></li>
+          <li role="none"><a href="#services" role="menuitem" data-i18n="nav_services">Services</a></li>
+          <li role="none"><a href="#doctors" role="menuitem" data-i18n="nav_doctors">Doctors</a></li>
+          <li role="none"><a href="#gallery" role="menuitem" data-i18n="nav_gallery">Gallery</a></li>
+          <li role="none"><a href="#blog" role="menuitem" data-i18n="nav_blog">Blog</a></li>
+          <li role="none"><a href="#contact" role="menuitem" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+
+        <!-- Right side: language toggle + Book Now button -->
+        <div class="nav-actions">
+          <!-- Language toggle button — switches between English and Tamil -->
+          <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language between English and Tamil">
+            <span>EN | தமிழ்</span>
+          </button>
+
+          <!-- Book Now CTA — scrolls to contact/booking section -->
+          <a href="#contact" class="btn btn-primary nav-cta" data-i18n="nav_book_now">Book Now</a>
+        </div>
+
+        <!-- Hamburger menu button — visible only on mobile -->
+        <button class="hamburger" id="hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============================================
+       MAIN CONTENT AREA
+       PURPOSE: Wraps all page sections. The "Skip
+                to main content" link jumps here.
+       ============================================ -->
+  <main id="main-content">
+
+    <!-- ============================================
+         SECTION 2: HERO
+         PURPOSE: Full-screen first impression with
+                  headline, subheading, and two CTA
+                  buttons. Sets the tone for the site.
+         NOTES: Background will be a real clinic photo.
+                Currently uses a placeholder gradient.
+                Dark overlay ensures text is readable.
+         ============================================ -->
+    <section id="hero" aria-label="Welcome banner">
+      <!-- [PLACEHOLDER] Replace background with real hero image (1920x800px, JPG) in images/hero/ -->
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <!-- Main headline -->
+          <h1 data-i18n="hero_heading">Heal Naturally. Live Fully.</h1>
+
+          <!-- Subheading with clinic description -->
+          <p class="hero-subtitle" data-i18n="hero_subheading">Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul.</p>
+
+          <!-- Two CTA buttons side by side -->
+          <div class="hero-ctas">
+            <!-- Book Appointment opens WhatsApp -->
+            <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20book%20an%20appointment." class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="hero_cta_book">Book Appointment</a>
+
+            <!-- Explore Services scrolls down to services section -->
+            <a href="#services" class="btn btn-secondary" data-i18n="hero_cta_explore">Explore Services</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 3: ABOUT
+         PURPOSE: Introduces the clinic's philosophy,
+                  vision, and mission. Two-column
+                  layout with text and an image.
+         NOTES: Image placeholder needs to be replaced
+                with a real clinic interior photo.
+         ============================================ -->
+    <section id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about-grid">
+
+          <!-- Left column: text content -->
+          <div class="about-text">
+            <h2 id="about-heading" data-i18n="about_heading">About Our Center</h2>
+            <p data-i18n="about_philosophy">At Owl I Health and Wellness Center, we believe in the body's innate ability to heal itself. Our approach combines time-tested naturopathy traditions with modern wellness practices to deliver drug-free, holistic healing. Every treatment plan is personalized to address the root cause — not just the symptoms — ensuring lasting wellness for body, mind, and soul.</p>
+
+            <h3 data-i18n="about_vision_title">Our Vision</h3>
+            <p data-i18n="about_vision">To be Tirunelveli's leading naturopathy center, making natural and holistic healthcare accessible, affordable, and effective for every individual.</p>
+
+            <h3 data-i18n="about_mission_title">Our Mission</h3>
+            <p data-i18n="about_mission">To provide personalized, drug-free healing through naturopathy, yoga, and nutrition — empowering our community to live healthier, happier lives through the power of nature.</p>
+          </div>
+
+          <!-- Right column: clinic photo -->
+          <div class="about-image">
+            <!-- [PLACEHOLDER] Replace with real clinic interior photo (800x600px, JPG) -->
+            <div class="image-placeholder" aria-label="Clinic interior photo placeholder">
+              <!-- Leaf icon as visual placeholder -->
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
+              </svg>
+              <span data-i18n="placeholder_clinic_photo">Clinic Photo</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 4: SERVICES
+         PURPOSE: Showcases all 15 naturopathy services
+                  offered by the clinic. Displayed in a
+                  responsive grid of cards.
+         NOTES: Each card has an icon, title, and short
+                description. Hover effect lifts the card.
+                Grid: 3 col desktop, 2 tablet, 1 mobile.
+         ============================================ -->
+    <section id="services" aria-labelledby="services-heading">
+      <div class="container">
+        <h2 id="services-heading" data-i18n="services_heading">Our Services</h2>
+        <p class="section-subtitle" data-i18n="services_subtitle">Comprehensive natural healing treatments tailored to your needs</p>
+
+        <div class="services-grid">
+
+          <!-- Service 1: Hydrotherapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Water/droplet icon for Hydrotherapy -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_1_title">Hydrotherapy</h3>
+            <p data-i18n="service_1_desc">Hip bath, Spinal bath, Steam bath, Enema therapy</p>
+          </div>
+
+          <!-- Service 2: Mud Therapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Earth/globe icon for Mud Therapy -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_2_title">Mud Therapy</h3>
+            <p data-i18n="service_2_desc">Mud pack, Mud bath, Clay applications</p>
+          </div>
+
+          <!-- Service 3: Diet Therapy / Nutrition Counseling -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Apple icon for Diet/Nutrition -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06z"/>
+                <path d="M10 2c1 .5 2 2 2 5"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_3_title">Diet Therapy / Nutrition Counseling</h3>
+            <p data-i18n="service_3_desc">Therapeutic fasting, Detox diets, Personalized meal plans</p>
+          </div>
+
+          <!-- Service 4: Massage Therapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Hand icon for Massage -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_4_title">Massage Therapy</h3>
+            <p data-i18n="service_4_desc">Full body oil massage, Therapeutic massage, Reflexology</p>
+          </div>
+
+          <!-- Service 5: Yoga Therapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Person/stretch icon for Yoga -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="4" r="2"/>
+                <path d="M4 20l4-9"/>
+                <path d="M20 20l-4-9"/>
+                <path d="M12 11v4"/>
+                <path d="M7 15h10"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_5_title">Yoga Therapy</h3>
+            <p data-i18n="service_5_desc">Asanas, Pranayama, Meditation, Therapeutic yoga</p>
+          </div>
+
+          <!-- Service 6: Acupuncture / Acupressure -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Target/crosshair icon for Acupuncture -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_6_title">Acupuncture / Acupressure</h3>
+            <p data-i18n="service_6_desc">Pain management, Meridian therapy</p>
+          </div>
+
+          <!-- Service 7: Magnetotherapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Magnet/zap icon for Magnetotherapy -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_7_title">Magnetotherapy</h3>
+            <p data-i18n="service_7_desc">Magnetic field therapy for chronic pain</p>
+          </div>
+
+          <!-- Service 8: Chromo Therapy -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Sun icon for Chromo/Light therapy -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/>
+                <path d="M12 20v2"/>
+                <path d="m4.93 4.93 1.41 1.41"/>
+                <path d="m17.66 17.66 1.41 1.41"/>
+                <path d="M2 12h2"/>
+                <path d="M20 12h2"/>
+                <path d="m6.34 17.66-1.41 1.41"/>
+                <path d="m19.07 4.93-1.41 1.41"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_8_title">Chromo Therapy</h3>
+            <p data-i18n="service_8_desc">Light and color-based healing</p>
+          </div>
+
+          <!-- Service 9: Detox & Panchakarma Programs -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Refresh/cycle icon for Detox -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 16h5v5"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_9_title">Detox &amp; Panchakarma Programs</h3>
+            <p data-i18n="service_9_desc">7-day, 14-day, 21-day packages</p>
+          </div>
+
+          <!-- Service 10: Weight Management -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Scale icon for Weight Management -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                <path d="M12 3v6l4 2"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_10_title">Weight Management</h3>
+            <p data-i18n="service_10_desc">Diet + Exercise + Therapy combo</p>
+          </div>
+
+          <!-- Service 11: Stress & Anxiety Management -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Heart icon for Stress/Wellness -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_11_title">Stress &amp; Anxiety Management</h3>
+            <p data-i18n="service_11_desc">Yoga + Counseling + Relaxation therapies</p>
+          </div>
+
+          <!-- Service 12: Chronic Pain Management -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Shield icon for Pain Management -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_12_title">Chronic Pain Management</h3>
+            <p data-i18n="service_12_desc">Back pain, Arthritis, Migraine</p>
+          </div>
+
+          <!-- Service 13: Women's Wellness -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Flower icon for Women's Wellness -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_13_title">Women's Wellness</h3>
+            <p data-i18n="service_13_desc">PCOS, Menstrual health, Prenatal care</p>
+          </div>
+
+          <!-- Service 14: Skin & Hair Care -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Sparkle icon for Skin/Hair Care -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_14_title">Skin &amp; Hair Care</h3>
+            <p data-i18n="service_14_desc">Eczema, Psoriasis, Hair fall treatments</p>
+          </div>
+
+          <!-- Service 15: Diabetes & Lifestyle Disease Management -->
+          <div class="service-card">
+            <div class="service-icon" aria-hidden="true">
+              <!-- Activity/pulse icon for Lifestyle Disease -->
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <h3 data-i18n="service_15_title">Diabetes &amp; Lifestyle Disease Management</h3>
+            <p data-i18n="service_15_desc">Holistic management of lifestyle diseases</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 5: WHY CHOOSE US
+         PURPOSE: Highlights 4 key reasons to choose
+                  this clinic over others.
+         NOTES: Light green background section.
+                Grid: 4 col desktop, 2x2 tablet, stacked mobile.
+         ============================================ -->
+    <section id="why-us" aria-labelledby="why-us-heading">
+      <div class="container">
+        <h2 id="why-us-heading" data-i18n="why_us_heading">Why Choose Us</h2>
+
+        <div class="why-us-grid">
+
+          <!-- Reason 1: Experienced Doctors -->
+          <div class="why-us-card">
+            <div class="why-us-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why_us_1_title">Experienced BNYS Doctors</h3>
+            <p data-i18n="why_us_1_desc">Our team of qualified BNYS doctors brings years of clinical expertise in naturopathy and holistic medicine.</p>
+          </div>
+
+          <!-- Reason 2: Natural Treatments -->
+          <div class="why-us-card">
+            <div class="why-us-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why_us_2_title">100% Natural Treatments</h3>
+            <p data-i18n="why_us_2_desc">Drug-free healing using water, mud, diet, yoga, and other natural therapies — no side effects, only wellness.</p>
+          </div>
+
+          <!-- Reason 3: Personalized Care -->
+          <div class="why-us-card">
+            <div class="why-us-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why_us_3_title">Personalized Care Plans</h3>
+            <p data-i18n="why_us_3_desc">Every patient receives a customized treatment plan designed for their unique health needs and goals.</p>
+          </div>
+
+          <!-- Reason 4: Affordable Wellness -->
+          <div class="why-us-card">
+            <div class="why-us-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why_us_4_title">Affordable Wellness</h3>
+            <p data-i18n="why_us_4_desc">Quality naturopathy treatments at fair prices — because good health should be accessible to everyone.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 6: DOCTORS
+         PURPOSE: Introduces the clinic's medical team
+                  with profile cards.
+         NOTES: ALL CONTENT IS PLACEHOLDER. Every detail
+                must be replaced with real doctor info.
+                3 cards — one per doctor.
+         ============================================ -->
+    <section id="doctors" aria-labelledby="doctors-heading">
+      <div class="container">
+        <h2 id="doctors-heading" data-i18n="doctors_heading">Meet Our Doctors</h2>
+        <p class="section-subtitle" data-i18n="doctors_subtitle">Qualified naturopathy professionals dedicated to your wellness</p>
+
+        <div class="doctors-grid">
+
+          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
+          <!-- Doctor 1: Chief Naturopathy Physician -->
+          <div class="doctor-card">
+            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
+            <div class="doctor-photo">
+              <div class="image-placeholder" aria-label="Doctor photo placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="doctor-info">
+              <!-- [PLACEHOLDER] Replace with real doctor name -->
+              <h3 data-i18n="doctor_1_name">Dr. [Doctor Name]</h3>
+              <p class="doctor-role" data-i18n="doctor_1_role">Chief Naturopathy Physician</p>
+              <p class="doctor-qualification" data-i18n="doctor_1_qualification">BNYS</p>
+              <p class="doctor-experience" data-i18n="doctor_1_experience">8+ years experience</p>
+              <p class="doctor-specialization" data-i18n="doctor_1_specialization">Chronic disease management, Detox programs</p>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
+          <!-- Doctor 2: Yoga & Rehabilitation Specialist -->
+          <div class="doctor-card">
+            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
+            <div class="doctor-photo">
+              <div class="image-placeholder" aria-label="Doctor photo placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="doctor-info">
+              <!-- [PLACEHOLDER] Replace with real doctor name -->
+              <h3 data-i18n="doctor_2_name">Dr. [Doctor Name]</h3>
+              <p class="doctor-role" data-i18n="doctor_2_role">Yoga &amp; Rehabilitation Specialist</p>
+              <p class="doctor-qualification" data-i18n="doctor_2_qualification">BNYS, Certified Yoga Therapist</p>
+              <p class="doctor-experience" data-i18n="doctor_2_experience">5+ years experience</p>
+              <p class="doctor-specialization" data-i18n="doctor_2_specialization">Musculoskeletal disorders, Stress management</p>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
+          <!-- Doctor 3: Nutrition & Diet Therapist -->
+          <div class="doctor-card">
+            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
+            <div class="doctor-photo">
+              <div class="image-placeholder" aria-label="Doctor photo placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="doctor-info">
+              <!-- [PLACEHOLDER] Replace with real doctor name -->
+              <h3 data-i18n="doctor_3_name">Dr. [Doctor Name]</h3>
+              <p class="doctor-role" data-i18n="doctor_3_role">Nutrition &amp; Diet Therapist</p>
+              <p class="doctor-qualification" data-i18n="doctor_3_qualification">BNYS, MSc Nutrition</p>
+              <p class="doctor-experience" data-i18n="doctor_3_experience">4+ years experience</p>
+              <p class="doctor-specialization" data-i18n="doctor_3_specialization">Weight management, Diabetes reversal</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 7: TESTIMONIALS
+         PURPOSE: Shows patient testimonials in a
+                  carousel that auto-rotates every 5s.
+         NOTES: ALL TESTIMONIALS ARE PLACEHOLDER.
+                Replace with real patient feedback.
+                Carousel logic is in testimonials.js.
+         ============================================ -->
+    <!-- [PLACEHOLDER] Replace all testimonials with real patient feedback -->
+    <section id="testimonials" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <h2 id="testimonials-heading" data-i18n="testimonials_heading">What Our Patients Say</h2>
+
+        <div class="testimonial-carousel" aria-label="Patient testimonials carousel">
+
+          <!-- Testimonial slides container -->
+          <div class="testimonial-track">
+
+            <!-- [PLACEHOLDER] Replace with real testimonial -->
+            <!-- Testimonial 1 -->
+            <div class="testimonial-slide" role="group" aria-label="Testimonial 1 of 5">
+              <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <blockquote>
+                <p data-i18n="testimonial_1_quote">"The hydrotherapy sessions have been life-changing for my chronic back pain. After just two weeks, I felt a significant improvement. The doctors here truly care about your well-being."</p>
+              </blockquote>
+              <cite>
+                <span class="testimonial-name" data-i18n="testimonial_1_name">Ramesh K.</span>
+                <span class="testimonial-treatment" data-i18n="testimonial_1_treatment">Hydrotherapy for Back Pain</span>
+              </cite>
+            </div>
+
+            <!-- [PLACEHOLDER] Replace with real testimonial -->
+            <!-- Testimonial 2 -->
+            <div class="testimonial-slide" role="group" aria-label="Testimonial 2 of 5">
+              <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <blockquote>
+                <p data-i18n="testimonial_2_quote">"I came here for weight management and the personalized diet plan combined with yoga therapy helped me lose 12 kg in 3 months. Highly recommended!"</p>
+              </blockquote>
+              <cite>
+                <span class="testimonial-name" data-i18n="testimonial_2_name">Priya S.</span>
+                <span class="testimonial-treatment" data-i18n="testimonial_2_treatment">Weight Management Program</span>
+              </cite>
+            </div>
+
+            <!-- [PLACEHOLDER] Replace with real testimonial -->
+            <!-- Testimonial 3 -->
+            <div class="testimonial-slide" role="group" aria-label="Testimonial 3 of 5">
+              <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <blockquote>
+                <p data-i18n="testimonial_3_quote">"The mud therapy and naturopathy treatments helped manage my diabetes naturally. My sugar levels have been stable for months now without increasing medication."</p>
+              </blockquote>
+              <cite>
+                <span class="testimonial-name" data-i18n="testimonial_3_name">Murugan V.</span>
+                <span class="testimonial-treatment" data-i18n="testimonial_3_treatment">Diabetes Management</span>
+              </cite>
+            </div>
+
+            <!-- [PLACEHOLDER] Replace with real testimonial -->
+            <!-- Testimonial 4 -->
+            <div class="testimonial-slide" role="group" aria-label="Testimonial 4 of 5">
+              <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <blockquote>
+                <p data-i18n="testimonial_4_quote">"I suffered from severe stress and anxiety. The yoga therapy sessions and counseling at Owl I helped me find peace and balance again. Grateful to the entire team."</p>
+              </blockquote>
+              <cite>
+                <span class="testimonial-name" data-i18n="testimonial_4_name">Lakshmi R.</span>
+                <span class="testimonial-treatment" data-i18n="testimonial_4_treatment">Stress & Anxiety Management</span>
+              </cite>
+            </div>
+
+            <!-- [PLACEHOLDER] Replace with real testimonial -->
+            <!-- Testimonial 5 -->
+            <div class="testimonial-slide" role="group" aria-label="Testimonial 5 of 5">
+              <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                <span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              </div>
+              <blockquote>
+                <p data-i18n="testimonial_5_quote">"The detox program was exactly what I needed. 14 days of complete rejuvenation — I left feeling like a new person. The facility is clean and the staff is wonderful."</p>
+              </blockquote>
+              <cite>
+                <span class="testimonial-name" data-i18n="testimonial_5_name">Kavitha M.</span>
+                <span class="testimonial-treatment" data-i18n="testimonial_5_treatment">14-Day Detox Program</span>
+              </cite>
+            </div>
+
+          </div>
+
+          <!-- Carousel navigation buttons -->
+          <button class="testimonial-prev" aria-label="Previous testimonial">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <button class="testimonial-next" aria-label="Next testimonial">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+
+          <!-- Carousel dots / indicators -->
+          <div class="testimonial-dots" aria-label="Testimonial navigation">
+            <button class="dot active" aria-label="Go to testimonial 1" aria-current="true"></button>
+            <button class="dot" aria-label="Go to testimonial 2"></button>
+            <button class="dot" aria-label="Go to testimonial 3"></button>
+            <button class="dot" aria-label="Go to testimonial 4"></button>
+            <button class="dot" aria-label="Go to testimonial 5"></button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 8: GALLERY
+         PURPOSE: Displays clinic photos in a grid.
+                  Clicking a photo opens a lightbox.
+         NOTES: ALL IMAGES ARE PLACEHOLDER. Replace
+                with real clinic photos (800x600px).
+                Lightbox logic is in lightbox.js.
+         ============================================ -->
+    <!-- [PLACEHOLDER] Replace all gallery images with real clinic photos -->
+    <section id="gallery" aria-labelledby="gallery-heading">
+      <div class="container">
+        <h2 id="gallery-heading" data-i18n="gallery_heading">Our Clinic Gallery</h2>
+        <p class="section-subtitle" data-i18n="gallery_subtitle">Take a look inside our wellness center</p>
+
+        <div class="gallery-grid">
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo (800x600px, JPG) -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 1 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_1">Reception Area</span>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 2 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_2">Treatment Room</span>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 3 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_3">Yoga Hall</span>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 4 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_4">Hydrotherapy Room</span>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 5 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_5">Garden Area</span>
+            </div>
+          </div>
+
+          <!-- [PLACEHOLDER] Replace with real clinic photo -->
+          <div class="gallery-item">
+            <div class="image-placeholder gallery-placeholder" role="button" tabindex="0" aria-label="Gallery image 6 - Click to enlarge">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span data-i18n="gallery_placeholder_6">Consultation Room</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Lightbox overlay — hidden by default, shown when a gallery image is clicked -->
+      <div class="lightbox" id="lightbox" role="dialog" aria-label="Image lightbox" aria-hidden="true">
+        <button class="lightbox-close" aria-label="Close lightbox">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <button class="lightbox-prev" aria-label="Previous image">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <div class="lightbox-content">
+          <img src="" alt="" class="lightbox-image">
+        </div>
+        <button class="lightbox-next" aria-label="Next image">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 9: BLOG PREVIEW
+         PURPOSE: Shows 3 blog post preview cards to
+                  establish authority and help SEO.
+         NOTES: Blog posts link to "#" for now. These
+                can link to full blog pages later.
+         ============================================ -->
+    <section id="blog" aria-labelledby="blog-heading">
+      <div class="container">
+        <h2 id="blog-heading" data-i18n="blog_heading">Health &amp; Wellness Blog</h2>
+        <p class="section-subtitle" data-i18n="blog_subtitle">Tips and insights for natural living</p>
+
+        <div class="blog-grid">
+
+          <!-- Blog Post 1 -->
+          <article class="blog-card">
+            <!-- [PLACEHOLDER] Replace with real blog image (600x400px, JPG) -->
+            <div class="blog-image">
+              <div class="image-placeholder" aria-label="Blog post image placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+            </div>
+            <div class="blog-content">
+              <h3 data-i18n="blog_1_title">5 Benefits of Hydrotherapy You Didn't Know</h3>
+              <p data-i18n="blog_1_excerpt">Discover how water-based treatments can relieve pain, improve circulation, and boost your immune system naturally.</p>
+              <a href="#" class="blog-read-more" data-i18n="blog_read_more">Read More &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Blog Post 2 -->
+          <article class="blog-card">
+            <!-- [PLACEHOLDER] Replace with real blog image (600x400px, JPG) -->
+            <div class="blog-image">
+              <div class="image-placeholder" aria-label="Blog post image placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+            </div>
+            <div class="blog-content">
+              <h3 data-i18n="blog_2_title">How Naturopathy Can Help Manage Diabetes Naturally</h3>
+              <p data-i18n="blog_2_excerpt">Learn about diet therapy, yoga, and natural treatments that can help stabilize blood sugar levels without increasing medication.</p>
+              <a href="#" class="blog-read-more" data-i18n="blog_read_more">Read More &rarr;</a>
+            </div>
+          </article>
+
+          <!-- Blog Post 3 -->
+          <article class="blog-card">
+            <!-- [PLACEHOLDER] Replace with real blog image (600x400px, JPG) -->
+            <div class="blog-image">
+              <div class="image-placeholder" aria-label="Blog post image placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+            </div>
+            <div class="blog-content">
+              <h3 data-i18n="blog_3_title">Yoga Asanas for Back Pain Relief</h3>
+              <p data-i18n="blog_3_excerpt">Simple yoga poses you can practice daily to strengthen your spine, improve posture, and find relief from chronic back pain.</p>
+              <a href="#" class="blog-read-more" data-i18n="blog_read_more">Read More &rarr;</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 10: CTA BANNER
+         PURPOSE: Full-width call-to-action encouraging
+                  visitors to book an appointment.
+         NOTES: Dark green background with white text.
+                Two buttons: WhatsApp booking + direct call.
+         ============================================ -->
+    <section id="cta-banner" aria-label="Call to action">
+      <div class="container">
+        <h2 data-i18n="cta_heading">Ready to Start Your Natural Healing Journey?</h2>
+        <div class="cta-buttons">
+          <!-- Book Appointment via WhatsApp -->
+          <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20book%20an%20appointment." class="btn btn-cta-primary" target="_blank" rel="noopener noreferrer" data-i18n="cta_book">Book Appointment</a>
+          <!-- Call Now — opens phone dialer -->
+          <a href="tel:+916379610554" class="btn btn-cta-secondary" data-i18n="cta_call">Call Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 11: CONTACT / BOOKING
+         PURPOSE: Contact form + clinic info side by
+                  side. Form submits via WhatsApp.
+         NOTES: Form validation happens in contact.js.
+                Google Maps embed shows clinic location.
+         ============================================ -->
+    <section id="contact" aria-labelledby="contact-heading">
+      <div class="container">
+        <h2 id="contact-heading" data-i18n="contact_heading">Get in Touch</h2>
+        <p class="section-subtitle" data-i18n="contact_subtitle">Book an appointment or send us a message</p>
+
+        <div class="contact-grid">
+
+          <!-- Left column: Contact / Booking Form -->
+          <div class="contact-form-wrapper">
+            <form id="contact-form" aria-label="Booking form" novalidate>
+
+              <!-- Name field -->
+              <div class="form-group">
+                <label for="contact-name" data-i18n="form_name_label">Your Name *</label>
+                <input type="text" id="contact-name" name="name" required autocomplete="name" aria-required="true" placeholder="" data-i18n-placeholder="form_name_placeholder">
+                <span class="form-error" aria-live="polite" data-i18n="form_name_error">Please enter your name</span>
+              </div>
+
+              <!-- Phone field -->
+              <div class="form-group">
+                <label for="contact-phone" data-i18n="form_phone_label">Phone Number *</label>
+                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel" aria-required="true" placeholder="" data-i18n-placeholder="form_phone_placeholder">
+                <span class="form-error" aria-live="polite" data-i18n="form_phone_error">Please enter a valid 10-digit Indian phone number</span>
+              </div>
+
+              <!-- Email field -->
+              <div class="form-group">
+                <label for="contact-email" data-i18n="form_email_label">Email Address</label>
+                <input type="email" id="contact-email" name="email" autocomplete="email" placeholder="" data-i18n-placeholder="form_email_placeholder">
+                <span class="form-error" aria-live="polite" data-i18n="form_email_error">Please enter a valid email address</span>
+              </div>
+
+              <!-- Service dropdown -->
+              <div class="form-group">
+                <label for="contact-service" data-i18n="form_service_label">Select Service *</label>
+                <select id="contact-service" name="service" required aria-required="true">
+                  <option value="" data-i18n="form_service_default">-- Choose a Service --</option>
+                  <option value="Hydrotherapy" data-i18n="service_1_title">Hydrotherapy</option>
+                  <option value="Mud Therapy" data-i18n="service_2_title">Mud Therapy</option>
+                  <option value="Diet Therapy / Nutrition Counseling" data-i18n="service_3_title">Diet Therapy / Nutrition Counseling</option>
+                  <option value="Massage Therapy" data-i18n="service_4_title">Massage Therapy</option>
+                  <option value="Yoga Therapy" data-i18n="service_5_title">Yoga Therapy</option>
+                  <option value="Acupuncture / Acupressure" data-i18n="service_6_title">Acupuncture / Acupressure</option>
+                  <option value="Magnetotherapy" data-i18n="service_7_title">Magnetotherapy</option>
+                  <option value="Chromo Therapy" data-i18n="service_8_title">Chromo Therapy</option>
+                  <option value="Detox & Panchakarma Programs" data-i18n="service_9_title">Detox &amp; Panchakarma Programs</option>
+                  <option value="Weight Management" data-i18n="service_10_title">Weight Management</option>
+                  <option value="Stress & Anxiety Management" data-i18n="service_11_title">Stress &amp; Anxiety Management</option>
+                  <option value="Chronic Pain Management" data-i18n="service_12_title">Chronic Pain Management</option>
+                  <option value="Women's Wellness" data-i18n="service_13_title">Women's Wellness</option>
+                  <option value="Skin & Hair Care" data-i18n="service_14_title">Skin &amp; Hair Care</option>
+                  <option value="Diabetes & Lifestyle Disease Mgmt" data-i18n="service_15_title">Diabetes &amp; Lifestyle Disease Management</option>
+                </select>
+                <span class="form-error" aria-live="polite" data-i18n="form_service_error">Please select a service</span>
+              </div>
+
+              <!-- Message field -->
+              <div class="form-group">
+                <label for="contact-message" data-i18n="form_message_label">Your Message</label>
+                <textarea id="contact-message" name="message" rows="4" placeholder="" data-i18n-placeholder="form_message_placeholder"></textarea>
+              </div>
+
+              <!-- Submit button -->
+              <button type="submit" class="btn btn-primary btn-submit" data-i18n="form_submit">Send via WhatsApp</button>
+
+              <!-- Fallback email link -->
+              <p class="form-fallback">
+                <span data-i18n="form_fallback_text">Or email us at </span>
+                <a href="mailto:owli2026@gmail.com">owli2026@gmail.com</a>
+              </p>
+
+            </form>
+          </div>
+
+          <!-- Right column: Contact Info + Map -->
+          <div class="contact-info-wrapper">
+
+            <!-- Address -->
+            <div class="contact-info-item">
+              <div class="contact-info-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div>
+                <h3 data-i18n="contact_address_title">Address</h3>
+                <p data-i18n="contact_address">1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli, Tirunelveli - 627604</p>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="contact-info-item">
+              <div class="contact-info-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 data-i18n="contact_phone_title">Phone</h3>
+                <a href="tel:+916379610554">+91 6379610554</a>
+              </div>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="contact-info-item">
+              <div class="contact-info-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 data-i18n="contact_whatsapp_title">WhatsApp</h3>
+                <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20enquire%20about%20your%20services." target="_blank" rel="noopener noreferrer">+91 6379610554</a>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="contact-info-item">
+              <div class="contact-info-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <h3 data-i18n="contact_email_title">Email</h3>
+                <a href="mailto:owli2026@gmail.com">owli2026@gmail.com</a>
+              </div>
+            </div>
+
+            <!-- Hours -->
+            <div class="contact-info-item">
+              <div class="contact-info-icon" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div>
+                <h3 data-i18n="contact_hours_title">Working Hours</h3>
+                <p data-i18n="contact_hours_weekday">Monday – Saturday: 9:00 AM – 9:00 PM</p>
+                <p data-i18n="contact_hours_sunday">Sunday: Closed (or by appointment)</p>
+              </div>
+            </div>
+
+            <!-- Google Maps embed -->
+            <div class="contact-map">
+              <!-- [PLACEHOLDER] Replace src with actual Google Maps embed URL for clinic location -->
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.123456789!2d77.7!3d8.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTirunelveli!5e0!3m2!1sen!2sin!4v1234567890"
+                width="100%"
+                height="250"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Owl I Health and Wellness Center location on Google Maps"
+                aria-label="Google Maps showing clinic location in Tirunelveli">
+              </iframe>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================
+       SECTION 12: FOOTER
+       PURPOSE: Site footer with logo, quick links,
+                top services, contact info, and social
+                media icons. Dark green background.
+       NOTES: Social media links are placeholder (#).
+              Replace with real profile URLs.
+       ============================================ -->
+  <footer id="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+
+        <!-- Footer Column 1: Logo + Brief About + Social Icons -->
+        <div class="footer-col">
+          <!-- Logo -->
+          <a href="#hero" class="footer-logo" aria-label="Owl I Health and Wellness Center - Home">
+            <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
+            </svg>
+            <span data-i18n="logo_text">Owl I</span>
+          </a>
+          <p class="footer-about" data-i18n="footer_about">Tirunelveli's trusted naturopathy and wellness center. Holistic, drug-free healing for body, mind, and soul.</p>
+
+          <!-- Social media icons — placeholder links -->
+          <div class="footer-social" aria-label="Social media links">
+            <!-- [PLACEHOLDER] Replace # with real Instagram profile URL -->
+            <a href="#" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </a>
+            <!-- [PLACEHOLDER] Replace # with real Facebook page URL -->
+            <a href="#" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+            <!-- [PLACEHOLDER] Replace # with real YouTube channel URL -->
+            <a href="#" aria-label="Subscribe on YouTube" target="_blank" rel="noopener noreferrer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43z"/>
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Footer Column 2: Quick Links -->
+        <div class="footer-col">
+          <h3 data-i18n="footer_quick_links_title">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="#hero" data-i18n="nav_home">Home</a></li>
+            <li><a href="#about" data-i18n="nav_about">About</a></li>
+            <li><a href="#services" data-i18n="nav_services">Services</a></li>
+            <li><a href="#doctors" data-i18n="nav_doctors">Doctors</a></li>
+            <li><a href="#gallery" data-i18n="nav_gallery">Gallery</a></li>
+            <li><a href="#blog" data-i18n="nav_blog">Blog</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Footer Column 3: Top 6 Services -->
+        <div class="footer-col">
+          <h3 data-i18n="footer_services_title">Our Services</h3>
+          <ul class="footer-links">
+            <li><a href="#services" data-i18n="service_1_title">Hydrotherapy</a></li>
+            <li><a href="#services" data-i18n="service_3_title">Diet Therapy / Nutrition Counseling</a></li>
+            <li><a href="#services" data-i18n="service_5_title">Yoga Therapy</a></li>
+            <li><a href="#services" data-i18n="service_9_title">Detox &amp; Panchakarma Programs</a></li>
+            <li><a href="#services" data-i18n="service_10_title">Weight Management</a></li>
+            <li><a href="#services" data-i18n="service_15_title">Diabetes &amp; Lifestyle Disease Management</a></li>
+          </ul>
+        </div>
+
+        <!-- Footer Column 4: Contact Info + Hours -->
+        <div class="footer-col">
+          <h3 data-i18n="footer_contact_title">Contact Us</h3>
+          <address class="footer-contact">
+            <p data-i18n="contact_address">1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli, Tirunelveli - 627604</p>
+            <p><a href="tel:+916379610554">+91 6379610554</a></p>
+            <p><a href="mailto:owli2026@gmail.com">owli2026@gmail.com</a></p>
+            <p data-i18n="contact_hours_weekday">Monday – Saturday: 9:00 AM – 9:00 PM</p>
+            <p data-i18n="contact_hours_sunday">Sunday: Closed (or by appointment)</p>
+          </address>
+        </div>
+
+      </div>
+
+      <!-- Footer bottom bar — copyright -->
+      <div class="footer-bottom">
+        <p>&copy; 2026 Owl I Health and Wellness Center. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       FLOATING ACTION BUTTONS (WhatsApp + Phone)
+       PURPOSE: Two fixed buttons in the bottom-right
+                corner for quick contact. Always visible
+                on every part of the page.
+       NOTES: WhatsApp button (green, bottom) has a
+              pulse animation. Phone button (above).
+              Both have tooltips that swap with language.
+       ============================================ -->
+  <div class="floating-buttons" aria-label="Quick contact buttons">
+
+    <!-- Phone Call Button (on top) -->
+    <a href="tel:+916379610554"
+       class="fab fab-phone"
+       aria-label="Call Owl I Health and Wellness Center"
+       data-i18n-tooltip="fab_phone_tooltip">
+      <!-- Phone icon SVG -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      <!-- Tooltip text — swaps with language toggle -->
+      <span class="fab-tooltip" data-i18n="fab_phone_tooltip">Call us now</span>
+    </a>
+
+    <!-- WhatsApp Button (on bottom) -->
+    <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20enquire%20about%20your%20services."
+       class="fab fab-whatsapp"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Chat with us on WhatsApp"
+       data-i18n-tooltip="fab_whatsapp_tooltip">
+      <!-- WhatsApp icon SVG -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      <!-- Tooltip text — swaps with language toggle -->
+      <span class="fab-tooltip" data-i18n="fab_whatsapp_tooltip">Chat on WhatsApp</span>
+    </a>
+
+  </div>
+
+  <!-- ============================================
+       JAVASCRIPT FILES
+       PURPOSE: Loaded at the end of <body> so the
+                HTML is fully parsed before scripts run.
+       NOTES: Order matters — i18n.js must load before
+              main.js so translations are available.
+       ============================================ -->
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/testimonials.js"></script>
+  <script src="js/lightbox.js"></script>
+  <script src="js/contact.js"></script>
+
+</body>
+</html>

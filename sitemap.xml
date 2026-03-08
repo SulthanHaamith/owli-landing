@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================
+  SITEMAP.XML
+  PURPOSE: Helps search engines discover and index
+           all pages on the website.
+  NOTES: Since this is a single-page site, there
+         is only one URL entry. Update the <lastmod>
+         date whenever you make changes to the site.
+  ============================================
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <!-- The homepage — our only page since this is a single-page site -->
+    <loc>https://owlihealthcare.com/</loc>
+    <!-- Last modified date — update this when content changes -->
+    <lastmod>2026-03-08</lastmod>
+    <!-- How often the page is likely to change -->
+    <changefreq>monthly</changefreq>
+    <!-- Priority relative to other pages (1.0 = highest) -->
+    <priority>1.0</priority>
+  </url>
+</urlset>
