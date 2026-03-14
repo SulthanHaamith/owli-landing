@@ -150,10 +150,23 @@ h3 {
 }
 
 /* --- LOGO ---
-   Reduce logo font size on mobile so "Owl I Healthcare"
-   doesn't overflow or push the hamburger off screen. */
+   Mobile: favicon + brand text */
+.header-logo-img {
+  height: 40px;
+  width: 40px;
+}
+
+#header.scrolled .header-logo-img {
+  height: 34px;
+  width: 34px;
+}
+
+.mobile-brand-text {
+  display: block;
+}
+
 .logo {
-  font-size: 1.15rem;
+  margin-right: 0;
 }
 
 /* --- HERO ---
@@ -331,6 +344,14 @@ h3 {
   min-height: 180px;
 }
 
+/* --- SMALL MOBILE (below 400px) ---
+   Slightly smaller brand text on very narrow screens */
+@media (max-width: 399px) {
+  .mobile-brand-text {
+    font-size: 14px;
+  }
+}
+
 
 /* ──────────────────────────────────────────────
    TABLET (481px and above)
@@ -375,9 +396,15 @@ h3 {
   }
 
   /* --- LOGO ---
-     Restore logo font size on wider screens */
-  .logo {
-    font-size: 1.35rem;
+     Tablet: slightly larger favicon */
+  .header-logo-img {
+    height: 42px;
+    width: 42px;
+  }
+
+  #header.scrolled .header-logo-img {
+    height: 36px;
+    width: 36px;
   }
 
   /* --- HERO ---
@@ -424,19 +451,10 @@ h3 {
   }
 
   /* --- DOCTORS ---
-     2-column grid. The third card will naturally
-     flow to the next row and center itself. */
+     2-column grid — both cards side by side */
   .doctors-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
-  }
-
-  /* Center the third (last) doctor card when it's
-     alone on its row in a 2-column layout */
-  .doctor-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    max-width: 50%;
-    justify-self: center;
   }
 
   /* --- BLOG ---
@@ -509,6 +527,12 @@ h3 {
 
   /* Hide the hamburger button — no longer needed */
   .hamburger {
+    display: none;
+  }
+
+  /* --- LOGO ---
+     Desktop: hide brand text, show only favicon */
+  .mobile-brand-text {
     display: none;
   }
 
@@ -686,9 +710,19 @@ h3 {
   }
 
   /* --- LOGO ---
-     Full desktop logo font size */
+     Full desktop favicon size */
+  .header-logo-img {
+    height: 50px;
+    width: 50px;
+  }
+
+  #header.scrolled .header-logo-img {
+    height: 40px;
+    width: 40px;
+  }
+
   .logo {
-    font-size: 1.5rem;
+    margin-right: 36px;
   }
 
   /* --- HERO ---
@@ -730,18 +764,10 @@ h3 {
   }
 
   /* --- DOCTORS ---
-     3-column grid — all three doctors in a row */
+     2-column grid — both cards side by side, centered */
   .doctors-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 32px;
-  }
-
-  /* Remove the centering rule for the 3rd card since
-     all three fit in one row at this width */
-  .doctor-card:last-child:nth-child(odd) {
-    grid-column: auto;
-    max-width: none;
-    justify-self: auto;
   }
 
   /* --- GALLERY ---

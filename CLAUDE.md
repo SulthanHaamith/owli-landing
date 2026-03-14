@@ -201,14 +201,14 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
   4. Affordable Wellness
 
 ### 9.6 Doctors
-- 3 profile cards — **ALL PLACEHOLDER**
-- Mark every detail: `<!-- [PLACEHOLDER] Replace with real doctor details -->`
+- 2 profile cards — **REAL DATA** (no placeholders)
+- Layout: 2 cards side by side on desktop (max-width ~450px each), stacked on mobile
+- Each card shows: photo, name, designation, qualification, specialization, experience, and areas of expertise as styled pills/tags
 
-| #  | Role                           | Qualification                     | Experience | Specialization                        |
-|----|--------------------------------|-----------------------------------|------------|---------------------------------------|
-| 1  | Chief Naturopathy Physician    | BNYS                              | 8+ years   | Chronic disease management, Detox     |
-| 2  | Yoga & Rehabilitation Specialist | BNYS, Certified Yoga Therapist  | 5+ years   | Musculoskeletal disorders, Stress mgmt |
-| 3  | Nutrition & Diet Therapist     | BNYS, MSc Nutrition               | 4+ years   | Weight management, Diabetes reversal  |
+| #  | Name                  | Designation            | Qualification              | Experience | Specialization                                                              |
+|----|-----------------------|------------------------|----------------------------|------------|-----------------------------------------------------------------------------|
+| 1  | Dr. Jospin Sheela.A   | Chief Medical Officer  | BNYS, M.Sc(Psy), cCGO     | 6+ years   | Naturopathy, Yoga Therapy, Clinical Nutrition and Lifestyle Medicine         |
+| 2  | Dr. Prakeerthi G      | Medical Officer        | BNYS                       | 1+ year    | Integrative Lifestyle Medicine and Energy Medicine (Acupuncture & Ozone Therapy) |
 
 ### 9.7 Testimonials
 - Carousel: CSS + vanilla JS (no library)
@@ -244,7 +244,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
   - Fallback: mailto link to owli2026@gmail.com
 - **Right column — Info:**
   - Address, Phone (tel: link), WhatsApp (wa.me link), Email (mailto: link), Hours
-  - Google Maps embed (Tirunelveli coordinates)
+  - Google Maps embed (real coordinates: 8.7134811, 77.623205)
 
 ### 9.12 Footer
 - Dark green background, light text
@@ -369,22 +369,21 @@ Z-index:  high (above all content)
 All placeholder content must be marked with `<!-- [PLACEHOLDER] -->` in HTML.
 This is the complete list of items the clinic owner needs to replace:
 
-| Item                        | Location              | Recommended Size / Format  |
-|-----------------------------|-----------------------|----------------------------|
-| Hero background image       | `images/hero/`        | 1920×800px, JPG            |
-| Clinic interior photo       | `images/`             | 800×600px, JPG             |
-| Doctor 1 photo + real name  | `images/doctors/`     | 400×400px, square          |
-| Doctor 2 photo + real name  | `images/doctors/`     | 400×400px, square          |
-| Doctor 3 photo + real name  | `images/doctors/`     | 400×400px, square          |
-| Gallery photos (6–8)        | `images/gallery/`     | 800×600px, JPG             |
-| Blog post images (3)        | `images/blog/`        | 600×400px, JPG             |
-| OG/social sharing image     | `images/og-image.jpg` | 1200×630px, JPG            |
-| Favicon                     | `images/favicon.ico`  | 32×32px or 64×64px         |
-| Clinic logo (if not text)   | `images/logo.svg`     | SVG preferred              |
-| 5 real patient testimonials | In `i18n.js`          | Text only                  |
-| Real doctor names & details | In HTML + `i18n.js`   | Text only                  |
-| Social media profile URLs   | Footer links          | Full URLs                  |
-| Google Maps embed URL       | Contact section       | Embed iframe URL           |
+| Item                        | Location              | Recommended Size / Format  | Status    |
+|-----------------------------|-----------------------|----------------------------|-----------|
+| Hero background image       | `images/hero/`        | 1920×800px, JPG            | Placeholder |
+| Clinic interior photo       | `images/`             | 800×600px, JPG             | Placeholder |
+| Gallery photos (6–8)        | `images/gallery/`     | 800×600px, JPG             | Placeholder |
+| Blog post images (3)        | `images/blog/`        | 600×400px, JPG             | Placeholder |
+| OG/social sharing image     | `images/og-image.jpg` | 1200×630px, JPG            | Placeholder |
+| Favicon                     | `images/favicon.ico`  | 32×32px or 64×64px         | Placeholder |
+| 5 real patient testimonials | In `i18n.js`          | Text only                  | Placeholder |
+| Social media profile URLs   | Footer links          | Full URLs                  | Placeholder |
+
+**Already completed (no longer placeholder):**
+- Doctor photos and details (2 doctors with real names, qualifications, and photos)
+- Clinic logo (owli-horizontal.png for header, owli-vertical.png for footer)
+- Google Maps embed (real coordinates: 8.7134811, 77.623205)
 
 ---
 

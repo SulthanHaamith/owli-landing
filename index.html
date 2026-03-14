@@ -43,8 +43,8 @@
   <meta name="twitter:image" content="https://owlihealthcare.com/images/og-image.jpg">
 
   <!-- Favicon — the small icon shown in the browser tab -->
-  <!-- [PLACEHOLDER] Replace with real favicon file -->
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
 
   <!-- Google Fonts — Poppins for English text, Noto Sans Tamil for Tamil text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -121,13 +121,10 @@
     <nav aria-label="Main navigation">
       <div class="nav-container">
 
-        <!-- Logo — text-based with a small leaf SVG icon -->
+        <!-- Logo — favicon image + brand text on mobile, favicon only on desktop -->
         <a href="#hero" class="logo" aria-label="Owl I Health and Wellness Center - Home">
-          <!-- Inline SVG leaf icon next to logo text -->
-          <svg class="logo-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
-          </svg>
-          <span data-i18n="logo_text">Owl I Healthcare</span>
+          <img src="images/favicon.png" alt="Owl I Health and Wellness Center" class="header-logo-img">
+          <span class="mobile-brand-text" data-i18n="mobile_brand_text">Owl I Healthcare Centre</span>
         </a>
 
         <!-- Main navigation links — each scrolls to its section -->
@@ -535,9 +532,8 @@
          SECTION 6: DOCTORS
          PURPOSE: Introduces the clinic's medical team
                   with profile cards.
-         NOTES: ALL CONTENT IS PLACEHOLDER. Every detail
-                must be replaced with real doctor info.
-                3 cards — one per doctor.
+         NOTES: 2 doctors — real data. Layout: 2 cards
+                side by side on desktop, stacked on mobile.
          ============================================ -->
     <section id="doctors" aria-labelledby="doctors-heading">
       <div class="container">
@@ -546,69 +542,55 @@
 
         <div class="doctors-grid">
 
-          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
-          <!-- Doctor 1: Chief Naturopathy Physician -->
+          <!-- Doctor 1: Chief Medical Officer -->
           <div class="doctor-card animate-on-scroll">
-            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
             <div class="doctor-photo">
-              <div class="image-placeholder" aria-label="Doctor photo placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-              </div>
+              <img src="images/doctors/doctor1.png" alt="Dr. Jospin Sheela.A - Chief Medical Officer" class="doctor-img">
             </div>
             <div class="doctor-info">
-              <!-- [PLACEHOLDER] Replace with real doctor name -->
-              <h3 data-i18n="doctor_1_name">Dr. [Doctor Name]</h3>
-              <p class="doctor-role" data-i18n="doctor_1_role">Chief Naturopathy Physician</p>
-              <p class="doctor-qualification" data-i18n="doctor_1_qualification">BNYS</p>
-              <p class="doctor-experience" data-i18n="doctor_1_experience">8+ years experience</p>
-              <p class="doctor-specialization" data-i18n="doctor_1_specialization">Chronic disease management, Detox programs</p>
+              <h3 data-i18n="doctor_1_name">Dr. Jospin Sheela.A</h3>
+              <p class="doctor-role" data-i18n="doctor_1_role">Chief Medical Officer</p>
+              <p class="doctor-qualification" data-i18n="doctor_1_qualification">BNYS, M.Sc(Psy), cCGO</p>
+              <p class="doctor-experience" data-i18n="doctor_1_experience">6+ years experience</p>
+              <p class="doctor-specialization" data-i18n="doctor_1_specialization">Naturopathy, Yoga Therapy, Clinical Nutrition and Lifestyle Medicine</p>
+              <div class="doctor-expertise">
+                <p class="expertise-title" data-i18n="doctor_expertise_title">Areas of Expertise</p>
+                <ul class="expertise-tags">
+                  <li data-i18n="doctor_1_exp_1">Lifestyle Disorders (Diabetes, Hypertension, Obesity)</li>
+                  <li data-i18n="doctor_1_exp_2">PCOS and Hormonal Imbalance</li>
+                  <li data-i18n="doctor_1_exp_3">Fertility and Preconception Care</li>
+                  <li data-i18n="doctor_1_exp_4">Women's Health and Postpartum Recovery</li>
+                  <li data-i18n="doctor_1_exp_5">Digestive Disorders</li>
+                  <li data-i18n="doctor_1_exp_6">Stress Management and Mental Wellness</li>
+                  <li data-i18n="doctor_1_exp_7">Therapeutic Yoga and Natural Detox Therapies</li>
+                  <li data-i18n="doctor_1_exp_8">Weight Management and Clinical Nutrition</li>
+                  <li data-i18n="doctor_1_exp_9">Skin Disorders and Natural Healing Therapies</li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
-          <!-- Doctor 2: Yoga & Rehabilitation Specialist -->
+          <!-- Doctor 2: Medical Officer -->
           <div class="doctor-card animate-on-scroll">
-            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
             <div class="doctor-photo">
-              <div class="image-placeholder" aria-label="Doctor photo placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-              </div>
+              <img src="images/doctors/doctor2.png" alt="Dr. Prakeerthi G - Medical Officer" class="doctor-img">
             </div>
             <div class="doctor-info">
-              <!-- [PLACEHOLDER] Replace with real doctor name -->
-              <h3 data-i18n="doctor_2_name">Dr. [Doctor Name]</h3>
-              <p class="doctor-role" data-i18n="doctor_2_role">Yoga &amp; Rehabilitation Specialist</p>
-              <p class="doctor-qualification" data-i18n="doctor_2_qualification">BNYS, Certified Yoga Therapist</p>
-              <p class="doctor-experience" data-i18n="doctor_2_experience">5+ years experience</p>
-              <p class="doctor-specialization" data-i18n="doctor_2_specialization">Musculoskeletal disorders, Stress management</p>
-            </div>
-          </div>
-
-          <!-- [PLACEHOLDER] Replace with real doctor details — name, photo, bio -->
-          <!-- Doctor 3: Nutrition & Diet Therapist -->
-          <div class="doctor-card animate-on-scroll">
-            <!-- [PLACEHOLDER] Replace with real doctor photo (400x400px, square) -->
-            <div class="doctor-photo">
-              <div class="image-placeholder" aria-label="Doctor photo placeholder">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
+              <h3 data-i18n="doctor_2_name">Dr. Prakeerthi G</h3>
+              <p class="doctor-role" data-i18n="doctor_2_role">Medical Officer</p>
+              <p class="doctor-qualification" data-i18n="doctor_2_qualification">BNYS</p>
+              <p class="doctor-experience" data-i18n="doctor_2_experience">1+ year experience</p>
+              <p class="doctor-specialization" data-i18n="doctor_2_specialization">Integrative Lifestyle Medicine and Energy Medicine (Acupuncture &amp; Ozone Therapy)</p>
+              <div class="doctor-expertise">
+                <p class="expertise-title" data-i18n="doctor_expertise_title">Areas of Expertise</p>
+                <ul class="expertise-tags">
+                  <li data-i18n="doctor_2_exp_1">Clinical Nutrition</li>
+                  <li data-i18n="doctor_2_exp_2">Lifestyle Counselling</li>
+                  <li data-i18n="doctor_2_exp_3">Ozone Therapy</li>
+                  <li data-i18n="doctor_2_exp_4">Clinical Acupuncture</li>
+                  <li data-i18n="doctor_2_exp_5">Therapeutic Yoga</li>
+                </ul>
               </div>
-            </div>
-            <div class="doctor-info">
-              <!-- [PLACEHOLDER] Replace with real doctor name -->
-              <h3 data-i18n="doctor_3_name">Dr. [Doctor Name]</h3>
-              <p class="doctor-role" data-i18n="doctor_3_role">Nutrition &amp; Diet Therapist</p>
-              <p class="doctor-qualification" data-i18n="doctor_3_qualification">BNYS, MSc Nutrition</p>
-              <p class="doctor-experience" data-i18n="doctor_3_experience">4+ years experience</p>
-              <p class="doctor-specialization" data-i18n="doctor_3_specialization">Weight management, Diabetes reversal</p>
             </div>
           </div>
 
@@ -1086,11 +1068,10 @@
               </div>
             </div>
 
-            <!-- Google Maps embed -->
+            <!-- Google Maps embed — real clinic coordinates -->
             <div class="contact-map">
-              <!-- [PLACEHOLDER] Replace src with actual Google Maps embed URL for clinic location -->
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.123456789!2d77.7!3d8.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sTirunelveli!5e0!3m2!1sen!2sin!4v1234567890"
+                src="https://maps.google.com/maps?q=8.7134811,77.623205&z=17&hl=en&output=embed"
                 width="100%"
                 height="250"
                 style="border:0;"
@@ -1125,10 +1106,7 @@
         <div class="footer-col">
           <!-- Logo -->
           <a href="#hero" class="footer-logo" aria-label="Owl I Health and Wellness Center - Home">
-            <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.5S2 11.5 2 13.5s1.75 3.75 1.75 3.75"/>
-            </svg>
-            <span data-i18n="logo_text">Owl I Healthcare</span>
+            <img src="images/owli-vertical.png" alt="Owl I Health and Wellness Center" class="footer-logo-img">
           </a>
           <p class="footer-about" data-i18n="footer_about">Tirunelveli's trusted naturopathy and wellness center. Holistic, drug-free healing for body, mind, and soul.</p>
 
