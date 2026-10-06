@@ -208,19 +208,19 @@ To replace a photo, drop the new image into `images/leadership/` and update the 
 
 ### Where services live:
 
-1. **Service cards in HTML** (`index.html`): Search for `services-grid` — all 15 service cards are inside this grid.
+1. **Service cards in HTML** (`index.html`): Search for `services-grid` — all 11 service cards are inside this grid.
 
-2. **Service translations** (`js/i18n.js`): Search for `service_1_title` through `service_15_title` (and their `_desc` variants) in both `en` and `ta` objects.
+2. **Service translations** (`js/i18n.js`): Search for `service_1_title` through `service_11_title` (and their `_desc` variants) in both `en` and `ta` objects.
 
-3. **Contact form dropdown** (`index.html`): Search for `contact-service` — the `<select>` element has all 15 services as `<option>` elements.
+3. **Contact form dropdown** (`index.html`): Search for `contact-service` — the `<select>` element has all 11 services as `<option>` elements.
 
 ### To edit an existing service:
 1. Update the title and description in `js/i18n.js` (both `en` and `ta`)
 2. Update the `value` attribute on the matching `<option>` in the contact form if the service name changed
 
-### To add a new service (e.g., service 16):
-1. Copy an existing service card `<div>` in the HTML and change the `data-i18n` keys to `service_16_title` and `service_16_desc`
-2. Add `service_16_title` and `service_16_desc` to both `en` and `ta` objects in `i18n.js`
+### To add a new service (e.g., service 12):
+1. Copy an existing service card `<div>` in the HTML and change the `data-i18n` keys to `service_12_title` and `service_12_desc`
+2. Add `service_12_title` and `service_12_desc` to both `en` and `ta` objects in `i18n.js`
 3. Add a new `<option>` to the contact form dropdown
 4. Choose an appropriate SVG icon for the new service
 

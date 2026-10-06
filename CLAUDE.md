@@ -174,28 +174,25 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 ### 9.4 Services
 - Grid: 3 col desktop, 2 tablet, 1 mobile
-- 15 cards with icon + name + 1-line description
+- 11 cards with icon + name + 1-line description
 - Hover: translateY(-5px) + box-shadow
+- Sourced from the official "OWL i Health Care Centre" booklet (services the clinic actually offers, as opposed to conditions treated — see `CONDITIONS WE COMMONLY ADDRESS` in the booklet for the latter)
 
 **Full service list:**
 
-| #  | Service                           | Description (EN)                                      |
-|----|-----------------------------------|-------------------------------------------------------|
-| 1  | Hydrotherapy                      | Hip bath, Spinal bath, Steam bath, Enema therapy      |
-| 2  | Mud Therapy                       | Mud pack, Mud bath, Clay applications                 |
-| 3  | Diet Therapy / Nutrition Counseling | Therapeutic fasting, Detox diets, Personalized meal plans |
-| 4  | Massage Therapy                   | Full body oil massage, Therapeutic massage, Reflexology |
-| 5  | Yoga Therapy                      | Asanas, Pranayama, Meditation, Therapeutic yoga       |
-| 6  | Acupuncture / Acupressure        | Pain management, Meridian therapy                     |
-| 7  | Magnetotherapy                    | Magnetic field therapy for chronic pain               |
-| 8  | Chromo Therapy                    | Light and color-based healing                         |
-| 9  | Detox & Panchakarma Programs     | 7-day, 14-day, 21-day packages                       |
-| 10 | Weight Management                 | Diet + Exercise + Therapy combo                       |
-| 11 | Stress & Anxiety Management       | Yoga + Counseling + Relaxation therapies              |
-| 12 | Chronic Pain Management           | Back pain, Arthritis, Migraine                        |
-| 13 | Women's Wellness                  | PCOS, Menstrual health, Prenatal care                 |
-| 14 | Skin & Hair Care                  | Eczema, Psoriasis, Hair fall treatments               |
-| 15 | Diabetes & Lifestyle Disease Mgmt | Holistic management of lifestyle diseases             |
+| #  | Service               | Description (EN)                                                          |
+|----|-----------------------|-----------------------------------------------------------------------------|
+| 1  | Massage Therapy       | Swedish, Ayurvedic oil, deep tissue, prenatal and postnatal massage        |
+| 2  | Hydrotherapy          | Steam bath, hip bath, and therapeutic water packs                         |
+| 3  | Fasting & Diet Therapy | Therapeutic fasting, individualized diet planning, and nutrition guidance |
+| 4  | Mud Therapy           | Mud bath, mud application, and mud pack                                   |
+| 5  | Foot Reflexology      | Gentle pressure-point therapy for relaxation and well-being               |
+| 6  | Aromatherapy          | Aromatherapy massage, essential oil inhalation, and diffusion             |
+| 7  | Yoga Therapy          | Therapeutic yoga, yoga nidra, and monthly yoga classes                    |
+| 8  | Acu Therapy           | Acupuncture, acupuncture stimulator, and moxa therapy                     |
+| 9  | Ozone Therapy         | Controlled oxygen-ozone therapy for individualized care                   |
+| 10 | Shirodhara            | Traditional oil-based relaxation therapy for the forehead                 |
+| 11 | Kizhi                 | Elakizhi, Njavarakizhi, and Podikizhi herbal poultice therapy             |
 
 ### 9.5 Why Choose Us
 - Light green background section
@@ -242,7 +239,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 ### 9.11 Contact / Booking
 - **Left column — Form:**
-  - Fields: Name, Phone, Email, Service (dropdown of 15 services), Message
+  - Fields: Name, Phone, Email, Service (dropdown of 11 services), Message
   - Validation: required fields, email regex, Indian phone format (10 digits, starts 6-9)
   - Submit action: open WhatsApp with pre-filled message
   - URL format: `https://wa.me/916379610554?text=Name: ...%0APhone: ...%0AService: ...%0AMessage: ...`
