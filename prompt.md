@@ -1,23 +1,27 @@
-Scrap the horizontal logo on mobile entirely. Remove .logo-mobile and all related CSS.
+Add this Site24x7 monitoring script to index.html.
 
-On mobile (below 769px), show:
-- The favicon.png image at height: 40px, width: 40px
-- Immediately next to it, a text span: "Owl I Healthcare Centre"
-  - font-family: Poppins
-  - font-weight: 700
-  - font-size: 16px
-  - color: var(--color-primary)
-  - margin-left: 8px
+Place it right before the closing </head> tag, after all other scripts and meta tags.
 
-Wrap both in a flex container with align-items: center, gap: 8px.
+Add a comment above it:
 
-The text span:
-- Class: .mobile-brand-text
-- Add data-i18n key, update i18n.js for both EN and TA
-- Visible ONLY below 769px (display: none on desktop)
+<!-- ============================================
+     MONITORING: Site24x7 Real User Monitoring (RUM)
+     PURPOSE: Performance monitoring for testing.
+     Remove this script before going to production if no longer needed.
+     ============================================ -->
 
-On desktop (769px+): keep showing only the favicon as it is now. Hide .mobile-brand-text.
+The script:
 
-Remove all leftover .logo-mobile img tags, CSS rules, and the white background card on mobile.
+<script type="text/javascript">
+(function(w,d,s,r,k,h,m){
+	if(w.performance && w.performance.timing && w.performance.navigation && !w.s247r) {
+		w[r] = w[r] || function(){(w[r].q = w[r].q || []).push(arguments)};
+		h=d.createElement('script');h.async=true;h.setAttribute('src',s+k);
+		d.getElementsByTagName('head')[0].appendChild(h);
+		(m = window.onerror),(window.onerror = function (b, c, d, f, g) {
+		m && m(b, c, d, f, g),g || (g = new Error(b)),(w[r].q = w[r].q || []).push(["captureException",g]);})
+	}
+})(window,document,'//static.site24x7rum.in/beacon/site24x7rum-min.js?appKey=','s247r','ef1e6007c4f9ca249f39321ddf754a62');
+</script>
 
-Keep it simple. Nothing else changes.
+No other changes.
