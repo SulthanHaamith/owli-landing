@@ -134,6 +134,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 | 7  | Testimonials      | `#testimonials`     | White              |
 | 8  | Gallery           | `#gallery`          | Cream              |
 | 9  | Blog Preview      | `#blog`             | White              |
+| 9B | FAQ               | `#faq`              | Light green (`--color-light-green`) |
 | 10 | CTA Banner        | `#cta-banner`       | Dark green (`--color-primary`) |
 | 11 | Contact / Booking | `#contact`          | Cream              |
 | 12 | Footer            | `#footer`           | Dark green (`--color-primary`) |
@@ -145,7 +146,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 ### 9.1 Header / Nav
 - Text logo: "Owl I" + small leaf/owl inline SVG
-- Nav links: Home, About, Services, Doctors, Gallery, Blog, Contact
+- Nav links: Home, About, Services, Doctors, Gallery, Blog, FAQ, Contact
 - "Book Now" CTA button (green) → scrolls to `#contact`
 - Language toggle: `EN | தமிழ்`
 - Mobile: hamburger → slide-in drawer
@@ -230,6 +231,11 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
   2. "How Naturopathy Can Help Manage Diabetes Naturally"
   3. "Yoga Asanas for Back Pain Relief"
 - Each: placeholder image, title, 2-line excerpt, "Read More →" (href="#")
+
+### 9.9B FAQ
+- 10 questions sourced from the official clinic booklet
+- Each rendered as a native `<details>/<summary>` element — accordion expand/collapse with no JS required
+- Content: appointments, consultation length, what to bring, continuing existing medicines, number of sessions needed, children/elderly eligibility, yoga without consultation, single-therapy visits, wellness-only visits, treatment suitability
 
 ### 9.10 CTA Banner
 - Full-width, dark green background

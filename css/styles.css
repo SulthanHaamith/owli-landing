@@ -1358,6 +1358,71 @@ body.lightbox-open {
 
 
 /* ──────────────────────────────────────────────
+   14B. FAQ SECTION
+   Light green background. Each question is a native
+   <details>/<summary> element — no JS required for
+   the expand/collapse behavior.
+   ────────────────────────────────────────────── */
+
+#faq {
+  padding: 80px 0;
+  background-color: var(--color-light-green);
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 4px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 28px 18px 0;
+  font-weight: 600;
+  color: var(--color-primary);
+  position: relative;
+}
+
+/* Hide the default disclosure triangle in all browsers */
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom "+" indicator that rotates into an "×" when open */
+.faq-item summary::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-secondary);
+  transition: transform 0.3s ease;
+}
+
+.faq-item[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.faq-item p {
+  color: var(--color-dark-text);
+  line-height: 1.7;
+  padding-bottom: 20px;
+}
+
+
+/* ──────────────────────────────────────────────
    15. CTA BANNER SECTION
    Full-width dark green banner that encourages
    visitors to book. White centered text with
