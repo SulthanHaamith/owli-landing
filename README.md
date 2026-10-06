@@ -128,10 +128,6 @@ All placeholder content is marked with `<!-- [PLACEHOLDER] -->` comments in the 
 | Item | File Path | Dimensions | Format |
 |------|-----------|------------|--------|
 | Hero background | `images/hero/hero-bg.jpg` | 1920 × 800 px | JPG |
-| Clinic interior photo | `images/clinic-interior.jpg` | 800 × 600 px | JPG |
-| Doctor 1 photo | `images/doctors/doctor-1.jpg` | 400 × 400 px | JPG (square) |
-| Doctor 2 photo | `images/doctors/doctor-2.jpg` | 400 × 400 px | JPG (square) |
-| Doctor 3 photo | `images/doctors/doctor-3.jpg` | 400 × 400 px | JPG (square) |
 | Gallery photo 1 | `images/gallery/gallery-1.jpg` | 800 × 600 px | JPG |
 | Gallery photo 2 | `images/gallery/gallery-2.jpg` | 800 × 600 px | JPG |
 | Gallery photo 3 | `images/gallery/gallery-3.jpg` | 800 × 600 px | JPG |
@@ -162,15 +158,15 @@ All placeholder content is marked with `<!-- [PLACEHOLDER] -->` comments in the 
 
 ## 6. How to Update Doctor Information
 
-Doctor data lives in two places:
+Doctor data lives in two places. There are currently **2 real doctor cards** (Dr. Jospin Sheela.A and Dr. Jebakumar. A) — no placeholders remain here.
 
 ### In `index.html`:
-Search for `[PLACEHOLDER] Replace with real doctor details` to find all three doctor cards. Each card has:
-- Photo (replace the `<div class="image-placeholder">` with an `<img>` tag)
-- Name, role, qualification, experience, specialization
+Search for `Doctor 1:` or `Doctor 2:` to find each doctor card. Each card has:
+- Photo (`<img>` pointing at `images/doctors/doctor1.png` / `doctor2.jpeg`)
+- Name, role, qualification, experience, specialization, and areas-of-expertise tags
 
 ### In `js/i18n.js`:
-Search for `doctor_1_name`, `doctor_2_name`, `doctor_3_name` in both the `en` and `ta` objects.
+Search for `doctor_1_name` / `doctor_2_name` in both the `en` and `ta` objects.
 
 ### Step-by-step: replacing Doctor 1
 
@@ -197,6 +193,14 @@ Search for `doctor_1_name`, `doctor_2_name`, `doctor_3_name` in both the `en` an
    ```
 
 5. Save both files. The doctor info updates on the site.
+
+### Updating the Leadership profiles (Founder & CEO, Co-Founder & MD)
+
+The "Our Leadership" sub-section sits at the bottom of the About section (`index.html`, inside `<div class="leadership">`). It uses the same `leader-card` layout for both profiles:
+- **Photos:** `images/leadership/ceo.png` and `images/leadership/md.jpeg`
+- **Text:** `leader_1_name`/`leader_1_role`/`leader_1_bio` and `leader_2_name`/`leader_2_role`/`leader_2_bio` in `js/i18n.js` (both `en` and `ta` objects)
+
+To replace a photo, drop the new image into `images/leadership/` and update the `src` on the matching `<img class="leader-img">`.
 
 ---
 
@@ -291,19 +295,13 @@ After registering a new domain, it can take **up to 48 hours** for the domain to
 | # | Item | File Location | What to Replace | Size/Format |
 |---|------|---------------|-----------------|-------------|
 | 1 | Hero background image | `images/hero/` | Clinic exterior or nature photo | 1920×800px, JPG |
-| 2 | Clinic interior photo | `images/` | Real photo of the clinic | 800×600px, JPG |
-| 3 | Doctor 1 photo + name | `images/doctors/` + `i18n.js` | Real doctor photo and details | 400×400px, square JPG |
-| 4 | Doctor 2 photo + name | `images/doctors/` + `i18n.js` | Real doctor photo and details | 400×400px, square JPG |
-| 5 | Doctor 3 photo + name | `images/doctors/` + `i18n.js` | Real doctor photo and details | 400×400px, square JPG |
-| 6 | Gallery photos (6) | `images/gallery/` | Real clinic/treatment photos | 800×600px, JPG |
-| 7 | Blog post images (3) | `images/blog/` | Relevant health topic images | 600×400px, JPG |
-| 8 | Social sharing image | `images/og-image.jpg` | Clinic branding image | 1200×630px, JPG |
-| 9 | Favicon | `images/favicon.ico` | Clinic logo icon | 32×32px, ICO |
-| 10 | Clinic logo | `images/logo.svg` | Real logo file | SVG preferred |
-| 11 | Patient testimonials (5) | `i18n.js` | Real patient quotes | Text only |
-| 12 | Doctor names & details (3) | `index.html` + `i18n.js` | Real names, qualifications | Text only |
-| 13 | Social media URLs (3) | `index.html` footer | Instagram, Facebook, YouTube URLs | Full URLs |
-| 14 | Google Maps embed URL | `index.html` contact section | Real embed URL from Google Maps | Embed iframe URL |
+| 2 | Gallery photos (6) | `images/gallery/` | Real clinic/treatment photos | 800×600px, JPG |
+| 3 | Blog post images (3) | `images/blog/` | Relevant health topic images | 600×400px, JPG |
+| 4 | Social sharing image | `images/og-image.jpg` | Clinic branding image | 1200×630px, JPG |
+| 5 | Patient testimonials (5) | `i18n.js` | Real patient quotes | Text only |
+| 6 | Social media URLs (3) | `index.html` footer | Instagram, Facebook, YouTube URLs | Full URLs |
+
+**Already real (no longer placeholder):** hero video/poster, favicon, clinic logo, clinic interior photo, both doctor profiles, both leadership profiles (Founder & CEO, Co-Founder & MD), Google Maps embed.
 
 ---
 

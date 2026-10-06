@@ -614,6 +614,87 @@ p {
   border-radius: 16px;
 }
 
+/* About section — real clinic interior photo.
+   height: auto preserves the image's natural aspect ratio so the
+   full photo shows at any column width, instead of being cropped. */
+.about-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}
+
+/* Leadership sub-section — Founder & Co-Founder profiles */
+.leadership {
+  margin-top: 64px;
+}
+
+.leadership-heading {
+  text-align: center;
+  color: var(--color-primary);
+  margin-bottom: 32px;
+}
+
+.leadership-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.leader-card {
+  background-color: var(--color-white);
+  border-radius: 16px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leader-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* Large rectangular photo spanning the full card width */
+.leader-photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.leader-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.leader-info {
+  padding: 24px 24px 32px;
+}
+
+.leader-info h4 {
+  color: var(--color-primary);
+  margin-bottom: 4px;
+  font-size: 1.15rem;
+}
+
+.leader-role {
+  color: var(--color-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.leader-bio {
+  color: var(--color-light-text);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
 
 /* ──────────────────────────────────────────────
    9. SERVICES SECTION

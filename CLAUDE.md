@@ -162,10 +162,15 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 - CSS fade-in animation on load
 
 ### 9.3 About
-- Two-column: text left, image placeholder right
+- Two-column: text left, real clinic interior photo right (`images/about/clinic-interior.png`)
 - Philosophy: Drug-free healing, holistic approach, personalized plans, traditional + modern
 - Brief Vision & Mission statements
-- `<!-- [PLACEHOLDER] Replace with clinic interior photo -->`
+- Sub-section: **Our Leadership** — 2 profile cards (Founder & CEO, Co-Founder & Managing Director), same card styling as Doctors but with a larger top-aligned photo and a bio paragraph instead of qualification/experience/expertise tags
+
+| #  | Name                     | Role                             |
+|----|--------------------------|-----------------------------------|
+| 1  | Abdul Salim Malik        | Founder & CEO                    |
+| 2  | Mrs. Jannath Firthouse    | Co-Founder & Managing Director   |
 
 ### 9.4 Services
 - Grid: 3 col desktop, 2 tablet, 1 mobile
@@ -208,7 +213,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 | #  | Name                  | Designation            | Qualification              | Experience | Specialization                                                              |
 |----|-----------------------|------------------------|----------------------------|------------|-----------------------------------------------------------------------------|
 | 1  | Dr. Jospin Sheela.A   | Chief Medical Officer  | BNYS, M.Sc(Psy), cCGO     | 6+ years   | Naturopathy, Yoga Therapy, Clinical Nutrition and Lifestyle Medicine         |
-| 2  | Dr. Prakeerthi G      | Medical Officer        | BNYS                       | 1+ year    | Integrative Lifestyle Medicine and Energy Medicine (Acupuncture & Ozone Therapy) |
+| 2  | Dr. Jebakumar. A      | Medical Officer        | BNYS                       | 1+ year    | Naturopathy, Pain Management, Acupuncture, Rehabilitation                   |
 
 ### 9.7 Testimonials
 - Carousel: CSS + vanilla JS (no library)
@@ -372,7 +377,6 @@ This is the complete list of items the clinic owner needs to replace:
 | Item                        | Location              | Recommended Size / Format  | Status    |
 |-----------------------------|-----------------------|----------------------------|-----------|
 | Hero background image       | `images/hero/`        | 1920×800px, JPG            | Placeholder |
-| Clinic interior photo       | `images/`             | 800×600px, JPG             | Placeholder |
 | Gallery photos (6–8)        | `images/gallery/`     | 800×600px, JPG             | Placeholder |
 | Blog post images (3)        | `images/blog/`        | 600×400px, JPG             | Placeholder |
 | OG/social sharing image     | `images/og-image.jpg` | 1200×630px, JPG            | Placeholder |
@@ -384,6 +388,8 @@ This is the complete list of items the clinic owner needs to replace:
 - Doctor photos and details (2 doctors with real names, qualifications, and photos)
 - Clinic logo (owli-horizontal.png for header, owli-vertical.png for footer)
 - Google Maps embed (real coordinates: 8.7134811, 77.623205)
+- Clinic interior photo (`images/about/clinic-interior.png`)
+- Leadership section — Founder & CEO and Co-Founder & Managing Director profiles with real photos (`images/leadership/`)
 
 ---
 
@@ -417,6 +423,8 @@ owli-healthcare/
 │   ├── hero/                   # Hero background (1920×800px)
 │   ├── services/               # Service icons (SVG preferred)
 │   ├── doctors/                # Doctor photos (400×400px, square)
+│   ├── leadership/              # Founder/Co-Founder photos
+│   ├── about/                  # Clinic interior photo
 │   ├── gallery/                # Clinic gallery photos (800×600px)
 │   ├── blog/                   # Blog thumbnail images (600×400px)
 │   ├── logo.svg                # Clinic logo

@@ -76,6 +76,13 @@ const translations = {
     about_mission_title: 'Our Mission',
     about_mission: 'To provide personalized, drug-free healing through naturopathy, yoga, and nutrition — empowering our community to live healthier, happier lives through the power of nature.',
     placeholder_clinic_photo: 'Clinic Photo',
+    leadership_heading: 'Our Leadership',
+    leader_1_name: 'Abdul Salim Malik',
+    leader_1_role: 'Founder & CEO',
+    leader_1_bio: 'Abdul Salim Malik envisions Owl I Healthcare Centre as a place where wellness becomes a natural part of everyday life—not something people seek only when they are unwell. He believes true wellbeing comes from caring for the whole person—body, mind, and lifestyle—and is committed to helping people feel understood, supported, and inspired to live healthier, happier lives.',
+    leader_2_name: 'Mrs. Jannath Firthouse',
+    leader_2_role: 'Co-Founder & Managing Director',
+    leader_2_bio: 'For Mrs. Jannath Firthouse, Owl I Healthcare Centre is more than a healthcare centre—it is a vision built with care, compassion, and purpose. As Co-Founder and Managing Director, she is passionate about creating a place where every person feels heard, cared for, and truly at home on their journey towards better health and wellbeing.',
 
     /* --- Services Section --- */
     services_heading: 'Our Services',
@@ -280,6 +287,13 @@ const translations = {
     about_mission_title: 'எங்கள் நோக்கம்',
     about_mission: 'இயற்கை மருத்துவம், யோகா மற்றும் ஊட்டச்சத்து மூலம் தனிப்பயனாக்கப்பட்ட, மருந்தில்லா குணப்படுத்துதலை வழங்குதல் — இயற்கையின் சக்தி மூலம் ஆரோக்கியமான, மகிழ்ச்சியான வாழ்க்கையை வாழ எங்கள் சமூகத்தை மேம்படுத்துதல்.',
     placeholder_clinic_photo: 'மருத்துவமனை புகைப்படம்',
+    leadership_heading: 'எங்கள் தலைமைத்துவம்',
+    leader_1_name: 'அப்துல் சலீம் மாலிக்',
+    leader_1_role: 'நிறுவனர் & தலைமை நிர்வாக அதிகாரி',
+    leader_1_bio: 'ஆரோக்கியம் என்பது உடல்நிலை சரியில்லாதபோது மட்டும் தேடப்படும் ஒன்றாக இல்லாமல், அன்றாட வாழ்வின் இயல்பான பகுதியாக மாற வேண்டும் என்பது அப்துல் சலீம் மாலிக்கின் பார்வை. உடல், மனம், வாழ்க்கை முறை என முழு மனிதரையும் கவனித்துக்கொள்வதிலேயே உண்மையான நல்வாழ்வு உள்ளது என நம்பும் அவர், மக்கள் புரிந்துகொள்ளப்பட்டதாகவும், ஆதரவு பெற்றதாகவும் உணர்ந்து, ஆரோக்கியமான, மகிழ்ச்சியான வாழ்க்கை வாழ ஊக்கமளிக்க அர்ப்பணிப்புடன் உள்ளார்.',
+    leader_2_name: 'திருமதி. ஜன்னத் ஃபிர்தௌஸ்',
+    leader_2_role: 'இணை நிறுவனர் & நிர்வாக இயக்குநர்',
+    leader_2_bio: 'திருமதி ஜன்னத் ஃபிர்தௌஸைப் பொறுத்தவரை, Owl I ஆரோக்கிய மையம் வெறும் சுகாதார மையம் மட்டுமல்ல — அக்கறை, கருணை, நோக்கத்துடன் கட்டப்பட்ட ஒரு பார்வை. இணை நிறுவனராகவும் நிர்வாக இயக்குநராகவும், ஒவ்வொரு நபரும் கேட்கப்பட்டதாகவும், கவனிக்கப்பட்டதாகவும், சிறந்த ஆரோக்கியம் நோக்கிய தங்கள் பயணத்தில் உண்மையிலேயே வீட்டில் இருப்பதைப் போலவும் உணரும் ஒரு இடத்தை உருவாக்குவதில் அவர் ஆர்வமாக உள்ளார்.',
 
     /* --- சேவைகள் பகுதி --- */
     services_heading: 'எங்கள் சேவைகள்',

@@ -249,6 +249,13 @@ h3 {
   gap: 20px;
 }
 
+/* --- LEADERSHIP ---
+   Single column — leader cards stack vertically */
+.leadership-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
 /* --- TESTIMONIALS ---
    Tighter padding inside slides. Smaller quote text.
    Buttons stay centered below the card on mobile. */
@@ -453,6 +460,13 @@ h3 {
   /* --- DOCTORS ---
      2-column grid — both cards side by side */
   .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  /* --- LEADERSHIP ---
+     2-column grid — both cards side by side */
+  .leadership-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
@@ -766,6 +780,13 @@ h3 {
   /* --- DOCTORS ---
      2-column grid — both cards side by side, centered */
   .doctors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  /* --- LEADERSHIP ---
+     2-column grid — both cards side by side, centered */
+  .leadership-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
   }
