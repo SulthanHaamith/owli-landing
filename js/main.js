@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* Observe all sections that have matching nav links */
-  var sectionIds = ['hero', 'about', 'services', 'doctors', 'gallery', 'blog', 'faq', 'contact'];
+  var sectionIds = ['hero', 'about', 'services', 'team', 'gallery', 'blog', 'faq', 'contact'];
   sectionIds.forEach(function (id) {
     var section = document.getElementById(id);
     if (section) {

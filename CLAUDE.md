@@ -1,4 +1,4 @@
-# CLAUDE.md — Owl I Health and Wellness Center
+# CLAUDE.md — Owl I Health Care Centre
 
 > **This file is the single source of truth for building the clinic's landing page.**
 > Claude Code should read this before every task. All decisions, content, and structure live here.
@@ -66,13 +66,13 @@
 Use these exact details everywhere on the site.
 
 ```
-Name:      Owl I Health and Wellness Center
+Name:      Owl I Health Care Centre
 Address:   1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli, Tirunelveli - 627604
 Phone:     +91 6379610554
 WhatsApp:  +91 6379610554
 Email:     owli2026@gmail.com
-Hours:     Monday–Saturday, 9:00 AM – 9:00 PM
-           Sunday: Closed (or by appointment)
+Hours:     Monday to Sunday: 9:00 AM – 8:00 PM
+           Open all days.
 Domain:    owlihealthcare.com
 ```
 
@@ -130,7 +130,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 | 3  | About             | `#about`            | Cream (`--color-background`) |
 | 4  | Services          | `#services`         | White              |
 | 5  | Why Choose Us     | `#why-us`           | Light green (`--color-light-green`) |
-| 6  | Doctors           | `#doctors`          | Cream              |
+| 6  | Our Team          | `#team`             | Cream              |
 | 7  | Testimonials      | `#testimonials`     | White              |
 | 8  | Gallery           | `#gallery`          | Cream              |
 | 9  | Blog Preview      | `#blog`             | White              |
@@ -146,7 +146,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 ### 9.1 Header / Nav
 - Text logo: "Owl I" + small leaf/owl inline SVG
-- Nav links: Home, About, Services, Doctors, Gallery, Blog, FAQ, Contact
+- Nav links: Home, About, Services, Our Team, Gallery, Blog, FAQ, Contact
 - "Book Now" CTA button (green) → scrolls to `#contact`
 - Language toggle: `EN | தமிழ்`
 - Mobile: hamburger → slide-in drawer
@@ -166,7 +166,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 - Two-column: text left, real clinic interior photo right (`images/about/clinic-interior.png`)
 - Philosophy: Drug-free healing, holistic approach, personalized plans, traditional + modern
 - Brief Vision & Mission statements
-- Sub-section: **Our Leadership** — 2 profile cards (Founder & CEO, Co-Founder & Managing Director), same card styling as Doctors but with a larger top-aligned photo and a bio paragraph instead of qualification/experience/expertise tags
+- Leadership profiles now live in the combined **Our Team** section (`#team`) — see 9.6
 
 | #  | Name                     | Role                             |
 |----|--------------------------|-----------------------------------|
@@ -203,8 +203,9 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
   3. Personalized Care Plans
   4. Affordable Wellness
 
-### 9.6 Doctors
-- 2 profile cards — **REAL DATA** (no placeholders)
+### 9.6 Our Team (`#team`)
+- Combined section: **Management & Leadership** sub-grid (2 leader cards) + **Our Doctors** sub-grid (2 doctor cards)
+- All 4 members retained — **REAL DATA** (no placeholders)
 - Layout: 2 cards side by side on desktop (max-width ~450px each), stacked on mobile
 - Each card shows: photo, name, designation, qualification, specialization, experience, and areas of expertise as styled pills/tags
 
@@ -257,11 +258,11 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 ### 9.12 Footer
 - Dark green background, light text
 - 4-column grid:
-  1. Logo + brief about + social icons (Instagram, Facebook, YouTube — placeholder `#` links)
+  1. Logo + brief about + social icon (Instagram only — https://www.instagram.com/owli_healthcare; Facebook/YouTube hidden until the clinic provides URLs)
   2. Quick Links (anchor links)
   3. Top 6 Services
   4. Contact info + Hours
-- Bottom bar: `© 2026 Owl I Health and Wellness Center. All Rights Reserved.`
+- Bottom bar: `© 2026 Owl I Health Care Centre. All Rights Reserved.`
 
 ### 9.13 Floating Action Buttons (WhatsApp + Phone)
 
@@ -285,7 +286,7 @@ Z-index:  high (above all content)
 - Subtle CSS pulse animation (slower/different rhythm than WhatsApp to avoid visual noise)
 - Link: `tel:+916379610554`
 - Tooltip on hover: "Call us now"
-- ARIA label: "Call Owl I Health and Wellness Center"
+- ARIA label: "Call Owl I Health Care Centre"
 
 **Styling details:**
 - Both buttons: 56px circles on desktop, 48px on mobile
@@ -300,7 +301,7 @@ Z-index:  high (above all content)
 ## 10. SEO
 
 ### Meta tags (in `<head>`)
-- `<title>`: Owl I Health and Wellness Center | Naturopathy Clinic in Tirunelveli
+- `<title>`: Owl I Health Care Centre | Naturopathy Clinic in Tirunelveli
 - `<meta name="description">`: Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.
 - `<meta name="keywords">`: naturopathy clinic tirunelveli, natural healing, yoga therapy, hydrotherapy, mud therapy, wellness center tirunelveli, BNYS doctor tirunelveli
 - Canonical: `https://owlihealthcare.com/`

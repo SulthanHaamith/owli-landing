@@ -629,10 +629,11 @@ p {
   margin-top: 64px;
 }
 
-.leadership-heading {
+.team-subheading {
   text-align: center;
   color: var(--color-primary);
-  margin-bottom: 32px;
+  font-size: 1.4rem;
+  margin: 40px 0 24px;
 }
 
 .leadership-grid {

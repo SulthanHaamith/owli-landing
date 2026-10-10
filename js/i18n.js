@@ -1,6 +1,6 @@
 /**
  * I18N.JS — Internationalization (Bilingual Support)
- * Owl I Health and Wellness Center
+ * Owl I Health Care Centre
  *
  * PURPOSE: Handles switching between English and Tamil
  *   on the entire website. Every user-visible text string
@@ -50,13 +50,13 @@ const translations = {
 
     /* --- Logo --- */
     logo_text: 'Owl I Healthcare',
-    mobile_brand_text: 'Owl I Healthcare Centre',
+    mobile_brand_text: 'Owl I Health Care Centre',
 
     /* --- Navigation --- */
     nav_home: 'Home',
     nav_about: 'About',
     nav_services: 'Services',
-    nav_doctors: 'Doctors',
+    nav_team: 'Our Team',
     nav_gallery: 'Gallery',
     nav_blog: 'Blog',
     nav_faq: 'FAQ',
@@ -71,19 +71,18 @@ const translations = {
 
     /* --- About Section --- */
     about_heading: 'About Our Center',
-    about_philosophy: "At Owl I Health and Wellness Center, we believe in the body's innate ability to heal itself. Our approach combines time-tested naturopathy traditions with modern wellness practices to deliver drug-free, holistic healing. Every treatment plan is personalized to address the root cause — not just the symptoms — ensuring lasting wellness for body, mind, and soul.",
+    about_philosophy: "At Owl I Health Care Centre, we believe in the body's innate ability to heal itself. Our approach combines time-tested naturopathy traditions with modern wellness practices to deliver drug-free, holistic healing. Every treatment plan is personalized to address the root cause — not just the symptoms — supporting your wellness for body, mind, and soul.",
     about_vision_title: 'Our Vision',
     about_vision: "To be Tirunelveli's leading naturopathy center, making natural and holistic healthcare accessible, affordable, and effective for every individual.",
     about_mission_title: 'Our Mission',
     about_mission: 'To provide personalized, drug-free healing through naturopathy, yoga, and nutrition — empowering our community to live healthier, happier lives through the power of nature.',
     placeholder_clinic_photo: 'Clinic Photo',
-    leadership_heading: 'Our Leadership',
     leader_1_name: 'Abdul Salim Malik',
     leader_1_role: 'Founder & CEO',
-    leader_1_bio: 'Abdul Salim Malik envisions Owl I Healthcare Centre as a place where wellness becomes a natural part of everyday life—not something people seek only when they are unwell. He believes true wellbeing comes from caring for the whole person—body, mind, and lifestyle—and is committed to helping people feel understood, supported, and inspired to live healthier, happier lives.',
+    leader_1_bio: 'Abdul Salim Malik envisions Owl I Health Care Centre as a place where wellness becomes a natural part of everyday life—not something people seek only when they are unwell. He believes true wellbeing comes from caring for the whole person—body, mind, and lifestyle—and is committed to helping people feel understood, supported, and inspired to live healthier, happier lives.',
     leader_2_name: 'Mrs. Jannath Firthouse',
     leader_2_role: 'Co-Founder & Managing Director',
-    leader_2_bio: 'For Mrs. Jannath Firthouse, Owl I Healthcare Centre is more than a healthcare centre—it is a vision built with care, compassion, and purpose. As Co-Founder and Managing Director, she is passionate about creating a place where every person feels heard, cared for, and truly at home on their journey towards better health and wellbeing.',
+    leader_2_bio: 'For Mrs. Jannath Firthouse, Owl I Health Care Centre is more than a healthcare centre—it is a vision built with care, compassion, and purpose. As Co-Founder and Managing Director, she is passionate about creating a place where every person feels heard, cared for, and truly at home on their journey towards better health and wellbeing.',
 
     /* --- Services Section --- */
     services_heading: 'Our Services',
@@ -123,9 +122,11 @@ const translations = {
     why_us_4_title: 'Affordable Wellness',
     why_us_4_desc: 'Quality naturopathy treatments at fair prices — because good health should be accessible to everyone.',
 
-    /* --- Doctors Section --- */
-    doctors_heading: 'Meet Our Doctors',
-    doctors_subtitle: 'Qualified naturopathy professionals dedicated to your wellness',
+    /* --- Team Section (Management + Doctors) --- */
+    team_heading: 'Our Team',
+    team_subtitle: 'The people behind Owl I Health Care Centre',
+    team_management_heading: 'Management & Leadership',
+    team_doctors_heading: 'Our Doctors',
     doctor_expertise_title: 'Areas of Expertise',
     doctor_1_name: 'Dr. Jospin Sheela.A',
     doctor_1_role: 'Chief Medical Officer',
@@ -193,7 +194,7 @@ const translations = {
 
     /* --- FAQ Section --- */
     faq_heading: 'Frequently Asked Questions',
-    faq_subtitle: 'Answers to common questions about visiting Owl I Health and Wellness Center',
+    faq_subtitle: 'Answers to common questions about visiting Owl I Health Care Centre',
     faq_q1: 'Do I need an appointment?',
     faq_a1: 'Appointments are recommended for consultation and treatments. Walk-ins may be accommodated depending on availability.',
     faq_q2: 'How long is a consultation?',
@@ -253,8 +254,8 @@ const translations = {
     contact_whatsapp_title: 'WhatsApp',
     contact_email_title: 'Email',
     contact_hours_title: 'Working Hours',
-    contact_hours_weekday: 'Monday – Saturday: 9:00 AM – 9:00 PM',
-    contact_hours_sunday: 'Sunday: Closed (or by appointment)',
+    contact_hours_weekday: 'Monday to Sunday: 9:00 AM – 8:00 PM',
+    contact_hours_sunday: 'Open all days.',
 
     /* --- Footer --- */
     footer_about: "Tirunelveli's trusted naturopathy and wellness center. Holistic, drug-free healing for body, mind, and soul.",
@@ -284,7 +285,7 @@ const translations = {
     nav_home: 'முகப்பு',
     nav_about: 'எங்களைப் பற்றி',
     nav_services: 'சேவைகள்',
-    nav_doctors: 'மருத்துவர்கள்',
+    nav_team: 'எங்கள் குழுவினர்',
     nav_gallery: 'புகைப்படத் தொகுப்பு',
     nav_blog: 'வலைப்பதிவு',
     nav_faq: 'கேள்வி பதில்',
@@ -305,7 +306,6 @@ const translations = {
     about_mission_title: 'எங்கள் நோக்கம்',
     about_mission: 'இயற்கை மருத்துவம், யோகா மற்றும் ஊட்டச்சத்து மூலம் தனிப்பயனாக்கப்பட்ட, மருந்தில்லா குணப்படுத்துதலை வழங்குதல் — இயற்கையின் சக்தி மூலம் ஆரோக்கியமான, மகிழ்ச்சியான வாழ்க்கையை வாழ எங்கள் சமூகத்தை மேம்படுத்துதல்.',
     placeholder_clinic_photo: 'மருத்துவமனை புகைப்படம்',
-    leadership_heading: 'எங்கள் தலைமைத்துவம்',
     leader_1_name: 'அப்துல் சலீம் மாலிக்',
     leader_1_role: 'நிறுவனர் & தலைமை நிர்வாக அதிகாரி',
     leader_1_bio: 'ஆரோக்கியம் என்பது உடல்நிலை சரியில்லாதபோது மட்டும் தேடப்படும் ஒன்றாக இல்லாமல், அன்றாட வாழ்வின் இயல்பான பகுதியாக மாற வேண்டும் என்பது அப்துல் சலீம் மாலிக்கின் பார்வை. உடல், மனம், வாழ்க்கை முறை என முழு மனிதரையும் கவனித்துக்கொள்வதிலேயே உண்மையான நல்வாழ்வு உள்ளது என நம்பும் அவர், மக்கள் புரிந்துகொள்ளப்பட்டதாகவும், ஆதரவு பெற்றதாகவும் உணர்ந்து, ஆரோக்கியமான, மகிழ்ச்சியான வாழ்க்கை வாழ ஊக்கமளிக்க அர்ப்பணிப்புடன் உள்ளார்.',
@@ -351,9 +351,11 @@ const translations = {
     why_us_4_title: 'மலிவான ஆரோக்கியம்',
     why_us_4_desc: 'நியாயமான விலையில் தரமான இயற்கை மருத்துவ சிகிச்சைகள் — நல்ல ஆரோக்கியம் அனைவருக்கும் எட்டக்கூடியதாக இருக்க வேண்டும்.',
 
-    /* --- மருத்துவர்கள் பகுதி --- */
-    doctors_heading: 'எங்கள் மருத்துவர்களைச் சந்தியுங்கள்',
-    doctors_subtitle: 'உங்கள் நலனுக்காக அர்ப்பணிக்கப்பட்ட தகுதிவாய்ந்த இயற்கை மருத்துவ நிபுணர்கள்',
+    /* --- குழு பகுதி (நிர்வாகம் + மருத்துவர்கள்) --- */
+    team_heading: 'எங்கள் குழு',
+    team_subtitle: 'Owl I ஆரோக்கிய மையத்தின் அர்ப்பணிப்புள்ள குழுவினர்',
+    team_management_heading: 'நிர்வாகம் மற்றும் தலைமைத்துவம்',
+    team_doctors_heading: 'எங்கள் மருத்துவர்கள்',
     doctor_expertise_title: 'நிபுணத்துவப் பகுதிகள்',
     doctor_1_name: 'Dr. Jospin Sheela.A',
     doctor_1_role: 'தலைமை மருத்துவ அதிகாரி',
@@ -481,8 +483,8 @@ const translations = {
     contact_whatsapp_title: 'வாட்ஸ்அப்',
     contact_email_title: 'மின்னஞ்சல்',
     contact_hours_title: 'வேலை நேரம்',
-    contact_hours_weekday: 'திங்கள் – சனி: காலை 9:00 – இரவு 9:00',
-    contact_hours_sunday: 'ஞாயிறு: மூடப்பட்டது (அல்லது முன்பதிவு மூலம்)',
+    contact_hours_weekday: 'திங்கள் முதல் ஞாயிறு வரை: காலை 9:00 – இரவு 8:00',
+    contact_hours_sunday: 'அனைத்து நாட்களும் திறந்திருக்கும்',
 
     /* --- அடிக்குறிப்பு --- */
     footer_about: 'திருநெல்வேலியின் நம்பகமான இயற்கை மருத்துவ மற்றும் ஆரோக்கிய மையம். உடல், மனம், ஆன்மா ஆகியவற்றிற்கான முழுமையான, மருந்தில்லா குணப்படுத்துதல்.',
