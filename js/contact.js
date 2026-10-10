@@ -342,8 +342,13 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Create success message element */
     var successDiv = document.createElement('div');
     successDiv.className = 'form-success';
-    successDiv.innerHTML = 'Opening WhatsApp... If it doesn\'t open, '
-      + '<a href="' + mailtoUrl + '">click here to email us instead</a>.';
+    var lang = (localStorage.getItem('owli-lang') === 'ta') ? 'ta' : 'en';
+    var confirmText = (lang === 'ta')
+      ? ' எங்கள் குழு பதிலளித்த பிறகுதான் சந்திப்புகள் உறுதிசெய்யப்படும்.'
+      : ' Appointments are confirmed after our team responds.';
+    successDiv.innerHTML = (lang === 'ta')
+      ? 'வாட்ஸ்அப் திறக்கிறது... திறக்கவில்லை என்றால், <a href="' + mailtoUrl + '">மின்னஞ்சல் மூலம் எங்களைத் தொடர்பு கொள்ளுங்கள்</a>.' + confirmText
+      : 'Opening WhatsApp... If it doesn\'t open, <a href="' + mailtoUrl + '">click here to email us instead</a>.' + confirmText;
 
     /* Insert after the submit button */
     submitBtn.parentNode.insertBefore(successDiv, submitBtn.nextSibling);

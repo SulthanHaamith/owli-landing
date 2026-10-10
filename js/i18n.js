@@ -66,7 +66,7 @@ const translations = {
     /* --- Hero Section --- */
     hero_heading: 'Heal Naturally. Live Fully.',
     hero_subheading: "Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul.",
-    hero_cta_book: 'Book Appointment',
+    hero_cta_book: 'Enquire on WhatsApp',
     hero_cta_explore: 'Explore Services',
 
     /* --- About Section --- */
@@ -218,7 +218,7 @@ const translations = {
 
     /* --- CTA Banner Section --- */
     cta_heading: 'Ready to Start Your Natural Healing Journey?',
-    cta_book: 'Book Appointment',
+    cta_book: 'Enquire on WhatsApp',
     cta_call: 'Call Now',
 
     /* --- Contact Section --- */
@@ -228,13 +228,24 @@ const translations = {
     /* Form labels */
     form_name_label: 'Your Name *',
     form_phone_label: 'Phone Number *',
-    form_email_label: 'Email Address',
+    form_email_label: 'Email Address (optional)',
     form_service_label: 'Select Service *',
     form_service_default: '-- Choose a Service --',
-    form_message_label: 'Your Message',
-    form_submit: 'Send via WhatsApp',
+    form_message_label: 'Your Message (optional)',
+    form_submit: 'Request an Appointment',
     form_fallback_text: 'Or email us at ',
     form_privacy_note: 'Your enquiry is sent through WhatsApp and used only to respond to your request.',
+    form_confirm_note: 'Appointments are confirmed after our team responds.',
+    form_opt_doctor: 'Doctor Consultation',
+    form_opt_wellness: 'General Wellness Enquiry',
+    form_opt_unsure: 'Not Sure - Need Guidance',
+    service_details_toggle: 'View Details',
+    service_details_show_less: 'Show Less',
+    service_details_involves: 'What it involves: ',
+    service_details_plan: 'A personalised treatment plan is recommended by the doctor based on your health needs.',
+    service_details_assessment: 'An assessment may be required before therapeutic procedures to ensure the treatment is suitable for you.',
+    service_details_enquire: 'Enquire on WhatsApp',
+    service_details_wa_msg: 'Hi! I would like to enquire about {t}.',
 
     /* Form error messages */
     form_name_error: 'Please enter your name',
@@ -296,7 +307,7 @@ const translations = {
     /* --- ஹீரோ பகுதி --- */
     hero_heading: 'இயற்கையாக குணமாகுங்கள். முழுமையாக வாழுங்கள்.',
     hero_subheading: 'திருநெல்வேலியின் நம்பகமான இயற்கை மருத்துவ மற்றும் ஆரோக்கிய மையம் — உடல், மனம், ஆன்மா ஆகியவற்றிற்கான முழுமையான குணப்படுத்துதல்.',
-    hero_cta_book: 'முன்பதிவு செய்யுங்கள்',
+    hero_cta_book: 'வாட்ஸ்அப் மூலம் விசாரிக்கவும்',
     hero_cta_explore: 'சேவைகளை அறியுங்கள்',
 
     /* --- எங்களைப் பற்றி பகுதி --- */
@@ -448,7 +459,7 @@ const translations = {
 
     /* --- CTA பேனர் பகுதி --- */
     cta_heading: 'உங்கள் இயற்கை குணமாகும் பயணத்தைத் தொடங்க தயாரா?',
-    cta_book: 'முன்பதிவு செய்யுங்கள்',
+    cta_book: 'வாட்ஸ்அப் மூலம் விசாரிக்கவும்',
     cta_call: 'இப்போது அழைக்கவும்',
 
     /* --- தொடர்பு பகுதி --- */
@@ -458,13 +469,24 @@ const translations = {
     /* படிவ லேபிள்கள் */
     form_name_label: 'உங்கள் பெயர் *',
     form_phone_label: 'தொலைபேசி எண் *',
-    form_email_label: 'மின்னஞ்சல் முகவரி',
+    form_email_label: 'மின்னஞ்சல் முகவரி (விருப்பம்)',
     form_service_label: 'சேவையைத் தேர்ந்தெடுக்கவும் *',
     form_service_default: '-- ஒரு சேவையைத் தேர்ந்தெடுக்கவும் --',
-    form_message_label: 'உங்கள் செய்தி',
-    form_submit: 'வாட்ஸ்அப் மூலம் அனுப்புங்கள்',
+    form_message_label: 'உங்கள் செய்தி (விருப்பம்)',
+    form_submit: 'சந்திப்புக்கு கோரிக்கை அனுப்புங்கள்',
     form_fallback_text: 'அல்லது மின்னஞ்சல் அனுப்புங்கள்: ',
     form_privacy_note: 'உங்கள் விசாரணை வாட்ஸ்அப் மூலம் அனுப்பப்படுகிறது; உங்கள் கோரிக்கைக்கு பதிலளிக்க மட்டுமே பயன்படுத்தப்படுகிறது.',
+    form_confirm_note: 'எங்கள் குழு பதிலளித்த பிறகுதான் சந்திப்புகள் உறுதிசெய்யப்படும்.',
+    form_opt_doctor: 'மருத்துவர் ஆலோசனை',
+    form_opt_wellness: 'பொது நல்வாழ்வு விசாரணை',
+    form_opt_unsure: 'உறுதியில்லை - வழிகாட்டல் வேண்டும்',
+    service_details_toggle: 'விவரங்களைக் காண்க',
+    service_details_show_less: 'சுருக்கக்கவும்',
+    service_details_involves: 'இதில் அடங்குவது: ',
+    service_details_plan: 'உங்கள் உடல்நலத் தேவைகளுக்கு ஏற்ப மருத்துவர் தனிப்பயன் சிகிச்சைத் திட்டத்தை பரிந்துரைப்பார்.',
+    service_details_assessment: 'சிகிச்சை முறைகளுக்கு முன், அது உங்களுக்குப் பொருத்தமானதா என உறுதி செய்ய மதிப்பீடு தேவைப்படலாம்.',
+    service_details_enquire: 'வாட்ஸ்அப் மூலம் விசாரிக்கவும்',
+    service_details_wa_msg: 'வணக்கம்! {t} பற்றி விசாரிக்க விரும்புகிறேன்.',
 
     /* படிவ பிழை செய்திகள் */
     form_name_error: 'உங்கள் பெயரை உள்ளிடவும்',

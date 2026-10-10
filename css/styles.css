@@ -1625,6 +1625,60 @@ body.lightbox-open {
   opacity: 0.85;
 }
 
+/* Treatment details: toggle button + expandable panel */
+.service-details-toggle {
+  margin-top: 16px;
+  padding: 8px 18px;
+  background-color: transparent;
+  color: var(--color-secondary);
+  border: 1.5px solid var(--color-light-green);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.service-details-toggle:hover,
+.service-details-toggle:focus-visible {
+  background-color: var(--color-light-green);
+  color: var(--color-primary);
+}
+
+.service-details-panel {
+  margin-top: 12px;
+  padding: 16px;
+  background-color: rgba(168, 197, 160, 0.12);
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-dark-text);
+}
+
+.service-details-panel p {
+  margin: 0 0 8px;
+}
+
+.service-details-enquire {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 6px 14px;
+  background-color: #25D366;
+  color: #FFFFFF;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.service-details-enquire:hover,
+.service-details-enquire:focus-visible {
+  color: #FFFFFF;
+  filter: brightness(0.95);
+}
+
 .form-fallback a {
   color: var(--color-secondary);
   font-weight: 500;

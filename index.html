@@ -208,7 +208,7 @@
           <!-- Two CTA buttons side by side -->
           <div class="hero-ctas">
             <!-- Book Appointment opens WhatsApp -->
-            <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20book%20an%20appointment." class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="hero_cta_book">Book Appointment</a>
+            <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20enquire%20about%20your%20services." class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="hero_cta_book">Enquire on WhatsApp</a>
 
             <!-- Explore Services scrolls down to services section -->
             <a href="#services" class="btn btn-secondary" data-i18n="hero_cta_explore">Explore Services</a>
@@ -965,7 +965,7 @@
         <h2 data-i18n="cta_heading">Ready to Start Your Natural Healing Journey?</h2>
         <div class="cta-buttons">
           <!-- Book Appointment via WhatsApp -->
-          <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20book%20an%20appointment." class="btn btn-cta-primary" target="_blank" rel="noopener noreferrer" data-i18n="cta_book">Book Appointment</a>
+          <a href="https://wa.me/916379610554?text=Hi!%20I'd%20like%20to%20enquire%20about%20your%20services." class="btn btn-cta-primary" target="_blank" rel="noopener noreferrer" data-i18n="cta_book">Enquire on WhatsApp</a>
           <!-- Call Now — opens phone dialer -->
           <a href="tel:+916379610554" class="btn btn-cta-secondary" data-i18n="cta_call">Call Now</a>
         </div>
@@ -1006,7 +1006,7 @@
 
               <!-- Email field -->
               <div class="form-group">
-                <label for="contact-email" data-i18n="form_email_label">Email Address</label>
+                <label for="contact-email" data-i18n="form_email_label">Email Address (optional)</label>
                 <input type="email" id="contact-email" name="email" autocomplete="email" placeholder="" data-i18n-placeholder="form_email_placeholder">
                 <span class="form-error" aria-live="polite" data-i18n="form_email_error">Please enter a valid email address</span>
               </div>
@@ -1027,18 +1027,24 @@
                   <option value="Ozone Therapy" data-i18n="service_9_title">Ozone Therapy</option>
                   <option value="Shirodhara" data-i18n="service_10_title">Shirodhara</option>
                   <option value="Kizhi" data-i18n="service_11_title">Kizhi</option>
+                  <option value="Doctor Consultation" data-i18n="form_opt_doctor">Doctor Consultation</option>
+                  <option value="General Wellness Enquiry" data-i18n="form_opt_wellness">General Wellness Enquiry</option>
+                  <option value="Not Sure - Need Guidance" data-i18n="form_opt_unsure">Not Sure - Need Guidance</option>
                 </select>
                 <span class="form-error" aria-live="polite" data-i18n="form_service_error">Please select a service</span>
               </div>
 
               <!-- Message field -->
               <div class="form-group">
-                <label for="contact-message" data-i18n="form_message_label">Your Message</label>
+                <label for="contact-message" data-i18n="form_message_label">Your Message (optional)</label>
                 <textarea id="contact-message" name="message" rows="4" placeholder="" data-i18n-placeholder="form_message_placeholder"></textarea>
               </div>
 
               <!-- Submit button -->
-              <button type="submit" class="btn btn-primary btn-submit" data-i18n="form_submit">Send via WhatsApp</button>
+              <button type="submit" class="btn btn-primary btn-submit" data-i18n="form_submit">Request an Appointment</button>
+
+              <!-- Appointment expectation note -->
+              <p class="form-confirm-note" data-i18n="form_confirm_note">Appointments are confirmed after our team responds.</p>
 
               <!-- Fallback email link -->
               <p class="form-fallback">
@@ -1279,6 +1285,7 @@
   <script src="js/testimonials.js"></script>
   <script src="js/lightbox.js"></script>
   <script src="js/contact.js"></script>
+  <script src="js/treatment-details.js"></script>
 
 </body>
 </html>

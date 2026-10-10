@@ -159,7 +159,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 - **Heading EN:** "Heal Naturally. Live Fully."
 - **Heading TA:** "இயற்கையாக குணமாகுங்கள். முழுமையாக வாழுங்கள்."
 - **Subheading EN:** "Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul."
-- Two CTAs: "Book Appointment" (→ WhatsApp) + "Explore Services" (→ `#services`)
+- Two CTAs: "Enquire on WhatsApp" (→ WhatsApp enquiry) + "Explore Services" (→ `#services`)
 - CSS fade-in animation on load
 
 ### 9.3 About
@@ -194,6 +194,13 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 | 9  | Ozone Therapy         | Controlled oxygen-ozone therapy for individualized care                   |
 | 10 | Shirodhara            | Traditional oil-based relaxation therapy for the forehead                 |
 | 11 | Kizhi                 | Elakizhi, Njavarakizhi, and Podikizhi herbal poultice therapy             |
+
+#### Treatment details (View Details)
+- Every service card has a visible pill button "View Details" (EN) / "விவரங்களைக் காண்க" (TA); label flips to "Show Less" while open
+- Expands a panel inside the card showing: what the treatment involves (the card description), a note that the doctor recommends a personalised treatment plan, and a note that an assessment may be required before therapeutic procedures
+- No durations or fees are shown anywhere (clinic has not approved them; add only after written confirmation)
+- Panel includes a WhatsApp "Enquire on WhatsApp" button with the treatment name pre-filled in the message
+- Implemented in `js/treatment-details.js`; builds panels from i18n keys, observes `<html lang>` and re-renders on language switch; ARIA: `aria-expanded` / `aria-controls`
 
 ### 9.5 Why Choose Us
 - Light green background section
@@ -242,13 +249,15 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 - Full-width, dark green background
 - **EN:** "Ready to Start Your Natural Healing Journey?"
 - **TA:** "உங்கள் இயற்கை குணமாகும் பயணத்தைத் தொடங்க தயாரா?"
-- Buttons: "Book Appointment" → WhatsApp, "Call Now" → `tel:+916379610554`
+- Buttons: "Enquire on WhatsApp" → WhatsApp, "Call Now" → `tel:+916379610554`
 
 ### 9.11 Contact / Booking
 - **Left column — Form:**
-  - Fields: Name, Phone, Email, Service (dropdown of 11 services), Message
+  - Fields: Name, Phone (required); Email (optional), Service (dropdown: 11 services + Doctor Consultation / General Wellness Enquiry / Not Sure - Need Guidance), Message (optional)
   - Validation: required fields, email regex, Indian phone format (10 digits, starts 6-9)
-  - Submit action: open WhatsApp with pre-filled message
+  - Submit button label: "Request an Appointment" (EN) / "சந்திப்புக்கு கோரிக்கை அனுப்புங்கள்" (TA)
+  - Expectation note under form: "Appointments are confirmed after our team responds."
+  - Submit action: open WhatsApp with pre-filled message; success message is bilingual and appends the same confirmation line
   - URL format: `https://wa.me/916379610554?text=Name: ...%0APhone: ...%0AService: ...%0AMessage: ...`
   - Fallback: mailto link to owli2026@gmail.com
 - **Right column — Info:**
@@ -447,7 +456,7 @@ owli-healthcare/
 | Purpose           | URL                                                                                                  |
 |--------------------|------------------------------------------------------------------------------------------------------|
 | Floating button    | `https://wa.me/916379610554?text=Hi! I'd like to enquire about your services.`                       |
-| Book Appointment   | `https://wa.me/916379610554?text=Hi! I'd like to book an appointment.`                               |
+| Enquire on WhatsApp | `https://wa.me/916379610554?text=Hi! I'd like to enquire about your services.`                        |
 | Contact form submit| `https://wa.me/916379610554?text=Name: [name]%0APhone: [phone]%0AEmail: [email]%0AService: [service]%0AMessage: [message]` |
 
 ### Phone Link
@@ -475,3 +484,7 @@ owli-healthcare/
 8. **Test mentally at 375px, 768px, and 1440px** widths.
 9. **No hardcoded colors** — use CSS custom properties everywhere.
 10. **Semantic HTML** — proper landmark elements, ARIA labels, accessibility.
+
+## Change Log
+
+- **2026-10-10 (B1 + B2):** Treatment "View Details" panels added to all 11 service cards (`js/treatment-details.js`, clinic-approved wording only, no durations/fees). Booking form softened: hero/CTA "Book Appointment" → "Enquire on WhatsApp"; submit → "Request an Appointment"; Email/Message optional; 3 new dropdown options; bilingual confirmation note + success message.
