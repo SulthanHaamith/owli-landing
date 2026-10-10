@@ -1615,6 +1615,16 @@ body.lightbox-open {
   color: var(--color-light-text);
 }
 
+/* Privacy note under the enquiry form (draft wording) */
+.form-privacy-note {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-light-text);
+  opacity: 0.85;
+}
+
 .form-fallback a {
   color: var(--color-secondary);
   font-weight: 500;

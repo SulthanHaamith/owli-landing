@@ -116,7 +116,7 @@ const translations = {
     why_us_1_title: 'Experienced BNYS Doctors',
     why_us_1_desc: 'Our team of qualified BNYS doctors brings years of clinical expertise in naturopathy and holistic medicine.',
     why_us_2_title: '100% Natural Treatments',
-    why_us_2_desc: 'Drug-free healing using water, mud, diet, yoga, and other natural therapies — no side effects, only wellness.',
+    why_us_2_desc: "Drug-free healing using water, mud, diet, yoga, and other natural therapies. Treatments are selected according to each individual's health needs and suitability.",
     why_us_3_title: 'Personalized Care Plans',
     why_us_3_desc: 'Every patient receives a customized treatment plan designed for their unique health needs and goals.',
     why_us_4_title: 'Affordable Wellness',
@@ -234,6 +234,7 @@ const translations = {
     form_message_label: 'Your Message',
     form_submit: 'Send via WhatsApp',
     form_fallback_text: 'Or email us at ',
+    form_privacy_note: 'Your enquiry is sent through WhatsApp and used only to respond to your request.',
 
     /* Form error messages */
     form_name_error: 'Please enter your name',
@@ -345,7 +346,7 @@ const translations = {
     why_us_1_title: 'அனுபவமிக்க BNYS மருத்துவர்கள்',
     why_us_1_desc: 'எங்கள் தகுதியான BNYS மருத்துவர்கள் குழு, இயற்கை மருத்துவம் மற்றும் முழுமையான மருத்துவத்தில் பல ஆண்டு மருத்துவ அனுபவத்தை கொண்டுவருகிறது.',
     why_us_2_title: '100% இயற்கை சிகிச்சைகள்',
-    why_us_2_desc: 'நீர், மண், உணவு, யோகா மற்றும் பிற இயற்கை சிகிச்சைகளைப் பயன்படுத்தி மருந்தில்லா குணப்படுத்துதல் — பக்கவிளைவுகள் இல்லை, நலம் மட்டுமே.',
+    why_us_2_desc: 'நீர், மண், உணவு, யோகா மற்றும் பிற இயற்கை சிகிச்சைகளைப் பயன்படுத்தி மருந்தில்லா குணப்படுத்துதல். ஒவ்வொரு தனிநபரின் உடல்நலத் தேவைகள் மற்றும் பொருத்தத்தைப் பொறுத்து சிகிச்சைகள் தேர்ந்தெடுக்கப்படுகின்றன.',
     why_us_3_title: 'தனிப்பயன் பராமரிப்பு திட்டங்கள்',
     why_us_3_desc: 'ஒவ்வொரு நோயாளியும் அவர்களின் தனித்துவமான சுகாதார தேவைகள் மற்றும் இலக்குகளுக்கு வடிவமைக்கப்பட்ட தனிப்பயன் சிகிச்சைத் திட்டத்தைப் பெறுகிறார்.',
     why_us_4_title: 'மலிவான ஆரோக்கியம்',
@@ -463,6 +464,7 @@ const translations = {
     form_message_label: 'உங்கள் செய்தி',
     form_submit: 'வாட்ஸ்அப் மூலம் அனுப்புங்கள்',
     form_fallback_text: 'அல்லது மின்னஞ்சல் அனுப்புங்கள்: ',
+    form_privacy_note: 'உங்கள் விசாரணை வாட்ஸ்அப் மூலம் அனுப்பப்படுகிறது; உங்கள் கோரிக்கைக்கு பதிலளிக்க மட்டுமே பயன்படுத்தப்படுகிறது.',
 
     /* படிவ பிழை செய்திகள் */
     form_name_error: 'உங்கள் பெயரை உள்ளிடவும்',
