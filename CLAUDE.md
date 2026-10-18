@@ -147,9 +147,10 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 ### 9.1 Header / Nav
 - Text logo: "Owl I" + small leaf/owl inline SVG
 - Nav links: Home, About, Services, Our Team, Gallery, Blog, FAQ, Contact
+- "Arokya Payanam 2026" button (`.btn-event`, warm brown accent — `--color-accent`) → links to `/events/`. Sits beside "Book Now" in `.nav-actions`, deliberately a different color so it reads as a distinct, time-limited announcement rather than a regular site CTA.
 - "Book Now" CTA button (green) → scrolls to `#contact`
 - Language toggle: `EN | தமிழ்`
-- Mobile: hamburger → slide-in drawer
+- Mobile: hamburger → slide-in drawer. `.nav-actions` (lang toggle, event button, Book Now) is hidden below the 769px breakpoint, consistent with the pre-existing Book Now behavior — mobile visitors reach the event via the homepage popup, the hero button, or the footer link instead.
 - Sticky on scroll with subtle box-shadow
 
 ### 9.2 Hero
@@ -159,7 +160,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 - **Heading EN:** "Heal Naturally. Live Fully."
 - **Heading TA:** "இயற்கையாக குணமாகுங்கள். முழுமையாக வாழுங்கள்."
 - **Subheading EN:** "Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul."
-- Two CTAs: "Enquire on WhatsApp" (→ WhatsApp enquiry) + "Explore Services" (→ `#services`)
+- Three CTAs: "Enquire on WhatsApp" + "Explore Services" (→ `#services`) + "Arokya Payanam 2026" (`.btn-event`, calendar icon, → `/events/`) — same accent color as the nav version, giving visitors a persistent (non-closable) way to reach the event page beyond the dismissable popup
 - CSS fade-in animation on load
 
 ### 9.3 About
@@ -499,5 +500,6 @@ owli-healthcare/
   - **Homepage announcement:** A centered modal popup (`css/event-banner.css` `.event-modal-overlay`/`.event-modal`, `js/event-banner.js`) appears ~800ms after the homepage loads — dark backdrop, the event logo, supporting text, and a "View event details" button. Closes via the × button, a backdrop click, or Escape; locks background scroll while open; stays hidden for 24h after closing (localStorage) and stops appearing entirely after `OWLI_EVENT.endDate`.
   - **Event artwork:** Official "Arokya Payanam 2026" logo (`images/events/arokya-payanam-logo.webp`) — the centerpiece of both the homepage popup and the events-page hero — and the organiser/association logo strip (INYGMA, AR Group of Institutions, SKT Nature Cure & Yoga Hospital, Owl I) at `images/events/organisers.png`. Both shown in white rounded cards so the white-background artwork doesn't clash with colored section backgrounds. A `.sr-only` utility (`css/styles.css`) keeps the organiser names readable to screen readers/SEO even though they're now conveyed by the logo image.
   - **Cache-busting:** `css/event-banner.css`, `js/event-banner.js`, and `js/event-config.js` are linked with a `?v=2` query string in `index.html`. Bump that number (`v=3`, `v=4`, …) any time one of those three files is edited again — without it, browsers that already cached an older version of the file may keep using the stale copy indefinitely, which previously made the popup render as plain unstyled content at the bottom of the page instead of the centered modal.
+  - **Persistent homepage CTAs:** Since the popup is closable (and stays hidden for 24h after that), two always-visible links to `/events/` were added so the event isn't only reachable while the popup happens to be showing: a third hero button ("Arokya Payanam 2026", `.btn-event`, calendar icon) next to "Enquire on WhatsApp" / "Explore Services", and a matching button in the header nav (`.nav-event`) beside "Book Now". Both reuse the `.btn-event` class (`--color-accent` brown background) so the event CTA is visually distinct from the green site CTAs everywhere it appears — nav, hero, and the popup.
 
 - **2026-10-10 (B1 + B2):** Treatment "View Details" panels added to all 11 service cards (`js/treatment-details.js`, clinic-approved wording only, no durations/fees). Booking form softened: hero/CTA "Book Appointment" → "Enquire on WhatsApp"; submit → "Request an Appointment"; Email/Message optional; 3 new dropdown options; bilingual confirmation note + success message.

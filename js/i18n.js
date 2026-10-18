@@ -68,6 +68,7 @@ const translations = {
     hero_subheading: "Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul.",
     hero_cta_book: 'Enquire on WhatsApp',
     hero_cta_explore: 'Explore Services',
+    hero_cta_event: 'Arokya Payanam 2026',
 
     /* --- About Section --- */
     about_heading: 'About Our Center',
@@ -426,6 +427,7 @@ const translations = {
     hero_subheading: 'திருநெல்வேலியின் நம்பகமான இயற்கை மருத்துவ மற்றும் ஆரோக்கிய மையம் — உடல், மனம், ஆன்மா ஆகியவற்றிற்கான முழுமையான குணப்படுத்துதல்.',
     hero_cta_book: 'வாட்ஸ்அப் மூலம் விசாரிக்கவும்',
     hero_cta_explore: 'சேவைகளை அறியுங்கள்',
+    hero_cta_event: 'ஆரோக்கிய பயணம் 2026',
 
     /* --- எங்களைப் பற்றி பகுதி --- */
     about_heading: 'எங்கள் மையத்தைப் பற்றி',

@@ -257,6 +257,23 @@ p {
   transform: translateY(-2px);
 }
 
+/* Event button — warm brown accent so it visually stands apart from the
+   two site CTAs next to it, without introducing a one-off color. Links
+   to the Arokya Payanam 2026 event page (events/index.html). */
+.btn-event {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn-event:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
 /* Image placeholder — grey box shown where real images will go.
    Displays a centered icon and label text. */
 .image-placeholder {
@@ -472,6 +489,14 @@ p {
 .nav-cta {
   padding: 10px 22px;
   font-size: 0.9rem;
+}
+
+/* Event link in the nav — same compact sizing as Book Now,
+   .btn-event already gives it the distinct accent color */
+.nav-event {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 /* Hamburger menu button — hidden on desktop, visible on mobile.
