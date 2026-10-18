@@ -277,7 +277,124 @@ const translations = {
 
     /* --- Floating Buttons --- */
     fab_whatsapp_tooltip: 'Chat on WhatsApp',
-    fab_phone_tooltip: 'Call us now'
+    fab_phone_tooltip: 'Call us now',
+
+    /* ═══ EVENT: AROKYA PAYANAM 2026 (homepage banner + /events/ page) ═══ */
+
+    /* --- Homepage banner + footer link --- */
+    ev_banner_status_soon: 'Registration opens soon',
+    ev_banner_status_open: 'Registration open',
+    ev_banner_title: 'Arokya Payanam 2026',
+    ev_banner_text: 'Yoga & Naturopathy conference · 15 Nov 2026 · Kadayam, Tirunelveli',
+    ev_banner_cta: 'View event details →',
+    ev_banner_close: 'Close banner',
+    ev_nav_event: 'Arokya Payanam 2026',
+
+    /* --- Events page: navigation --- */
+    ev_nav_about: 'About Event',
+    ev_nav_agenda: 'Agenda',
+    ev_nav_competitions: 'Competitions',
+    ev_nav_register: 'Register',
+
+    /* --- Events page: hero --- */
+    ev_badge: 'One-Day Health & Wellness Conference',
+    ev_title: 'Arokya Payanam 2026',
+    ev_tagline: 'A Journey Towards Health Through Nature',
+    ev_hero_cta_agenda: 'View Agenda',
+    ev_date_label: 'Date',
+    ev_date: 'Sunday, 15 November 2026',
+    ev_time_label: 'Time',
+    ev_time: '9:00 A.M. – 4:00 P.M.',
+    ev_venue_label: 'Venue',
+    ev_venue: 'AR Group of Institutions, Kadayam, Tirunelveli',
+    ev_theme_label: 'Theme',
+    ev_theme: 'Yoga and Naturopathy for a Stronger and Healthier You',
+
+    /* --- Events page: registration state (soon / open pairs) --- */
+    ev_reg_btn_soon: 'Registration Opens Soon',
+    ev_reg_btn_open: 'Register Now',
+    ev_reg_status_soon: 'Coming Soon',
+    ev_reg_status_open: 'Open Now',
+    ev_reg_note_soon: 'Online registration will open soon. Please check back on this page. For any questions, reach us on WhatsApp or email.',
+    ev_reg_note_open: 'Registration is now open. Click the button to complete your registration. For any questions, reach us on WhatsApp or email.',
+    ev_reg_title: 'Registration',
+
+    /* --- Events page: about + objectives --- */
+    ev_about_title: 'About the Event',
+    ev_about_p1: 'Arokya Payanam 2026 is a one-day health and wellness awareness programme & conference designed to encourage healthier living through practical knowledge, lifestyle awareness, Yoga and Naturopathy.',
+    ev_about_p2: 'The programme brings together health professionals, students, wellness professionals, business communities and the general public through expert sessions and interactive activities.',
+    ev_about_p3: 'The event will feature six expert speaker sessions of 45 minutes each, along with three independently conducted competitions.',
+    ev_obj_title: 'Event Objectives',
+    ev_obj_1: 'Create awareness about healthy living and wellbeing',
+    ev_obj_2: 'Encourage positive lifestyle changes',
+    ev_obj_3: 'Promote prevention-oriented health practices',
+    ev_obj_4: 'Create awareness about mental wellness and stress management',
+    ev_obj_5: 'Introduce the practical importance of Yoga in daily life',
+    ev_obj_6: 'Create awareness about the principles of Naturopathy',
+    ev_obj_7: 'Connect health professionals, students and the general public',
+    ev_obj_8: 'Encourage creativity and health awareness through competitions',
+
+    /* --- Events page: quick stats --- */
+    ev_stat_sessions: 'Expert Speaker Sessions',
+    ev_stat_competitions: 'Competitions',
+    ev_stat_minutes: 'Minutes Per Session',
+    ev_stat_participants: 'Expected Participants',
+
+    /* --- Events page: audience --- */
+    ev_aud_title: 'Who Will Attend',
+    ev_aud_sub: 'Arokya Payanam 2026 is expected to bring together a diverse audience from healthcare, education, business and the general community.',
+    ev_aud_students: 'Naturopathy Students',
+    ev_aud_doctors: 'Doctors & Healthcare Professionals',
+    ev_aud_bni: 'BNI Members & Business Community',
+    ev_aud_public_title: 'General Public',
+    ev_aud_public: 'Health-conscious individuals, families and people interested in healthy living, Yoga, Naturopathy and preventive wellness.',
+    ev_aud_footfall: 'Expected total footfall: 350+ participants, in addition to the general public.',
+
+    /* --- Events page: agenda --- */
+    ev_agenda_title: 'Agenda of the Event',
+    ev_agenda_note: 'Every speaker will receive a full 45-minute session — approximately 35–40 minutes of presentation followed by 5–10 minutes of interaction / Q&A.',
+    ev_ag_1: 'Invocation / Opening',
+    ev_ag_2: 'Traditional Lamp Lighting by Chief Guest and Dignitaries',
+    ev_ag_3: 'Welcome Address',
+    ev_ag_4: 'Introduction to Arokya Payanam 2026, Theme & Objectives',
+    ev_ag_5: 'Chief Guest Address',
+    ev_ag_s1_tag: 'Speaker Session 1 · Awareness',
+    ev_ag_s1: '“Am I Really Healthy?”',
+    ev_ag_s2_tag: 'Speaker Session 2 · Lifestyle',
+    ev_ag_s2: '“Your Lifestyle, Your Health”',
+    ev_ag_tea: 'Tea / Refreshment Break',
+    ev_ag_s3_tag: 'Speaker Session 3 · Prevention',
+    ev_ag_s3: '“Prevention Begins Today”',
+    ev_ag_s4_tag: 'Speaker Session 4 · Mental Wellness',
+    ev_ag_s4: '“The Stressed Mind, The Tired Body”',
+    ev_ag_lunch: 'Lunch Break',
+    ev_ag_s5_tag: 'Speaker Session 5 · Yoga',
+    ev_ag_s5: '“Yoga Beyond the Mat”',
+    ev_ag_s6_tag: 'Speaker Session 6 · Naturopathy',
+    ev_ag_s6: '“The Power of Nature”',
+    ev_ag_results: 'Competition Results & Prize Distribution',
+    ev_ag_felicitation: 'Felicitation / Presentation of Mementos',
+    ev_ag_thanks: 'Vote of Thanks',
+    ev_ag_anthem: 'National Anthem / Official Group Photograph',
+    ev_ag_end: 'Programme Concludes',
+
+    /* --- Events page: competitions --- */
+    ev_comp_title: 'Competitions',
+    ev_comp_sub: 'Arokya Payanam 2026 will feature three competitions.',
+    ev_comp_1: 'Reels Competition',
+    ev_comp_2: 'Fireless Cooking Competition',
+    ev_comp_3: 'Poster Presentation',
+    ev_comp_arr_title: 'Competition Arrangement',
+    ev_comp_arr_1: 'All competitions will be conducted separately from the main speaker programme.',
+    ev_comp_arr_2: 'Dedicated competition areas, coordinators and judges will be assigned.',
+    ev_comp_arr_3: 'Competition activities will not interrupt or interfere with the 45-minute speaker sessions.',
+    ev_comp_arr_4: 'Each competition will also be organised independently to avoid interference between competitions.',
+    ev_prize_title: 'Prize Distribution',
+    ev_prize_text: 'Winners of the Reels Competition, Fireless Cooking Competition and Poster Presentation will be recognised on the main stage from 3:15 P.M. to 3:35 P.M.',
+
+    /* --- Events page: organisers + misc --- */
+    ev_org_title: 'Organised By / In Association With',
+    ev_back_home: 'Back to Home'
   },
 
 
@@ -518,7 +635,124 @@ const translations = {
 
     /* --- மிதக்கும் பொத்தான்கள் --- */
     fab_whatsapp_tooltip: 'வாட்ஸ்அப்பில் அரட்டையடிக்கவும்',
-    fab_phone_tooltip: 'இப்போது அழைக்கவும்'
+    fab_phone_tooltip: 'இப்போது அழைக்கவும்',
+
+    /* ═══ நிகழ்வு: ஆரோக்கிய பயணம் 2026 ═══ */
+
+    /* --- முகப்புப் பதாகை + அடிக்குறிப்பு இணைப்பு --- */
+    ev_banner_status_soon: 'பதிவு விரைவில் தொடங்கும்',
+    ev_banner_status_open: 'பதிவு தொடங்கியுள்ளது',
+    ev_banner_title: 'ஆரோக்கிய பயணம் 2026',
+    ev_banner_text: 'யோகா & இயற்கை மருத்துவ மாநாடு · 15 நவம்பர் 2026 · கடையம், திருநெல்வேலி',
+    ev_banner_cta: 'நிகழ்வு விவரங்களைக் காண்க →',
+    ev_banner_close: 'பதாகையை மூடு',
+    ev_nav_event: 'ஆரோக்கிய பயணம் 2026',
+
+    /* --- நிகழ்வுப் பக்கம்: வழிசெலுத்தல் --- */
+    ev_nav_about: 'நிகழ்வு பற்றி',
+    ev_nav_agenda: 'நிகழ்ச்சி நிரல்',
+    ev_nav_competitions: 'போட்டிகள்',
+    ev_nav_register: 'பதிவு',
+
+    /* --- நிகழ்வுப் பக்கம்: முகப்பு --- */
+    ev_badge: 'ஒரு நாள் ஆரோக்கிய & நல்வாழ்வு மாநாடு',
+    ev_title: 'ஆரோக்கிய பயணம் 2026',
+    ev_tagline: 'இயற்கை வழியே ஆரோக்கியம் நோக்கிய ஒரு பயணம்',
+    ev_hero_cta_agenda: 'நிகழ்ச்சி நிரலைக் காண்க',
+    ev_date_label: 'தேதி',
+    ev_date: 'ஞாயிற்றுக்கிழமை, 15 நவம்பர் 2026',
+    ev_time_label: 'நேரம்',
+    ev_time: 'காலை 9:00 – மாலை 4:00',
+    ev_venue_label: 'இடம்',
+    ev_venue: 'AR குரூப் ஆஃப் இன்ஸ்டிடியூஷன்ஸ், கடையம், திருநெல்வேலி',
+    ev_theme_label: 'கருப்பொருள்',
+    ev_theme: 'வலிமையான, ஆரோக்கியமான உங்களுக்காக யோகா மற்றும் இயற்கை மருத்துவம்',
+
+    /* --- நிகழ்வுப் பக்கம்: பதிவு நிலை --- */
+    ev_reg_btn_soon: 'பதிவு விரைவில் தொடங்கும்',
+    ev_reg_btn_open: 'இப்போது பதிவு செய்யுங்கள்',
+    ev_reg_status_soon: 'விரைவில்',
+    ev_reg_status_open: 'இப்போது திறந்துள்ளது',
+    ev_reg_note_soon: 'ஆன்லைன் பதிவு விரைவில் தொடங்கும். இந்தப் பக்கத்தைத் தொடர்ந்து பார்வையிடவும். ஏதேனும் கேள்விகளுக்கு வாட்ஸ்அப் அல்லது மின்னஞ்சல் மூலம் எங்களைத் தொடர்பு கொள்ளவும்.',
+    ev_reg_note_open: 'பதிவு இப்போது தொடங்கியுள்ளது. பதிவை முடிக்க பொத்தானைக் கிளிக் செய்யவும். ஏதேனும் கேள்விகளுக்கு வாட்ஸ்அப் அல்லது மின்னஞ்சல் மூலம் எங்களைத் தொடர்பு கொள்ளவும்.',
+    ev_reg_title: 'பதிவு',
+
+    /* --- நிகழ்வுப் பக்கம்: நிகழ்வு பற்றி + நோக்கங்கள் --- */
+    ev_about_title: 'நிகழ்வு பற்றி',
+    ev_about_p1: 'ஆரோக்கிய பயணம் 2026 என்பது நடைமுறை அறிவு, வாழ்க்கைமுறை விழிப்புணர்வு, யோகா மற்றும் இயற்கை மருத்துவம் வழியாக ஆரோக்கியமான வாழ்வை ஊக்குவிக்க வடிவமைக்கப்பட்ட ஒரு நாள் ஆரோக்கிய & நல்வாழ்வு விழிப்புணர்வு நிகழ்ச்சி மற்றும் மாநாடு ஆகும்.',
+    ev_about_p2: 'நிபுணர் உரைகள் மற்றும் பங்கேற்புச் செயல்பாடுகள் மூலம் சுகாதார வல்லுநர்கள், மாணவர்கள், நல்வாழ்வு நிபுணர்கள், வணிக சமூகத்தினர் மற்றும் பொதுமக்களை இந்நிகழ்ச்சி ஒன்றிணைக்கிறது.',
+    ev_about_p3: 'தலா 45 நிமிடங்கள் கொண்ட ஆறு நிபுணர் உரை அமர்வுகளுடன், தனித்தனியாக நடத்தப்படும் மூன்று போட்டிகளும் இந்நிகழ்வில் இடம்பெறும்.',
+    ev_obj_title: 'நிகழ்வின் நோக்கங்கள்',
+    ev_obj_1: 'ஆரோக்கியமான வாழ்வு மற்றும் நல்வாழ்வு குறித்த விழிப்புணர்வை ஏற்படுத்துதல்',
+    ev_obj_2: 'நேர்மறையான வாழ்க்கைமுறை மாற்றங்களை ஊக்குவித்தல்',
+    ev_obj_3: 'நோய் தடுப்பை மையமாகக் கொண்ட ஆரோக்கிய நடைமுறைகளை ஊக்குவித்தல்',
+    ev_obj_4: 'மன நலம் மற்றும் மன அழுத்த மேலாண்மை குறித்த விழிப்புணர்வை ஏற்படுத்துதல்',
+    ev_obj_5: 'அன்றாட வாழ்வில் யோகாவின் நடைமுறை முக்கியத்துவத்தை அறிமுகப்படுத்துதல்',
+    ev_obj_6: 'இயற்கை மருத்துவத்தின் கொள்கைகள் குறித்த விழிப்புணர்வை ஏற்படுத்துதல்',
+    ev_obj_7: 'சுகாதார வல்லுநர்கள், மாணவர்கள் மற்றும் பொதுமக்களை இணைத்தல்',
+    ev_obj_8: 'போட்டிகள் மூலம் படைப்பாற்றலையும் ஆரோக்கிய விழிப்புணர்வையும் ஊக்குவித்தல்',
+
+    /* --- நிகழ்வுப் பக்கம்: சுருக்கப் புள்ளிவிவரம் --- */
+    ev_stat_sessions: 'நிபுணர் உரை அமர்வுகள்',
+    ev_stat_competitions: 'போட்டிகள்',
+    ev_stat_minutes: 'நிமிடங்கள் (ஒவ்வொரு அமர்வும்)',
+    ev_stat_participants: 'எதிர்பார்க்கப்படும் பங்கேற்பாளர்கள்',
+
+    /* --- நிகழ்வுப் பக்கம்: பார்வையாளர்கள் --- */
+    ev_aud_title: 'யார் கலந்துகொள்வார்கள்',
+    ev_aud_sub: 'சுகாதாரம், கல்வி, வணிகம் மற்றும் பொதுச் சமூகத்தைச் சேர்ந்த பல்வேறு தரப்பினர் ஆரோக்கிய பயணம் 2026-ல் ஒன்றுகூடுவார்கள் என எதிர்பார்க்கப்படுகிறது.',
+    ev_aud_students: 'இயற்கை மருத்துவ மாணவர்கள்',
+    ev_aud_doctors: 'மருத்துவர்கள் & சுகாதார நிபுணர்கள்',
+    ev_aud_bni: 'BNI உறுப்பினர்கள் & வணிக சமூகத்தினர்',
+    ev_aud_public_title: 'பொதுமக்கள்',
+    ev_aud_public: 'ஆரோக்கியத்தில் அக்கறையுள்ளவர்கள், குடும்பங்கள் மற்றும் ஆரோக்கிய வாழ்வு, யோகா, இயற்கை மருத்துவம், நோய்த் தடுப்பு நல்வாழ்வில் ஆர்வமுள்ளவர்கள்.',
+    ev_aud_footfall: 'எதிர்பார்க்கப்படும் மொத்த வருகை: பொதுமக்கள் தவிர 350+ பங்கேற்பாளர்கள்.',
+
+    /* --- நிகழ்வுப் பக்கம்: நிகழ்ச்சி நிரல் --- */
+    ev_agenda_title: 'நிகழ்ச்சி நிரல்',
+    ev_agenda_note: 'ஒவ்வொரு பேச்சாளருக்கும் முழு 45 நிமிட அமர்வு வழங்கப்படும் — சுமார் 35–40 நிமிட உரையும், அதைத் தொடர்ந்து 5–10 நிமிட கலந்துரையாடல் / கேள்வி பதிலும்.',
+    ev_ag_1: 'இறை வணக்கம் / தொடக்கம்',
+    ev_ag_2: 'சிறப்பு விருந்தினர் மற்றும் முக்கியப் பிரமுகர்களால் பாரம்பரிய குத்துவிளக்கேற்றுதல்',
+    ev_ag_3: 'வரவேற்புரை',
+    ev_ag_4: 'ஆரோக்கிய பயணம் 2026, கருப்பொருள் மற்றும் நோக்கங்கள் அறிமுகம்',
+    ev_ag_5: 'சிறப்பு விருந்தினர் உரை',
+    ev_ag_s1_tag: 'உரை அமர்வு 1 · விழிப்புணர்வு',
+    ev_ag_s1: '“நான் உண்மையிலேயே ஆரோக்கியமாக இருக்கிறேனா?”',
+    ev_ag_s2_tag: 'உரை அமர்வு 2 · வாழ்க்கைமுறை',
+    ev_ag_s2: '“உங்கள் வாழ்க்கைமுறை, உங்கள் ஆரோக்கியம்”',
+    ev_ag_tea: 'தேநீர் / சிற்றுண்டி இடைவேளை',
+    ev_ag_s3_tag: 'உரை அமர்வு 3 · நோய்த் தடுப்பு',
+    ev_ag_s3: '“தடுப்பு இன்றே தொடங்கட்டும்”',
+    ev_ag_s4_tag: 'உரை அமர்வு 4 · மன நலம்',
+    ev_ag_s4: '“அழுத்தமான மனம், சோர்வான உடல்”',
+    ev_ag_lunch: 'மதிய உணவு இடைவேளை',
+    ev_ag_s5_tag: 'உரை அமர்வு 5 · யோகா',
+    ev_ag_s5: '“யோகா பாயைத் தாண்டி”',
+    ev_ag_s6_tag: 'உரை அமர்வு 6 · இயற்கை மருத்துவம்',
+    ev_ag_s6: '“இயற்கையின் சக்தி”',
+    ev_ag_results: 'போட்டி முடிவுகள் & பரிசளிப்பு',
+    ev_ag_felicitation: 'பாராட்டு / நினைவுப் பரிசுகள் வழங்குதல்',
+    ev_ag_thanks: 'நன்றியுரை',
+    ev_ag_anthem: 'தேசிய கீதம் / அதிகாரப்பூர்வ குழு புகைப்படம்',
+    ev_ag_end: 'நிகழ்ச்சி நிறைவு',
+
+    /* --- நிகழ்வுப் பக்கம்: போட்டிகள் --- */
+    ev_comp_title: 'போட்டிகள்',
+    ev_comp_sub: 'ஆரோக்கிய பயணம் 2026-ல் மூன்று போட்டிகள் நடைபெறும்.',
+    ev_comp_1: 'ரீல்ஸ் போட்டி',
+    ev_comp_2: 'நெருப்பில்லா சமையல் போட்டி',
+    ev_comp_3: 'போஸ்டர் விளக்கக்காட்சி',
+    ev_comp_arr_title: 'போட்டி ஏற்பாடுகள்',
+    ev_comp_arr_1: 'அனைத்துப் போட்டிகளும் முதன்மை உரை நிகழ்ச்சியிலிருந்து தனியாக நடத்தப்படும்.',
+    ev_comp_arr_2: 'போட்டிகளுக்கென பிரத்யேக இடங்கள், ஒருங்கிணைப்பாளர்கள் மற்றும் நடுவர்கள் நியமிக்கப்படுவார்கள்.',
+    ev_comp_arr_3: 'போட்டி நடவடிக்கைகள் 45 நிமிட உரை அமர்வுகளுக்கு இடையூறு செய்யாது.',
+    ev_comp_arr_4: 'போட்டிகளுக்கிடையே குறுக்கீடு ஏற்படாமல் ஒவ்வொரு போட்டியும் தனித்தனியாக நடத்தப்படும்.',
+    ev_prize_title: 'பரிசளிப்பு',
+    ev_prize_text: 'ரீல்ஸ் போட்டி, நெருப்பில்லா சமையல் போட்டி மற்றும் போஸ்டர் விளக்கக்காட்சி வெற்றியாளர்கள் மாலை 3:15 முதல் 3:35 வரை முதன்மை மேடையில் கௌரவிக்கப்படுவார்கள்.',
+
+    /* --- நிகழ்வுப் பக்கம்: ஏற்பாட்டாளர்கள் + பிற --- */
+    ev_org_title: 'ஏற்பாடு / இணைந்து நடத்துவோர்',
+    ev_back_home: 'முகப்புக்குத் திரும்பு'
   }
 };
 

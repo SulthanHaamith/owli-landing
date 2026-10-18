@@ -36,26 +36,36 @@ The clinic owner and staff, to establish an online presence and allow patients t
 
 ```
 owli-healthcare/
-├── index.html              # The entire website — all 12 sections in one page
+├── index.html              # The entire website — all sections in one page
+├── events/
+│   └── index.html          # Arokya Payanam 2026 event page (/events/)
 ├── css/
 │   ├── styles.css          # All visual styles, colors, layouts, components
-│   └── responsive.css      # Mobile-first media queries for all screen sizes
+│   ├── responsive.css      # Mobile-first media queries for all screen sizes
+│   ├── events.css          # Styles for the /events/ page only
+│   └── event-banner.css    # Homepage "Arokya Payanam 2026" popup
 ├── js/
 │   ├── i18n.js             # All English + Tamil translations, language toggle logic
 │   ├── main.js             # Nav menu, sticky header, scroll animations, active nav
 │   ├── testimonials.js     # Testimonial carousel (auto-rotate, swipe, dots)
 │   ├── lightbox.js         # Gallery lightbox (open, navigate, close, keyboard)
-│   └── contact.js          # Form validation, WhatsApp URL builder, rate limiting
+│   ├── contact.js          # Form validation, WhatsApp URL builder, rate limiting
+│   ├── treatment-details.js# Service card "View Details" panels
+│   ├── event-config.js     # One place to open/close event registration
+│   └── event-banner.js     # Homepage event popup (show/close, 24h dismissal)
 ├── images/
 │   ├── hero/               # Hero background image (1920×800px)
 │   ├── services/           # Service icons (SVG preferred)
 │   ├── doctors/            # Doctor photos (400×400px, square)
+│   ├── leadership/         # Founder/Co-Founder photos
+│   ├── about/               # Clinic interior photo
+│   ├── events/              # Event logo + organiser logo strip
 │   ├── gallery/            # Clinic gallery photos (800×600px)
 │   ├── blog/               # Blog thumbnail images (600×400px)
 │   ├── logo.svg            # Clinic logo (SVG preferred)
 │   ├── og-image.jpg        # Social sharing image (1200×630px)
 │   └── favicon.ico         # Browser tab icon (32×32px or 64×64px)
-├── sitemap.xml             # SEO sitemap with single page entry
+├── sitemap.xml             # SEO sitemap — homepage + /events/
 ├── robots.txt              # Allows all search engine crawlers
 ├── CLAUDE.md               # Complete project specification (for developers)
 ├── prompt.md               # Build phase instructions (for developers)
@@ -286,9 +296,30 @@ After registering a new domain, it can take **up to 48 hours** for the domain to
 3. Use an FTP client like [FileZilla](https://filezilla-project.org/)
 4. Connect and upload changed files to `public_html/`
 
+### A note on caching (CSS/JS not updating after a change)
+If you edit a CSS or JS file and the live site still shows the old version after uploading, it's almost always a **cache** — either the visitor's browser or Hostinger's CDN is still serving the old file. Two things help:
+1. **Bump the `?v=` version number** on that file's `<link>`/`<script>` tag in `index.html` (e.g. `styles.css?v=2` → `?v=3`). This forces every browser to treat it as a new file and fetch it fresh. `css/event-banner.css`, `js/event-banner.js`, and `js/event-config.js` already use this pattern — follow the same style for any file you add it to.
+2. **Purge the Hostinger CDN cache** in hPanel (Websites → your domain → Cache/CDN section → Purge Cache) after uploading, so the edge servers fetch the new file instead of serving a stale cached copy for up to 7 days.
+
 ---
 
-## 10. Complete Placeholder Checklist
+## 10. How to Manage the Arokya Payanam 2026 Event
+
+The event lives in three places, all controlled from one switch:
+
+1. **`js/event-config.js`** — the single source of truth. While `registrationUrl` is an empty string (`''`), every "Register" button and label on the site (homepage popup + `/events/` page) shows "Registration Opens Soon" and the buttons are disabled. Paste a Razorpay payment link in as `registrationUrl` (must start with `https://`), save, and every one of those labels/buttons switches to "Register Now" automatically — no other file needs to change.
+2. **`events/index.html`** — the full event page at `/events/`: agenda, competitions, organisers, contact details.
+3. **Homepage popup** (`index.html` → `<div id="event-banner">`, styled by `css/event-banner.css`, behavior in `js/event-banner.js`) — a centered announcement that appears ~800ms after the homepage loads, showing the event logo and a link to `/events/`. It closes via the × button, clicking outside it, or the Escape key, and stays hidden for 24 hours after a visitor closes it. It also stops appearing entirely after the date in `OWLI_EVENT.endDate` (`js/event-config.js`) — update that if the event date ever changes.
+
+### To remove the event entirely once it's over
+1. Delete the `<div id="event-banner">` block from `index.html` (search for `EVENT BANNER`) and its two `<script>` tags (`event-config.js`, `event-banner.js`) and the `<link>` to `css/event-banner.css`.
+2. Delete the `events/` folder, `css/events.css`, `images/events/`, and the one footer link to it in `index.html`.
+3. Remove the `/events/` entry from `sitemap.xml`.
+4. The `ev_*` keys in `js/i18n.js` can stay (unused keys are harmless) or be removed for tidiness.
+
+---
+
+## 11. Complete Placeholder Checklist
 
 **Replace ALL of these before going live:**
 
@@ -305,7 +336,7 @@ After registering a new domain, it can take **up to 48 hours** for the domain to
 
 ---
 
-## 11. Browser Support
+## 12. Browser Support
 
 This website works in all modern browsers:
 
@@ -322,7 +353,7 @@ The site uses modern CSS features (custom properties, grid, flexbox) and JavaScr
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 ### "Site not loading after upload"
 - Make sure `index.html` is directly inside `public_html/` (not in a subfolder)
@@ -333,6 +364,7 @@ The site uses modern CSS features (custom properties, grid, flexbox) and JavaScr
 - Check that the `css/` folder is uploaded to `public_html/`
 - Open browser DevTools (F12) → Console tab → look for 404 errors on CSS files
 - Verify the file paths in the `<link>` tags in `index.html` match your folder structure
+- **If you just edited a CSS/JS file and the change doesn't show up:** it's very likely a cache, not a bug. Hard-refresh the page (Ctrl+Shift+R / Cmd+Shift+R), and if that doesn't help, see "A note on caching" under Section 9 — bump the file's `?v=` number and purge the Hostinger CDN cache. A real symptom of this: an element (like the event popup) rendering as plain unstyled content in the wrong place on the page, because the browser's cached CSS has no rules for a class name that only exists in the newer HTML.
 
 ### "Language toggle not working"
 - Open browser DevTools → Console tab → check for JavaScript errors

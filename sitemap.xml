@@ -20,4 +20,11 @@
     <!-- Priority relative to other pages (1.0 = highest) -->
     <priority>1.0</priority>
   </url>
+  <!-- Arokya Payanam 2026 event page -->
+  <url>
+    <loc>https://owlihealthcare.com/events/</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

@@ -60,6 +60,11 @@
   <!-- Responsive stylesheet — media queries for mobile/tablet/desktop -->
   <link rel="stylesheet" href="css/responsive.css">
 
+  <!-- Event banner stylesheet — closable "Arokya Payanam 2026" popup (see js/event-banner.js).
+       The ?v= query string busts stale browser/CDN caches whenever this file changes —
+       bump it (e.g. v=3) any time event-banner.css is edited again. -->
+  <link rel="stylesheet" href="css/event-banner.css?v=2">
+
   <!-- ============================================
        STRUCTURED DATA (JSON-LD)
        PURPOSE: Helps Google understand this is a
@@ -1195,6 +1200,7 @@
             <li><a href="#team" data-i18n="nav_team">Our Team</a></li>
             <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
             <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+            <li><a href="events/" data-i18n="ev_nav_event">Arokya Payanam 2026</a></li>
           </ul>
         </div>
 
@@ -1274,6 +1280,39 @@
   </div>
 
   <!-- ============================================
+       EVENT BANNER: AROKYA PAYANAM 2026
+       PURPOSE: Centered popup announcement that appears shortly
+                after the homepage loads, with the event logo,
+                supporting text, and a button to the /events/ page.
+                Hidden until js/event-banner.js reveals it;
+                visitors can close it with the × button, by clicking
+                the dark backdrop, or by pressing Escape.
+       NOTES: - The status pill ("Registration opens soon") switches
+                to "Registration open" automatically once a Razorpay
+                link is added in js/event-config.js.
+              - To remove the banner, delete this whole block.
+       ============================================ -->
+  <div id="event-banner" class="event-modal-overlay" hidden>
+    <div class="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+      <button type="button" id="event-banner-close" class="event-modal-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <span class="event-modal-status" data-reg-soon="ev_banner_status_soon" data-reg-open="ev_banner_status_open" data-i18n="ev_banner_status_soon">Registration opens soon</span>
+
+      <img src="images/events/arokya-payanam-logo.webp" alt="Arokya Payanam 2026" class="event-modal-logo" width="1238" height="706">
+
+      <h2 id="event-modal-title" class="sr-only" data-i18n="ev_banner_title">Arokya Payanam 2026</h2>
+      <p class="event-modal-text" data-i18n="ev_banner_text">Yoga &amp; Naturopathy conference · 15 Nov 2026 · Kadayam, Tirunelveli</p>
+
+      <a href="events/" class="btn btn-primary event-modal-cta" data-i18n="ev_banner_cta">View event details →</a>
+    </div>
+  </div>
+
+  <!-- ============================================
        JAVASCRIPT FILES
        PURPOSE: Loaded at the end of <body> so the
                 HTML is fully parsed before scripts run.
@@ -1286,6 +1325,10 @@
   <script src="js/lightbox.js"></script>
   <script src="js/contact.js"></script>
   <script src="js/treatment-details.js"></script>
+  <!-- Event: registration state (js/event-config.js) + closable banner.
+       ?v= busts stale caches — bump it any time these files are edited again. -->
+  <script src="js/event-config.js?v=2"></script>
+  <script src="js/event-banner.js?v=2"></script>
 
 </body>
 </html>

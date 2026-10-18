@@ -305,6 +305,22 @@ p {
   top: 0;
 }
 
+/* Visually hides content while keeping it readable by screen readers —
+   used where an image already conveys the same information visually
+   (e.g. a logo strip) but the underlying text should still exist for
+   accessibility and SEO. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 
 /* ──────────────────────────────────────────────
    6. HEADER / NAVIGATION

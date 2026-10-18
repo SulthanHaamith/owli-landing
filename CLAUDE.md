@@ -423,27 +423,35 @@ Everything below goes into Hostinger's `public_html/` directory.
 ```
 owli-healthcare/
 ├── index.html                  # Single-page site with all sections
+├── events/
+│   └── index.html              # Arokya Payanam 2026 event page (/events/)
 ├── css/
 │   ├── styles.css              # All base styles, layout, components
-│   └── responsive.css          # Media queries for mobile/tablet/desktop
+│   ├── responsive.css          # Media queries for mobile/tablet/desktop
+│   ├── events.css              # Styles for the /events/ page only
+│   └── event-banner.css        # Homepage "Arokya Payanam 2026" popup
 ├── js/
 │   ├── main.js                 # Nav toggle, sticky header, scroll animations
 │   ├── i18n.js                 # Translation object + language toggle logic
 │   ├── testimonials.js         # Testimonial carousel (auto-rotate + controls)
 │   ├── lightbox.js             # Gallery lightbox (open/close/navigate)
-│   └── contact.js              # Form validation + WhatsApp URL builder
+│   ├── contact.js              # Form validation + WhatsApp URL builder
+│   ├── treatment-details.js    # Service card "View Details" panels
+│   ├── event-config.js         # Event registration state (one place to open/close it)
+│   └── event-banner.js         # Homepage event popup (show/close, 24h dismissal)
 ├── images/
 │   ├── hero/                   # Hero background (1920×800px)
 │   ├── services/               # Service icons (SVG preferred)
 │   ├── doctors/                # Doctor photos (400×400px, square)
 │   ├── leadership/              # Founder/Co-Founder photos
 │   ├── about/                  # Clinic interior photo
+│   ├── events/                 # Event logo + organiser logo strip
 │   ├── gallery/                # Clinic gallery photos (800×600px)
 │   ├── blog/                   # Blog thumbnail images (600×400px)
 │   ├── logo.svg                # Clinic logo
 │   ├── og-image.jpg            # Social sharing image (1200×630px)
 │   └── favicon.ico             # Browser tab icon
-├── sitemap.xml                 # Single-page sitemap for SEO
+├── sitemap.xml                 # Sitemap — homepage + /events/
 ├── robots.txt                  # Allow all crawlers
 └── README.md                   # Full project documentation
 ```
@@ -486,5 +494,10 @@ owli-healthcare/
 10. **Semantic HTML** — proper landmark elements, ARIA labels, accessibility.
 
 ## Change Log
+
+- **Arokya Payanam 2026 event:** New `/events/` page (`events/index.html`, `css/events.css`) with full event details, bilingual (`ev_*` keys in `i18n.js`), plus one footer link on the homepage. Registration state is controlled from one place, `js/event-config.js`: while `registrationUrl` is empty, every registration label/button site-wide says "Registration Opens Soon"; paste the Razorpay link there and push to switch everything to "Register Now".
+  - **Homepage announcement:** A centered modal popup (`css/event-banner.css` `.event-modal-overlay`/`.event-modal`, `js/event-banner.js`) appears ~800ms after the homepage loads — dark backdrop, the event logo, supporting text, and a "View event details" button. Closes via the × button, a backdrop click, or Escape; locks background scroll while open; stays hidden for 24h after closing (localStorage) and stops appearing entirely after `OWLI_EVENT.endDate`.
+  - **Event artwork:** Official "Arokya Payanam 2026" logo (`images/events/arokya-payanam-logo.webp`) — the centerpiece of both the homepage popup and the events-page hero — and the organiser/association logo strip (INYGMA, AR Group of Institutions, SKT Nature Cure & Yoga Hospital, Owl I) at `images/events/organisers.png`. Both shown in white rounded cards so the white-background artwork doesn't clash with colored section backgrounds. A `.sr-only` utility (`css/styles.css`) keeps the organiser names readable to screen readers/SEO even though they're now conveyed by the logo image.
+  - **Cache-busting:** `css/event-banner.css`, `js/event-banner.js`, and `js/event-config.js` are linked with a `?v=2` query string in `index.html`. Bump that number (`v=3`, `v=4`, …) any time one of those three files is edited again — without it, browsers that already cached an older version of the file may keep using the stale copy indefinitely, which previously made the popup render as plain unstyled content at the bottom of the page instead of the centered modal.
 
 - **2026-10-10 (B1 + B2):** Treatment "View Details" panels added to all 11 service cards (`js/treatment-details.js`, clinic-approved wording only, no durations/fees). Booking form softened: hero/CTA "Book Appointment" → "Enquire on WhatsApp"; submit → "Request an Appointment"; Email/Message optional; 3 new dropdown options; bilingual confirmation note + success message.

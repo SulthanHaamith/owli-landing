@@ -1,0 +1,127 @@
+/* ──────────────────────────────────────────────
+   EVENT-BANNER.CSS — Homepage "Arokya Payanam 2026" popup
+   A centered announcement modal that appears shortly after the
+   homepage loads: logo, supporting text, and a button to the
+   /events/ page. js/event-banner.js reveals it (unless the
+   visitor closed it recently or the event is over) and closes
+   it on the × button, a backdrop click, or the Escape key.
+
+   - Hidden by default (the `hidden` attribute).
+   - z-index 1100 — above the header (1000) and the big header
+     stack, below nothing else on this site.
+   ────────────────────────────────────────────── */
+
+.event-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: rgba(26, 26, 26, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* The hidden attribute must win over the flex layout above */
+.event-modal-overlay[hidden] {
+  display: none;
+}
+
+.event-modal-overlay.is-visible {
+  opacity: 1;
+}
+
+.event-modal {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--color-white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  padding: 44px 24px 28px;
+  text-align: center;
+  /* Pop-in entrance (see .is-visible on the overlay) */
+  transform: scale(0.92);
+  transition: transform 0.3s ease;
+}
+
+.event-modal-overlay.is-visible .event-modal {
+  transform: scale(1);
+}
+
+/* Close (×) button — 44px touch target, top-right corner */
+.event-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-light-text);
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.event-modal-close:hover {
+  color: var(--color-primary);
+  background-color: var(--color-background);
+}
+
+.event-modal-close:focus-visible,
+.event-modal-cta:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* Small pill: "Registration opens soon" */
+.event-modal-status {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-color: var(--color-light-green);
+  color: var(--color-primary);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+/* The event logo is the centerpiece of this popup */
+.event-modal-logo {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  margin: 0 auto 18px;
+}
+
+.event-modal-text {
+  color: var(--color-dark-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.event-modal-cta {
+  display: inline-block;
+}
+
+@media (min-width: 480px) {
+  .event-modal { max-width: 420px; padding: 52px 36px 36px; }
+  .event-modal-logo { max-width: 300px; }
+  .event-modal-text { font-size: 1.05rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-modal-overlay,
+  .event-modal {
+    transition: none;
+  }
+}
