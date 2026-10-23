@@ -11,7 +11,7 @@
               - Text is bilingual through the same js/i18n.js
                 system as the homepage (keys start with "ev_").
               - Registration is controlled from ONE place:
-                js/event-config.js (paste the Razorpay link there).
+                js/event-config.js (registrationMode: 'preview' | 'open' | 'closed').
        ============================================ -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,8 +111,10 @@
          HERO
          PURPOSE: Event name, tagline, key facts, and the
                   main registration button.
-         NOTES: The button (data-reg-btn) is disabled until a
-                Razorpay link is set in js/event-config.js.
+         NOTES: The button (data-reg-btn) stays disabled until
+                registrationMode is 'open' in js/event-config.js AND the
+                server switch (owli-config.php) agrees. 'preview' keeps it
+                disabled while prices + the form are shown as a demo.
          ============================================ -->
     <section class="ev-hero" id="event-top" aria-labelledby="ev-title">
       <div class="container">
@@ -148,7 +150,7 @@
         <div class="ev-hero-ctas">
           <!-- Registration button: "Opens Soon" now, "Register Now" once a link is set -->
           <a class="btn btn-cta-primary ev-reg-btn is-disabled" data-reg-btn aria-disabled="true" tabindex="-1"
-             data-reg-soon="ev_reg_btn_soon" data-reg-open="ev_reg_btn_open" data-i18n="ev_reg_btn_soon">Registration Opens Soon</a>
+             data-reg-soon="ev_reg_btn_soon" data-reg-preview="ev_reg_btn_preview" data-reg-open="ev_reg_btn_open" data-i18n="ev_reg_btn_soon">Registration Opens Soon</a>
           <a href="#agenda" class="btn btn-secondary" data-i18n="ev_hero_cta_agenda">View Agenda</a>
         </div>
       </div>
@@ -320,16 +322,19 @@
 
     <!-- ============================================
          REGISTRATION
-         PURPOSE: Shows "Coming Soon" until a Razorpay link is
-                  added to js/event-config.js, then switches to
-                  an active "Register Now" button automatically.
+         PURPOSE: The pill / note / button follow the registration mode:
+                  'closed'  -> "Coming Soon" + disabled button
+                  'preview' -> "Preview — Opens Soon", form explorable,
+                               Pay button disabled, server refuses (503)
+                  'open'    -> "Register Now", form fully active.
+                  Driven by js/event-config.js + the server switch.
          ============================================ -->
     <section class="ev-section alt" id="register" aria-labelledby="register-heading">
       <div class="container">
         <div class="ev-register-card">
-          <span class="ev-status-pill" data-reg-soon="ev_reg_status_soon" data-reg-open="ev_reg_status_open" data-i18n="ev_reg_status_soon">Coming Soon</span>
+          <span class="ev-status-pill" data-reg-soon="ev_reg_status_soon" data-reg-preview="ev_reg_status_preview" data-reg-open="ev_reg_status_open" data-i18n="ev_reg_status_soon">Coming Soon</span>
           <h2 id="register-heading" data-i18n="ev_reg_title">Registration</h2>
-          <p data-reg-soon="ev_reg_note_soon" data-reg-open="ev_reg_note_open" data-i18n="ev_reg_note_soon">Online registration will open soon. Please check back on this page. For any questions, reach us on WhatsApp or email.</p>
+          <p data-reg-soon="ev_reg_note_soon" data-reg-preview="ev_reg_note_preview" data-reg-open="ev_reg_note_open" data-i18n="ev_reg_note_soon">Online registration will open soon. Please check back on this page. For any questions, reach us on WhatsApp or email.</p>
           <a class="btn btn-primary ev-reg-btn is-disabled" data-reg-btn aria-disabled="true" tabindex="-1"
              data-reg-soon="ev_reg_btn_soon" data-reg-open="ev_reg_btn_open" data-i18n="ev_reg_btn_soon">Registration Opens Soon</a>
           <div class="ev-contact-row">
@@ -337,6 +342,149 @@
             <a href="mailto:arokyapayanam@gmail.com">arokyapayanam@gmail.com</a>
           </div>
         </div>
+
+        <!-- ============================================
+             REGISTRATION FORM
+             PURPOSE: Collects attendee details, then sends them to the
+                      secure Coaxlure payment page (see js/event-register.js
+                      and api/register.php).
+             NOTES: - Category-specific fields (data-cat="...") show/hide
+                      automatically. Hidden ones are disabled so they are
+                      not sent.
+                    - The price shown is for display only; the server
+                      recalculates it from the database.
+                    - The form stays locked until registrationOpen = true
+                      in js/event-config.js.
+             ============================================ -->
+        <form id="register-form" class="ev-form" novalidate autocomplete="on">
+          <h3 data-i18n="evf_title">Register for Arokya Payanam 2026</h3>
+          <p class="ev-form-closed" id="evf-closed" data-i18n="evf_closed">Registration opens soon. The form will unlock once online payments are approved.</p>
+
+          <fieldset class="ev-form-fields" id="evf-fields" disabled>
+            <!-- Honeypot: real people never see or fill this -->
+            <div class="ev-hp" aria-hidden="true">
+              <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <div class="ev-field">
+              <label for="evf-category" data-i18n="evf_category">I am registering as</label>
+              <select id="evf-category" name="category" required>
+                <option value="" data-i18n="evf_cat_choose">Select a category</option>
+                <option value="student" data-i18n="evf_cat_student">Naturopathy Student</option>
+                <option value="general" data-i18n="evf_cat_general">General Public</option>
+                <option value="bni" data-i18n="evf_cat_bni">BNI Member</option>
+                <option value="doctor" data-i18n="evf_cat_doctor">Doctor</option>
+              </select>
+              <span class="ev-error" data-err-for="category"></span>
+              <!-- Filled by js/event-register.js from api/quote.php?category=all (prices come from the database) -->
+              <ul class="ev-price-list" id="evf-price-list" hidden></ul>
+            </div>
+
+            <div class="ev-field">
+              <label for="evf-name" data-i18n="evf_name">Full name *</label>
+              <input id="evf-name" name="name" type="text" maxlength="100" autocomplete="name" required>
+              <span class="ev-error" data-err-for="name"></span>
+            </div>
+
+            <div class="ev-field">
+              <label for="evf-mobile" data-i18n="evf_mobile">Mobile number *</label>
+              <input id="evf-mobile" name="mobile" type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="9876543210" required>
+              <span class="ev-error" data-err-for="mobile"></span>
+            </div>
+
+            <div class="ev-field">
+              <label for="evf-email" data-i18n="evf_email">Email</label>
+              <input id="evf-email" name="email" type="email" maxlength="150" autocomplete="email" required>
+              <span class="ev-error" data-err-for="email"></span>
+            </div>
+
+            <div class="ev-field">
+              <label for="evf-address" data-i18n="evf_address">Address</label>
+              <textarea id="evf-address" name="address" rows="2" maxlength="300" autocomplete="street-address" required></textarea>
+              <span class="ev-error" data-err-for="address"></span>
+            </div>
+
+            <!-- Student -->
+            <div class="ev-cat-block" data-cat="student" hidden>
+              <div class="ev-field">
+                <label for="evf-year" data-i18n="evf_year">Year of study</label>
+                <select id="evf-year" name="year_of_study" required>
+                  <option value="" data-i18n="evf_year_choose">Select year</option>
+                  <option value="part1" data-i18n="evf_year_part1">Part 1</option>
+                  <option value="part2" data-i18n="evf_year_part2">Part 2</option>
+                  <option value="2nd" data-i18n="evf_year_2nd">2nd Year</option>
+                  <option value="3rd" data-i18n="evf_year_3rd">3rd Year</option>
+                  <option value="4th" data-i18n="evf_year_4th">4th Year</option>
+                  <option value="internship" data-i18n="evf_year_intern">Internship</option>
+                </select>
+                <span class="ev-error" data-err-for="year_of_study"></span>
+              </div>
+              <div class="ev-field">
+                <label for="evf-college" data-i18n="evf_college">College</label>
+                <input id="evf-college" name="college" type="text" maxlength="150" required>
+                <span class="ev-error" data-err-for="college"></span>
+              </div>
+              <div class="ev-field">
+                <span class="ev-label" data-i18n="evf_comps">Competitions (optional)</span>
+                <label class="ev-check"><input type="checkbox" name="competitions" value="poster"> <span data-i18n="ev_comp_3">Poster Presentation</span></label>
+                <label class="ev-check"><input type="checkbox" name="competitions" value="fireless_cooking"> <span data-i18n="ev_comp_2">Fireless Cooking Competition</span></label>
+              </div>
+            </div>
+
+            <!-- BNI -->
+            <div class="ev-cat-block" data-cat="bni" hidden>
+              <div class="ev-field">
+                <label for="evf-chapter" data-i18n="evf_chapter">BNI chapter</label>
+                <input id="evf-chapter" name="chapter" type="text" maxlength="100" required>
+                <span class="ev-error" data-err-for="chapter"></span>
+              </div>
+              <div class="ev-field">
+                <label for="evf-org" data-i18n="evf_org">Organisation / business name</label>
+                <input id="evf-org" name="organisation" type="text" maxlength="150" required>
+                <span class="ev-error" data-err-for="organisation"></span>
+              </div>
+            </div>
+
+            <!-- Doctor -->
+            <div class="ev-cat-block" data-cat="doctor" hidden>
+              <div class="ev-field">
+                <label for="evf-qual" data-i18n="evf_qual">Qualification</label>
+                <input id="evf-qual" name="qualification" type="text" maxlength="100" required>
+                <span class="ev-error" data-err-for="qualification"></span>
+              </div>
+              <div class="ev-field">
+                <label for="evf-clinic" data-i18n="evf_clinic">Clinic / hospital name (optional)</label>
+                <input id="evf-clinic" name="clinic" type="text" maxlength="150">
+                <span class="ev-error" data-err-for="clinic"></span>
+              </div>
+            </div>
+
+            <!-- Coupon -->
+            <div class="ev-field">
+              <label for="evf-coupon" data-i18n="evf_coupon">Coupon code (optional)</label>
+              <div class="ev-coupon-row">
+                <input id="evf-coupon" name="coupon" type="text" maxlength="30" autocapitalize="characters" autocomplete="off">
+                <button type="button" class="btn btn-secondary" id="evf-coupon-apply" data-i18n="evf_apply">Apply</button>
+              </div>
+              <span class="ev-error" data-err-for="coupon"></span>
+            </div>
+
+            <div class="ev-price-box" id="evf-price" aria-live="polite" hidden>
+              <span data-i18n="evf_amount">Amount to pay</span>
+              <strong id="evf-price-value">₹0</strong>
+            </div>
+
+            <p class="ev-error ev-form-error" id="evf-form-error" role="alert"></p>
+
+            <button type="submit" class="btn btn-primary ev-pay-btn" id="evf-submit" disabled>
+              <span data-i18n="evf_pay">Proceed to Payment</span>
+            </button>
+            <p class="ev-form-note" data-i18n="evf_note">You will be taken to Coaxlure's secure payment page. Your registration is confirmed only after the payment is verified.</p>
+          </fieldset>
+        </form>
+
+        <!-- Shown when the attendee returns from the payment page -->
+        <div class="ev-status-box" id="evf-status" role="status" aria-live="polite" hidden></div>
       </div>
     </section>
 
@@ -387,7 +535,9 @@
   </div>
 
   <!-- i18n.js first (translations + language toggle), then registration state -->
-  <script src="../js/i18n.js"></script>
-  <script src="../js/event-config.js"></script>
+  <script src="../js/i18n.js?v=2"></script>
+  <script src="../js/event-config.js?v=5"></script>
+  <!-- Registration form: category fields, price, payment redirect, status check -->
+  <script src="../js/event-register.js?v=2"></script>
 </body>
 </html>

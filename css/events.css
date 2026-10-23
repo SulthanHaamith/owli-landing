@@ -762,3 +762,124 @@ body.events-page {
   .floating-buttons { bottom: 20px; right: 16px; }
   .fab { width: 48px; height: 48px; }
 }
+
+
+/* ============================================
+   REGISTRATION FORM (events/index.html #register-form)
+   PURPOSE: Mobile-first form card. 16px inputs stop iOS zoom-on-focus;
+            44px+ tap targets for thumbs.
+   ============================================ */
+.ev-form {
+  max-width: 640px;
+  margin: 28px auto 0;
+  padding: 24px 18px;
+  background-color: var(--color-white);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(45, 90, 61, 0.12);
+  text-align: left;
+}
+.ev-form h3 { color: var(--color-primary); margin-bottom: 12px; text-align: center; }
+.ev-form-closed {
+  background: var(--color-background);
+  color: var(--color-accent);
+  padding: 12px 14px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+.ev-form-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ev-form-fields:disabled { opacity: 0.45; }
+.ev-field { margin-bottom: 16px; }
+.ev-field label, .ev-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--color-dark-text);
+  font-size: 0.95rem;
+}
+.ev-field input[type="text"],
+.ev-field input[type="tel"],
+.ev-field input[type="email"],
+.ev-field select,
+.ev-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 16px;
+  border: 1.5px solid var(--color-light-green);
+  border-radius: 8px;
+  background: var(--color-white);
+  color: var(--color-dark-text);
+}
+.ev-field input:focus, .ev-field select:focus, .ev-field textarea:focus {
+  outline: 3px solid rgba(91, 140, 90, 0.35);
+  border-color: var(--color-secondary);
+}
+.ev-field textarea { resize: vertical; }
+.ev-check {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-weight: 400 !important;
+  cursor: pointer;
+}
+.ev-check input { width: 22px; height: 22px; flex-shrink: 0; accent-color: var(--color-primary); }
+.ev-coupon-row { display: flex; gap: 8px; }
+.ev-coupon-row input { flex: 1; min-width: 0; text-transform: uppercase; }
+.ev-coupon-row .btn { min-height: 46px; padding: 0 16px; }
+.ev-error { display: block; color: #b3261e; font-size: 0.85rem; margin-top: 4px; }
+.ev-error:empty { display: none; }
+.ev-form-error { text-align: center; margin: 8px 0; font-weight: 600; }
+.ev-price-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: var(--color-background);
+  border-radius: 10px;
+  color: var(--color-primary);
+}
+.ev-price-box strong { font-size: 1.3rem; }
+/* Price list under the category dropdown (tap-friendly, highlights the chosen row) */
+.ev-price-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.ev-price-list[hidden] { display: none; }
+.ev-price-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border, #d9e2dc);
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+.ev-price-list li.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-background);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.ev-pay-btn { width: 100%; min-height: 50px; font-size: 1.05rem; }
+.ev-pay-btn:disabled { opacity: 0.6; cursor: wait; }
+.ev-form-note { font-size: 0.82rem; color: var(--color-light-text); text-align: center; margin-top: 10px; }
+.ev-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.ev-status-box {
+  max-width: 640px;
+  margin: 20px auto 0;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--color-white);
+  border-left: 5px solid var(--color-accent);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ev-status-box.is-paid { border-left-color: var(--color-secondary); color: var(--color-primary); }
+.ev-status-box .btn { margin-top: 10px; }
+.ev-cat-block[hidden] { display: none; }
+@media (min-width: 640px) {
+  .ev-form { padding: 32px; }
+}

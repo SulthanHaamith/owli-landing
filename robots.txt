@@ -9,5 +9,9 @@
 User-agent: *
 Allow: /
 
+# The admin console is for staff only (it is also password-protected
+# by admin/index.php) — keep it out of search results.
+Disallow: /admin/
+
 # Point crawlers to our sitemap for better indexing
 Sitemap: https://owlihealthcare.com/sitemap.xml

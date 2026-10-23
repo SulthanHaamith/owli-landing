@@ -1,0 +1,13 @@
+# Arokya Payanam API — only register.php, quote.php and status.php are public.
+# Everything else (helpers, config, cron) is blocked from the web.
+<FilesMatch "^(_.*|config.*\.php|cron-recheck\.php|admin-pass\.php|\.htaccess)$">
+  Require all denied
+</FilesMatch>
+
+# Never list the folder
+Options -Indexes
+
+# API replies are never cached
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-store"
+</IfModule>

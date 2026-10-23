@@ -7,9 +7,9 @@
 
 ## 1. PROJECT SUMMARY
 
-**What:** A static landing page for a naturopathy clinic in Tirunelveli, Tamil Nadu, India.
-**Goal:** Get the clinic online quickly with a professional, fast-loading, bilingual (English/Tamil) website.
-**Approach:** Pure static site — no backend, no database, no authentication. Upload-and-go.
+**What:** A bilingual (English/Tamil) clinic website with a static homepage and a PHP/MySQL-backed event registration flow for Arokya Payanam 2026.
+**Goal:** Maintain the clinic website and provide secure event registration with server-side pricing and Coaxlure payment verification.
+**Approach:** The clinic pages are static HTML/CSS/vanilla JavaScript. Event registration uses PHP endpoints and MySQL on Hostinger; local development uses Docker. Payment credentials must remain outside the repository and public web root.
 
 ---
 
@@ -20,44 +20,38 @@
 | Markup      | Plain HTML5           | Semantic elements, no templating engine         |
 | Styling     | Hand-written CSS      | Custom properties for theming, separate responsive file |
 | JavaScript  | Vanilla JS (ES6+)     | No libraries, no bundler                       |
-| Icons       | Inline SVGs + Lucide CDN | `https://unpkg.com/lucide@latest` as fallback |
+| Icons       | Inline SVGs only | Hand-written SVGs; no icon library or CDN |
 | Fonts       | Google Fonts (`<link>`)| Poppins (EN), Noto Sans Tamil (TA)             |
 | Animations  | CSS-only + IntersectionObserver | Keyframes, transitions — no JS animation libs |
-| Build step  | **None**              | Open `index.html` in browser = done            |
-| Hosting     | Hostinger (shared)    | Upload to `public_html/` via File Manager or FTP |
+| Build step  | **None**              | Static pages need no compilation; serve locally for API testing |
+| Backend     | PHP 8.2+               | Event registration endpoints under `api/`       |
+| Database    | MySQL / MariaDB        | Event tiers, coupons, registrations, payments    |
+| Hosting     | Hostinger Premium      | PHP/MySQL enabled; site files deployed to `public_html/` |
 
-### What is NOT allowed
-- No JS frameworks (React, Vue, Angular, Astro, Next.js)
-- No build tools (npm, Webpack, Vite, Parcel)
-- No server-side runtime (Node.js, PM2, Nginx config)
-- No database (PostgreSQL, Prisma, SQLite)
-- No authentication system
-- No CSS preprocessors (Sass, Less) — plain CSS only
-- No Tailwind build step (CDN usage would be acceptable but not planned)
+### Project constraints
+- Keep the clinic pages in plain HTML/CSS/vanilla JavaScript; no JS frameworks or front-end build tools.
+- The event-registration backend is PHP + MySQL. Do not replace it with a browser-side payment integration.
+- Never expose Coaxlure credentials, generated tokens, database passwords, or attendee data in client-side files or Git.
+- Keep using plain CSS; no Sass/Less or required CSS build step.
 
 ---
 
 ## 3. DOMAIN & HOSTING
 
-- **Domain:** owlihealthcare.com (not yet registered — register through Hostinger for free domain with hosting plan)
-- **Hosting provider:** Hostinger — Premium Web Hosting plan (includes 1 free domain)
-- **Deployment method:** Upload all files to `public_html/` via Hostinger File Manager or FTP
-- **SSL:** Free SSL certificate — enable in Hostinger hPanel after domain is active
-- **No server-side setup needed:** No Node.js, no PM2, no Nginx config. Just upload static files.
+- **Domain:** `owlihealthcare.com` (reported live by the site owner)
+- **Hosting provider:** Hostinger Premium Web Hosting
+- **Deployment:** GitHub deployment publishes the site into `public_html/` (the owner reports pushes deploy automatically); File Manager/FTP remain available for server-only configuration.
+- **Runtime:** PHP 8.2+ and MySQL are available on the hosting plan. The clinic pages are static; the event form uses the PHP API in `api/` and the MySQL schema in `sql/schema.sql`.
+- **SSL:** Active for the domain.
+- **Secrets:** Keep `owli-config.php` outside `public_html` and outside Git. On Hostinger, place it in the parent directory described in `api/config.sample.php`.
+- **Local preview:** Docker web container serves `http://localhost:8800/`; the event page is `http://localhost:8800/events/`.
 
-### Domain Registration Steps
-1. Purchase Hostinger Premium Web Hosting (or higher) — includes 1 free domain for the first year
-2. During checkout, claim free domain: `owlihealthcare.com`
-3. If `.com` is taken, fallback options: `owlihealthcare.in`, `owlihealth.com`, `owlihealthcenter.com`
-4. After purchase: Hostinger auto-points the domain to hosting — no manual DNS setup needed
-5. Enable free SSL in hPanel → Security → SSL
-
-### Deployment Steps
-1. Open Hostinger hPanel → Files → File Manager
-2. Navigate to `public_html/`
-3. Delete default files (index.html, .htaccess if present)
-4. Upload entire project folder contents (index.html, css/, js/, images/, etc.) directly into `public_html/`
-5. Verify: visit `https://owlihealthcare.com` — site should be live
+### Deployment and server configuration
+- The owner reports the domain, Premium hosting, SSL, PHP 8.2–8.5 and MySQL are active.
+- The owner reports GitHub pushes deploy the site into `public_html/`. Use the repository's configured deployment workflow for project changes, and verify deployment before considering a change live.
+- Use hPanel/File Manager for server-only setup: create the production DB/user, import `sql/schema.sql`, configure PHP/cron, and place `owli-config.php` outside `public_html`.
+- Do not remove existing site files or upload a replacement site as part of routine deployment.
+- For local PHP/API testing, use the Docker preview URLs and local config details documented in `README.md` §10. Local container hostnames/passwords are not production settings.
 
 ---
 
@@ -439,7 +433,12 @@ owli-healthcare/
 │   ├── contact.js              # Form validation + WhatsApp URL builder
 │   ├── treatment-details.js    # Service card "View Details" panels
 │   ├── event-config.js         # Event registration state (one place to open/close it)
-│   └── event-banner.js         # Homepage event popup (show/close, 24h dismissal)
+│   ├── event-banner.js         # Homepage event popup (show/close, 24h dismissal)
+│   └── event-register.js       # /events/ registration form (category fields, price list, payment redirect)
+├── admin/index.php            # Password-protected staff console: registrations, statuses, recheck, CSV export
+├── api/                        # PHP backend: register.php, quote.php, status.php, cron-recheck.php, _bootstrap.php, admin-pass.php
+├── scripts/                    # validate.php (pre-deploy checks) + check-i18n.js (EN/TA parity)
+├── sql/schema.sql              # MySQL tables + starting prices (import once via phpMyAdmin)
 ├── images/
 │   ├── hero/                   # Hero background (1920×800px)
 │   ├── services/               # Service icons (SVG preferred)
@@ -484,7 +483,7 @@ owli-healthcare/
 ## 18. RULES FOR CLAUDE CODE
 
 1. **Read this file first** before every task.
-2. **Pure static output** — the final site must work by opening `index.html` in a browser. No build step required in production.
+2. **Keep the public clinic pages static**, with no front-end build step. The event registration form requires the PHP/MySQL backend when served; direct `file://` opening can preview static content but cannot exercise the API.
 3. **All text bilingual** — every display string goes through the i18n system.
 4. **Mark every placeholder** with `<!-- [PLACEHOLDER] -->` comments.
 5. **Mobile-first** — base styles target mobile, enhance with `min-width` media queries.
@@ -496,10 +495,24 @@ owli-healthcare/
 
 ## Change Log
 
-- **Arokya Payanam 2026 event:** New `/events/` page (`events/index.html`, `css/events.css`) with full event details, bilingual (`ev_*` keys in `i18n.js`), plus one footer link on the homepage. Registration state is controlled from one place, `js/event-config.js`: while `registrationUrl` is empty, every registration label/button site-wide says "Registration Opens Soon"; paste the Razorpay link there and push to switch everything to "Register Now".
+- **2026-10-23 — Admin console + validation suite + repo cleanup (this push):** Three new pieces ship together as the pre-commit state. **(1) `admin/index.php`** — a password-protected staff console at `/admin/` (unlinked, `robots.txt`-excluded, English-only internal tool): summary cards (total/paid/pending/failed/collected/awaiting), a paginated registration table with status pills, expandable rows showing category details + payment-attempt history with the raw Coaxlure response, filters (status/category/search across reference, name, mobile, email), a **"Recheck payment now"** button per pending registration (calls Coaxlure immediately instead of waiting for the 5-minute cron), and **Export CSV** honouring the active filters (UTF-8 BOM for Excel, built with `fputcsv` — never hand-concatenated). Auth: the password lives ONLY as a `password_hash()` in `owli-config.php` (`'admin' => ['password_hash' => …]`); empty hash = console disabled with a 403 and no login form at all. Sessions are httponly/SameSite=Lax (+secure on HTTPS), the id is regenerated on login, every POST is CSRF-checked, failures cost 1s each and 5 failures/15min lock the IP (counters in the `settings` table, so the throttle survives across processes). The local DB user needed one extra grant: `DELETE ON owli.settings` (throttle cleanup on successful login). **(2) `api/admin-pass.php`** — CLI helper (CLI-only guard + blocked by `.htaccess`) that prints the hash to paste into the config; never stores the password. **(3) `scripts/validate.php`** — pre-deploy validation (local Docker **and** Hostinger): PHP ≥ 8.2 + extensions, config shape (no values printed), DB + all 5 tables + 4 price tiers, endpoint behaviour (quote prices; register refusing 503 in preview/closed — probe skipped when open so it can never create a live order; status rejecting unknown refs), admin console reachable + leaking no data pre-login, cron file present + web-blocked, internal files 404 (this caught `config.sample.php` actually being served — now guarded like `_bootstrap.php`), Coaxlure host reachability with an EMPTY request (no credentials), static pages, exit code 1 on failure. `scripts/check-i18n.js` also moved out of the machine-local `.claude/` folder (now git-ignored wholesale) and gained events-page + runtime-key coverage. `robots.txt` now disallows `/admin/`. Verification (all live): 51/51 validate checks, PHP lint clean, login/logout/recheck/filters/CSV/lockout/CSRF-rejection behaviours confirmed with curl, dashboard shows the 12 test registrations and the correct ₹ summary. Coaxlure credentials: nothing in the repo, `git status` clean of secrets, config sample carries only placeholder values.
+
+- **2026-10-23 — Preview mode: progress demo without opening payments:** Registration now has THREE states instead of an on/off boolean: `'closed'`, `'preview'`, `'open'`. `js/event-config.js` gained `registrationMode: 'preview'` (the committed default), and — more importantly — the **server got its own switch**: `registration => ['mode' => ...]` in `owli-config.php` (mirrored in `api/config.sample.php`), enforced by a new `owli_registration_mode()` in `api/_bootstrap.php`. In `preview`: `api/quote.php` returns real prices (`mode:"preview"`, `open:false`), the form is explorable, the "Proceed to Payment" button is disabled, and `api/register.php` refuses with 503 `not_open` — so flipping the JS flag alone can never open payments. In `open` mode BOTH switches must agree (`clientMode() === 'open' && serverMode === 'open'` in `js/event-register.js`); `closed` keeps the legacy behaviour. New bilingual keys (`evf_preview_note`, `ev_reg_*_preview`, `ev_banner_status_preview`) in EN+TA with i18n parity verified (346/346); cache versions bumped (`event-config.js?v=5`, `i18n.js?v=2`, `event-register.js?v=2`). Stale "Razorpay" comments in both HTML pages were corrected to describe the Coaxlure-era mode system. Live-verified: quote returns prices with `mode:preview`, register returns 503 with the preview message, status.php and cron-recheck.php unaffected. This is the state to commit and deploy so the public site shows real progress (prices, agenda, form) while the ₹1 payment test remains pending. The earlier plan (fixing the blank `https://app.coaxlure.com/customer/...` redirect) is explicitly deferred per the owner: verify later with proper credentials and a real ₹1 test; no Coaxlure credentials are ever committed.
+
+- **2026-10-23 — Registration form: Full name and Mobile number marked as mandatory:** Both fields were already enforced at every layer — HTML `required`, client validation in `js/event-register.js` (name ≥ 2 chars; mobile must be a 10-digit Indian number after stripping `+91`/`0`), `api/register.php` returning HTTP 422 for missing/whitespace/invalid values, and `NOT NULL` columns in `sql/schema.sql` (re-verified live against the dev Coaxlure API: every negative case rejected). What was missing was the visual cue: the events form labelled only the *optional* fields ("(optional)"), so required fields looked no different. The `evf_name`/`evf_mobile` labels now end with `*` — "Full name *", "Mobile number *", and their Tamil equivalents — in `js/i18n.js` and in the `events/index.html` fallback text, matching the contact form's convention. `js/i18n.js` also gained its first cache-buster (`?v=1` in both pages); it previously had none even though repeat visitors hold the pre-event version cached, which is the stale-asset failure README §9 warns about.
+
+- **2026-10-23 — Local credentials set up for pre-commit testing:** Local secrets moved to `/home/<you>/work/owli-config.php` (outside both repos, git-ignored) and the `owli-web` container recreated so it mounts that file **read-only**. The local DB user is now `owliuser` — a new least-privilege MariaDB account (SELECT/INSERT/UPDATE on `owli` only) instead of root. The config targets the real Coaxlure **dev** server with the TEST credentials from `work/coaxlure/test-coaxlure-business-api-credentials.csv` (CSVs chmod 600). The full registration flow was re-verified through the local site against the real dev API: quote/register/status/cron endpoints, pricing, validation, honeypot, pending-row reuse with re-pricing, host allowlist, and guarded files. The dev server's payment links use `https://app.coaxlure.com/...`, matching both the server allowlist and the client-side check. Test rows created during verification were deleted from the local DB.
+
+- **Local registration setup and status:** Docker runs `owli-web` (site at `http://localhost:8800/`, event page `/events/`), `owli-db` (MariaDB, port 3306 internal only) and `owli-mock` (offline Coaxlure fake). Local secrets live in `/home/<you>/work/owli-config.php` — outside both repos, git-ignored, mounted **read-only** into `owli-web` as `/srv/owli-config.php`; the Coaxlure credential CSVs sit in `work/coaxlure/` with `600` permissions. The DB user is now the least-privilege `owliuser` (SELECT/INSERT/UPDATE on `owli` only), not root. The config points at the **real Coaxlure dev server** with the TEST credentials; switch `api_base` to `http://owli-mock:8081/merchant/business-api` for offline mock tests. `static_token` remains empty (test credentials include a Secret and `/auth` works). Registration remains closed by default (`registrationOpen: false`). Never copy local values to Hostinger.
+
+- **Event registration form + Coaxlure payment:** `/events/#register-form` (`js/event-register.js`, bilingual `evf_*` keys) with category-specific fields from `Category.docx`. The attendee picks a category; prices (Student ₹299, BNI ₹399, Doctor ₹399, General ₹449, no GST) are shown as a list from `api/quote.php?category=all` and recalculated by `api/register.php` — the browser never sends an amount. Backend is PHP + MySQL (`api/`, `sql/schema.sql`); tiers and coupons are database rows, so prices/offers change without code edits. Payment is verified server-side via Coaxlure `GET /payment-status` (on return from checkout + `api/cron-recheck.php`); no signed webhook is documented. Secrets live in `owli-config.php` outside `public_html` (git-ignored). The form stays locked while `registrationOpen` is `false` in `js/event-config.js`. Verified locally with Docker (PHP 8.2 + MariaDB). The real Coaxlure **dev** API has now been exercised end-to-end from the local site (2026-10-23): `/auth` issues a token, `create-order` returns the correct `totalAmount`, `payment-link` returns an `https://app.coaxlure.com/...` URL, and `payment-status` reports `PENDING` for an unpaid order. Still pending: a real (₹1) test payment to confirm the paid `paymentStatus` wording that `coax_fetch_status()` matches on `paid` (case-insensitive). See README §10 for go-live steps.
+
+- **Arokya Payanam 2026 event:** `/events/` page (`events/index.html`, `css/events.css`) with event details and bilingual `ev_*` translations, linked from the homepage. Registration is controlled by `js/event-config.js`: `registrationOpen: false` keeps registration CTAs disabled; when intentionally enabled, CTAs point to the built-in registration form at `/events/#register-form`. `registrationUrl` is only a legacy external-link override; do not use it for the PHP/MySQL form.
   - **Homepage announcement:** A centered modal popup (`css/event-banner.css` `.event-modal-overlay`/`.event-modal`, `js/event-banner.js`) appears ~800ms after the homepage loads — dark backdrop, the event logo, supporting text, and a "View event details" button. Closes via the × button, a backdrop click, or Escape; locks background scroll while open; stays hidden for 24h after closing (localStorage) and stops appearing entirely after `OWLI_EVENT.endDate`.
   - **Event artwork:** Official "Arokya Payanam 2026" logo (`images/events/arokya-payanam-logo.webp`) — the centerpiece of both the homepage popup and the events-page hero — and the organiser/association logo strip (INYGMA, AR Group of Institutions, SKT Nature Cure & Yoga Hospital, Owl I) at `images/events/organisers.png`. Both shown in white rounded cards so the white-background artwork doesn't clash with colored section backgrounds. A `.sr-only` utility (`css/styles.css`) keeps the organiser names readable to screen readers/SEO even though they're now conveyed by the logo image.
   - **Cache-busting:** `css/event-banner.css`, `js/event-banner.js`, and `js/event-config.js` are linked with a `?v=2` query string in `index.html`. Bump that number (`v=3`, `v=4`, …) any time one of those three files is edited again — without it, browsers that already cached an older version of the file may keep using the stale copy indefinitely, which previously made the popup render as plain unstyled content at the bottom of the page instead of the centered modal.
   - **Persistent homepage CTAs:** Since the popup is closable (and stays hidden for 24h after that), two always-visible links to `/events/` were added so the event isn't only reachable while the popup happens to be showing: a third hero button ("Arokya Payanam 2026", `.btn-event`, calendar icon) next to "Enquire on WhatsApp" / "Explore Services", and a matching button in the header nav (`.nav-event`) beside "Book Now". Both reuse the `.btn-event` class (`--color-accent` brown background) so the event CTA is visually distinct from the green site CTAs everywhere it appears — nav, hero, and the popup.
+
+- **2026-10-23 — Lucide CDN removed:** `index.html` no longer loads `https://unpkg.com/lucide@latest`. It was a dead dependency — nothing in the codebase ever called `lucide.createIcons()` or any Lucide API (all icons are hand-written inline SVGs). Removing it drops one render-blocking third-party request, eliminates the unpinned `@latest` supply-chain risk, and keeps the page working even if unpkg is unreachable. **Do not re-add an icon CDN** unless a real need appears; add icons as inline SVGs instead.
 
 - **2026-10-10 (B1 + B2):** Treatment "View Details" panels added to all 11 service cards (`js/treatment-details.js`, clinic-approved wording only, no durations/fees). Booking form softened: hero/CTA "Book Appointment" → "Enquire on WhatsApp"; submit → "Request an Appointment"; Email/Message optional; 3 new dropdown options; bilingual confirmation note + success message.

@@ -4,27 +4,41 @@
  * PURPOSE: One place to control the event's registration state.
  *          Used by BOTH the homepage banner and the /events/ page.
  *
- * ┌──────────────────────────────────────────────────────────┐
- * │  HOW TO OPEN REGISTRATION (after Razorpay is approved):  │
- * │                                                          │
- * │  1. Paste your Razorpay payment page / form link into    │
- * │     `registrationUrl` below (must start with https://).  │
- * │  2. Commit and push to GitHub. Done!                     │
- * │                                                          │
- * │  Every "Registration Opens Soon" label becomes           │
- * │  "Register Now" and the buttons start working.           │
- * │  To close registration again, set it back to ''.         │
- * └──────────────────────────────────────────────────────────┘
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │  REGISTRATION MODES (registrationMode):                      │
+ * │                                                              │
+ * │  'preview' — Progress is visible: ticket prices, the full    │
+ * │              form and coupon previews all work, but the      │
+ * │              "Proceed to Payment" button stays disabled and  │
+ * │              the server REFUSES registrations (503 not_open).│
+ * │              Safe state while the payment integration is     │
+ * │              still being verified.                           │
+ * │  'open'    — Buttons say "Register Now", the form submits    │
+ * │              and the server accepts registrations. Flip to   │
+ * │              this ONLY after live Coaxlure credentials and  │
+ * │              a successful Rs 1 test payment (README §10).    │
+ * │  'closed'  — Everything reads "Registration Opens Soon" and │
+ * │              the form is locked. Use to take it down again.  │
+ * └──────────────────────────────────────────────────────────────┘
+ *
+ * IMPORTANT: The server has its OWN switch (owli-config.php ->
+ * registration.mode; api/quote.php reports it as "mode"). The form
+ * only unlocks when BOTH sides say 'open', so editing this file
+ * alone can never open payments on the live site.
  *
  * HOW IT WORKS:
- *   - Elements with data-reg-soon="key1" data-reg-open="key2" get their
- *     translation key swapped depending on the state.
- *   - Elements with data-reg-btn become a real link when registration is open.
+ *   - Elements with data-reg-soon / data-reg-preview / data-reg-open
+ *     get the translation key matching the current mode.
+ *   - Elements with data-reg-btn only become real links in 'open' mode.
  *
- * DEPENDENCIES: i18n.js (and events-i18n.js on the /events/ page) must load first.
+ * DEPENDENCIES: js/i18n.js must load first.
  */
 window.OWLI_EVENT = {
-  /* Razorpay link goes here, e.g. 'https://rzp.io/l/your-link'. Empty = "opens soon". */
+  /* MAIN SWITCH for the built-in registration form (/events/#register-form).
+     'preview' | 'open' | 'closed' — see the box comment above. */
+  registrationMode: 'preview',
+
+  /* Optional external link (legacy). If set, buttons open it instead of the form. */
   registrationUrl: '',
 
   /* The banner stops showing after this moment (the day after the event, IST). */
@@ -32,12 +46,20 @@ window.OWLI_EVENT = {
 };
 
 (function () {
-  var cfg = window.OWLI_EVENT;
-  var isOpen = /^https:\/\//i.test(cfg.registrationUrl || '');
+  var cfg = window.OWLI_EVENT || {};
+
+  /* Accept the old boolean flag too, so a stale cached copy still behaves sanely. */
+  var mode = cfg.registrationMode;
+  if (mode !== 'preview' && mode !== 'open' && mode !== 'closed') {
+    mode = cfg.registrationOpen === true ? 'open' : 'closed';
+  }
+  var hasExternalUrl = /^https:\/\//i.test(cfg.registrationUrl || '');
+  if (hasExternalUrl) mode = 'open';
 
   /* --- 1. Swap translation keys on labels / notes / status pills --- */
+  var keyAttr = mode === 'open' ? 'data-reg-open' : (mode === 'preview' ? 'data-reg-preview' : 'data-reg-soon');
   document.querySelectorAll('[data-reg-soon]').forEach(function (el) {
-    var key = el.getAttribute(isOpen ? 'data-reg-open' : 'data-reg-soon');
+    var key = el.getAttribute(keyAttr) || el.getAttribute('data-reg-soon');
     if (!key) return;
     el.setAttribute('data-i18n', key);
 
@@ -47,16 +69,22 @@ window.OWLI_EVENT = {
     }
   });
 
-  /* --- 2. Turn registration buttons on (or keep them disabled) --- */
+  /* --- 2. Registration buttons work only when registration is open --- */
   document.querySelectorAll('[data-reg-btn]').forEach(function (btn) {
-    if (isOpen) {
-      btn.setAttribute('href', cfg.registrationUrl);
-      btn.setAttribute('target', '_blank');
-      btn.setAttribute('rel', 'noopener noreferrer');
+    if (mode === 'open') {
+      if (hasExternalUrl) {
+        btn.setAttribute('href', cfg.registrationUrl);
+        btn.setAttribute('target', '_blank');
+        btn.setAttribute('rel', 'noopener noreferrer');
+      } else {
+        /* Built-in form: scroll to it on /events/, or go there from other pages */
+        btn.setAttribute('href', document.body.classList.contains('events-page') ? '#register-form' : '/events/#register-form');
+      }
       btn.removeAttribute('aria-disabled');
       btn.removeAttribute('tabindex');
       btn.classList.remove('is-disabled');
     } else {
+      /* 'closed' AND 'preview': buttons stay disabled (preview shows progress elsewhere) */
       btn.removeAttribute('href');
       btn.setAttribute('aria-disabled', 'true');
       btn.setAttribute('tabindex', '-1');

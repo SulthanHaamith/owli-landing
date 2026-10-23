@@ -51,9 +51,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons CDN — fallback icon library for any icons not using inline SVG -->
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-
   <!-- Main stylesheet — colors, layout, components -->
   <link rel="stylesheet" href="css/styles.css">
 
@@ -1302,9 +1299,10 @@
                 Hidden until js/event-banner.js reveals it;
                 visitors can close it with the × button, by clicking
                 the dark backdrop, or by pressing Escape.
-       NOTES: - The status pill ("Registration opens soon") switches
-                to "Registration open" automatically once a Razorpay
-                link is added in js/event-config.js.
+       NOTES: - The status pill follows the registration mode from
+                js/event-config.js: "Registration opens soon" (closed /
+                preview) or "Registration open" (open). Preview shows
+                the event's progress without opening payments.
               - To remove the banner, delete this whole block.
        ============================================ -->
   <div id="event-banner" class="event-modal-overlay" hidden>
@@ -1316,7 +1314,7 @@
         </svg>
       </button>
 
-      <span class="event-modal-status" data-reg-soon="ev_banner_status_soon" data-reg-open="ev_banner_status_open" data-i18n="ev_banner_status_soon">Registration opens soon</span>
+      <span class="event-modal-status" data-reg-soon="ev_banner_status_soon" data-reg-preview="ev_banner_status_preview" data-reg-open="ev_banner_status_open" data-i18n="ev_banner_status_soon">Registration opens soon</span>
 
       <img src="images/events/arokya-payanam-logo.webp" alt="Arokya Payanam 2026" class="event-modal-logo" width="1238" height="706">
 
@@ -1334,7 +1332,7 @@
        NOTES: Order matters — i18n.js must load before
               main.js so translations are available.
        ============================================ -->
-  <script src="js/i18n.js"></script>
+  <script src="js/i18n.js?v=2"></script>
   <script src="js/main.js"></script>
   <script src="js/testimonials.js"></script>
   <script src="js/lightbox.js"></script>
@@ -1342,7 +1340,7 @@
   <script src="js/treatment-details.js"></script>
   <!-- Event: registration state (js/event-config.js) + closable banner.
        ?v= busts stale caches — bump it any time these files are edited again. -->
-  <script src="js/event-config.js?v=2"></script>
+  <script src="js/event-config.js?v=5"></script>
   <script src="js/event-banner.js?v=2"></script>
 
 </body>

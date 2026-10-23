@@ -1,0 +1,9 @@
+# Server secrets — never commit
+owli-config.php
+api/config.php
+*.env
+
+node_modules/
+
+# Local tool state (machine-specific paths, nothing the site needs)
+.claude/
