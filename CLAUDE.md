@@ -453,6 +453,7 @@ owli-healthcare/
 │   └── favicon.ico             # Browser tab icon
 ├── sitemap.xml                 # Sitemap — homepage + /events/
 ├── robots.txt                  # Allow all crawlers
+├── GO-LIVE-STEPS.md            # Operator runbook: Rs 10 payment test + opening registration
 └── README.md                   # Full project documentation
 ```
 
@@ -494,6 +495,8 @@ owli-healthcare/
 10. **Semantic HTML** — proper landmark elements, ARIA labels, accessibility.
 
 ## Change Log
+
+- **2026-10-24 — `GO-LIVE-STEPS.md` added: operator runbook for the ₹10 test + go-live:** All remaining next steps (previously only in conversation/README §10) are now a concrete runbook in the repo, tailored to the current deployed state (Hostinger `u810328541_owlievents`, both switches at `'preview'`, patch `f379888` live). It documents the two-switch matrix (server `owli-config.php` — instant, no deploy — vs client `js/event-config.js` — Git deploy), the phased sequence: **A** — ₹10 tier (`1000` paise) + client-flip commit/push/deploy-verify while submissions are still refused; **B** — server switch → immediate ₹10 payment + paid-detection evidence (admin pill, "Coaxlure said" raw wording, `status.php`, cron `newly_paid=1`, confirmation email); **C1** — restore `44900`, registration live (the A commit becomes the go-live commit); **C2** — one-edit server rollback + capture `raw_status` for a `coax_fetch_status()` matcher fix, then retest. Includes safety rules (short ₹10 window, real-money note, credential hygiene, FK-ordered cleanup SQL for the test row) and an explicit correction: the client flip for the *live* test **must** go through Git — a local-only flip does not affect Hostinger (it only works for localhost testing with dev credentials). README §2/§10 and CLAUDE.md §16 now reference the file.
 
 - **2026-10-24 — Live test payment set to Rs 10; online minimum lowered to Rs 1:** The real-money verification step (README §10 go-live step 5) now uses **Rs 10** (`1000` paise) instead of Rs 100. `api/register.php` used to refuse every server price below `10000` paise (Rs 100) with `amount_too_low`, which made a cheap live test impossible; the floor is now **`100` paise (Rs 1)** — Coaxlure's own minimum — so the Rs 10 tier passes and Rs 0 remains impossible (no free-ticket flow; anything below Rs 1 cannot be paid online at all). Real ticket prices stay controlled by the `tiers` table. Verified locally against the real dev Coaxlure API with the server mode temporarily `open`: a `general` tier at `1000` paise completes registration and creates a real Rs 10 dev order (amount cross-check passes, `app.coaxlure.com` payment link returned), while a `50`-paise tier is still refused with `amount_too_low`; tier and mode were restored afterwards and the test rows deleted. README §10, PRD.md and the mode-box comment in `js/event-config.js` now consistently say Rs 10 / `1000` paise. **This change must be deployed to Hostinger before the Rs 10 test** — until the deploy lands, the live `register.php` still refuses with `amount_too_low`.
 

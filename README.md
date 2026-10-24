@@ -88,6 +88,7 @@ owli-healthcare/
 ├── robots.txt              # Allows all search engine crawlers
 ├── CLAUDE.md               # Complete project specification (for developers)
 ├── prompt.md               # Build phase instructions (for developers)
+├── GO-LIVE-STEPS.md        # Runbook: Rs 10 live payment test + opening registration
 └── README.md               # This file — how to use and maintain the site
 ```
 
@@ -342,6 +343,9 @@ php public_html/scripts/validate.php                             # Hostinger (hP
 It verifies: PHP ≥ 8.2 + required extensions, config presence/shape, DB connection, all 5 tables, the 4 price tiers, live endpoint behaviour (`quote.php` prices; `register.php` correctly refusing with 503 while in preview/closed — the probe is skipped when the server is open so it never creates a real order on a live system; `status.php` rejecting unknown refs), admin console reachability + that it leaks no data before login, cron job file + its web-block, internal-file protection, Coaxlure host reachability (empty request, no credentials), and the static pages. Exit code 1 on any failure, so it can gate deploys. **Run it on Hostinger right after the first deploy and before opening registration.** For translation parity: `node scripts/check-i18n.js` (exits 1 on any missing key).
 
 **Go-live steps**
+
+> For the current deployment there is a concrete operator runbook with the exact SQL, switch flips and verification checklist: **`GO-LIVE-STEPS.md`** (steps 5–6 below in expanded, current-state form).
+
 1. hPanel → Databases: create the MySQL database + user. phpMyAdmin → Import `sql/schema.sql`.
 2. Copy `api/config.sample.php` to `owli-config.php` in the folder **above** `public_html` and fill in the DB details and the Coaxlure Client ID + Secret (Coaxlure → Business API → Integration). Never put these in Git. Set `registration.mode` to `'preview'` first — the event page then shows ticket prices and a working form demo, while the server still refuses submissions.
    - Also set the admin password hash here (`php api/admin-pass.php 'password'` → paste into the `'admin'` block) so `/admin/` is usable.
