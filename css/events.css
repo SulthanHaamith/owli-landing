@@ -145,9 +145,12 @@ body.events-page {
   border-bottom-color: var(--color-secondary);
 }
 
-/* Anchored sections shouldn't hide behind the fixed header */
+/* Anchored sections shouldn't hide behind the fixed header.
+   #ticket-lookup added 2026-10-26: a shared …/events/#ticket-lookup link
+   used to scroll the lookup card under the fixed header. */
 .ev-section,
-#event-top {
+#event-top,
+#ticket-lookup {
   scroll-margin-top: 110px;
 }
 
@@ -158,7 +161,7 @@ body.events-page {
   .ev-logo span { font-size: 1.05rem; }
   .ev-subnav ul { padding: 0 20px; gap: 12px; }
   .ev-subnav a { font-size: 0.9rem; }
-  .ev-section, #event-top { scroll-margin-top: 120px; }
+  .ev-section, #event-top, #ticket-lookup { scroll-margin-top: 120px; }
 }
 
 
@@ -902,20 +905,33 @@ body.events-page {
   color: #6d4c00;
   text-align: left;
 }
-/* Action buttons inside the WHITE status box must be visible on it:
-   the site's .btn-secondary (transparent bg + WHITE text + WHITE border)
-   is designed for dark surfaces — on the white .ev-status-box it rendered
-   white-on-white, i.e. invisible except on hover (owner bug report
-   2026-10-25). Re-skin it for light surfaces; this single scoped rule
-   covers the waiting box's "Check payment status now", the pending box's
-   "Check again" and the paid box's "Done" button. */
-.ev-status-box .btn-secondary {
+/* Secondary buttons on WHITE surfaces must be visible on them.
+   The site's .btn-secondary (transparent bg + WHITE text + WHITE border,
+   styles.css) is a dark-surface style. Every white card on this page made
+   it render white-on-white — present in the DOM, invisible until hover:
+     - .ev-status-box    → "Check payment status now", "Check again",
+                           "Done" (owner bug report 2026-10-25)
+     - .ev-form          → the coupon "Apply" button (same latent bug,
+                           found in the 2026-10-26 audit)
+     - .ev-ticket-lookup → the lookup card's "Find my ticket" button AND
+                           the result-box actions (owner bug report
+                           2026-10-26: "Find my ticket is not visible")
+   ONE re-skin for every white surface on this page; the palette is
+   unchanged. scripts/validate.php regex-checks this rule, so removing
+   it or reverting the colour fails the deploy. */
+.ev-form .btn-secondary,
+.ev-status-box .btn-secondary,
+.ev-ticket-lookup .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
   border: 2px solid var(--color-secondary);
 }
+.ev-form .btn-secondary:hover,
+.ev-form .btn-secondary:focus-visible,
 .ev-status-box .btn-secondary:hover,
-.ev-status-box .btn-secondary:focus-visible {
+.ev-status-box .btn-secondary:focus-visible,
+.ev-ticket-lookup .btn-secondary:hover,
+.ev-ticket-lookup .btn-secondary:focus-visible {
   background-color: var(--color-secondary);
   color: var(--color-white);
 }
@@ -1015,16 +1031,9 @@ body.events-page {
 }
 .ev-lookup-result .ev-paid-row .btn { margin-top: 0; flex: 1 1 100%; }
 .ev-lookup-result .ev-paid-row .btn { margin-top: 0; }
-.ev-lookup-result .btn-secondary {
-  background-color: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-secondary);
-}
-.ev-lookup-result .btn-secondary:hover,
-.ev-lookup-result .btn-secondary:focus-visible {
-  background-color: var(--color-secondary);
-  color: var(--color-white);
-}
+/* (.ev-lookup-result .btn-secondary colour rules removed 2026-10-26:
+   the result box lives INSIDE .ev-ticket-lookup, so the white-surface
+   re-skin above already covers its three action buttons.) */
 .ev-lookup-result .ev-ticket-hint {
   margin-top: 8px;
   font-size: 0.82rem;

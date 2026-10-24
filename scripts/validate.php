@@ -326,6 +326,18 @@ $i18 = (string)@file_get_contents(__DIR__ . '/../js/i18n.js');
 check('lookup strings exist in BOTH languages', str_contains($i18, 'evf_lookup_ok') && substr_count($i18, 'evf_lookup_bad') === 2);
 $ecss = (string)@file_get_contents(__DIR__ . '/../css/events.css');
 check('lookup card styled in events.css', str_contains($ecss, '.ev-ticket-lookup'));
+/* Invisible-button regression guard (owner reports 2026-10-25 + 2026-10-26):
+   the site's .btn-secondary is WHITE-on-transparent (a dark-surface style),
+   so inside the white cards on /events/ it rendered white-on-white — the
+   "Find my ticket" and coupon "Apply" buttons were invisible until hover.
+   events.css must re-skin it on every white surface, and these regex
+   checks make a removal or colour regression fail the deploy. */
+$reSkin = '/\.ev-form \.btn-secondary,\s*\.ev-status-box \.btn-secondary,\s*'
+    . '\.ev-ticket-lookup \.btn-secondary\s*\{[^}]*?color:\s*var\(--color-primary\)/s';
+check('white-card .btn-secondary re-skinned green (Apply, Find my ticket, status-box, lookup actions)', (bool)preg_match($reSkin, $ecss));
+$reHover = '/\.ev-form \.btn-secondary:hover,[\s\S]*?\.ev-ticket-lookup \.btn-secondary:focus-visible'
+    . '\s*\{[^}]*?background-color:\s*var\(--color-secondary\)/s';
+check('re-skinned secondary buttons fill green on hover/focus', (bool)preg_match($reHover, $ecss));
 
 /* ------------------------------------------------------------------ */
 /* Report                                                              */
