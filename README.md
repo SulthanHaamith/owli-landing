@@ -89,6 +89,7 @@ owli-healthcare/
 ├── robots.txt              # Allows all search engine crawlers
 ├── CLAUDE.md               # Complete project specification (for developers)
 ├── prompt.md               # Build phase instructions (for developers)
+├── HANDOFF.md             # START HERE — full project handoff (2026-10-26)
 ├── GO-LIVE-STEPS.md        # Runbook: Rs 10 live payment test + opening registration
 ├── PROJECT-STATUS.md       # Live status snapshot: what works, what's left, decisions
 ├── API-TROUBLESHOOTING.md  # API debugging runbook: reproduce → log → cause → verify

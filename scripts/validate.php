@@ -25,7 +25,9 @@
  *               message for anything else — owner request 2026-10-26)
  *           11. Documentation split: CHANGE-LOG.md + docs/CLAUDE-*.md must
  *               be web-blocked like every other .md (root .htaccess covers
- *               them; these checks make a silent regression impossible)
+ *               them; these checks make a silent regression impossible).
+ *               HANDOFF.md is in the same protected list (handoff contains
+ *               operational detail about the live server).
  *
  * SECURITY: No credential is ever echoed — only booleans about config
  *          structure. Safe to paste the output anywhere.
@@ -267,7 +269,7 @@ if ($siteUrl !== '') {
        .htaccess must refuse them (GO-LIVE-STEPS.md contains coupon SQL and
        server details; README/CLAUDE/API-TROUBLESHOOTING describe the security
        model and the debugging method). */
-    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md', '/LOCAL-TESTING.md', '/PROJECT-STATUS.md', '/CHANGE-LOG.md', '/PRD.md', '/prompt.md'] as $doc) {
+    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md', '/LOCAL-TESTING.md', '/PROJECT-STATUS.md', '/CHANGE-LOG.md', '/PRD.md', '/prompt.md', '/HANDOFF.md'] as $doc) {
         [$dc] = probe($siteUrl . $doc);
         check("doc $doc blocked from the web", in_array($dc, [403, 404], true), 'HTTP ' . $dc);
     }

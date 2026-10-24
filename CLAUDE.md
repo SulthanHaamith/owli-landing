@@ -271,6 +271,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 | Topic | Where it lives |
 |---|---|
+| **Complete project handoff (read first)** | `HANDOFF.md` |
 | Go-live / ₹10 test / two-switch system | `GO-LIVE-STEPS.md` |
 | Live status + owner steps + decision log | `PROJECT-STATUS.md` |
 | API debugging runbook | `API-TROUBLESHOOTING.md` |
