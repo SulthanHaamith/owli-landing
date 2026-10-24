@@ -614,6 +614,11 @@ function owli_send_confirmation(PDO $db, int $regId): void
               . "Your registration for Arokya Payanam 2026 is confirmed.\r\n\r\n"
               . "Registration ID: " . $r['reference'] . "\r\n"
               . $amountLine . "\r\n"
+              /* Owner request 2026-10-26: the ticket travels with the email —
+                 a direct link to the same PDF the success box offers, so the
+                 attendee has it even if they never return to the site. */
+              . "Entry ticket (PDF): https://owlihealthcare.com/api/ticket.php?ref=" . $r['reference'] . "\r\n"
+              . "You can re-download the ticket any time from the event page using your ID.\r\n"
               . "Date: Sunday, 15 November 2026, 9:00 A.M. - 4:00 P.M.\r\n"
               . "Venue: AR Group of Institutions, Kadayam, Tirunelveli\r\n\r\n"
               . "Please keep this ID for the event. Questions? WhatsApp +91 6379610554 or arokyapayanam@gmail.com.\r\n\r\n"
@@ -625,5 +630,121 @@ function owli_send_confirmation(PDO $db, int $regId): void
         @mail($r['email'], $subject, $body, $headers);
     } catch (Throwable $e) {
         error_log('owli: confirmation email failed: ' . $e->getMessage());
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Admin digest — every 2 days, every entry, one email                  */
+/* ------------------------------------------------------------------ */
+
+/* Owner request 2026-10-26: "Send a mail containing all the entries to the
+   admin mail once every 2 days." Runs as the cron's pass 3; the recipient
+   comes from owli-config.php -> admin.digest_to (falls back to mail_from).
+   Best-effort by design: a mail failure is logged and retried on the next
+   cron run — the schedule stamp below is only written after a successful
+   send, and no email ever blocks the payment checks. */
+
+const OWLI_DIGEST_KEY  = 'digest_last_sent';
+const OWLI_DIGEST_GAP  = 2 * 86400;   // seconds between digests
+const OWLI_DIGEST_ROWS = 1500;         // hard cap on listed rows per mail
+
+/** One registration, one readable line for the digest body. */
+function owli_digest_line(array $r): string
+{
+    $line = $r['reference'] . ' | ' . str_pad(ucfirst((string)$r['status']), 7)
+          . ' | ' . ucfirst((string)$r['category'])
+          . ' | Rs ' . owli_rupees((int)$r['amount_paise'])
+          . ' | ' . (string)$r['name']
+          . ' | ' . (string)$r['mobile']
+          . ' | ' . (string)$r['email']
+          . ' | ' . substr((string)$r['created_at'], 0, 16);
+    if ((string)($r['coupon_code'] ?? '') !== '') {
+        $line .= ' | coupon ' . (string)$r['coupon_code'];
+    }
+    return $line;
+}
+
+/** Builds the digest as [subject, body]. Split from the sender so the content
+ *  can be previewed/tested without a mail server (LOCAL-TESTING.md). */
+function owli_build_digest(PDO $db): array
+{
+    $sum = $db->query(
+        "SELECT COUNT(*) AS total,
+                COALESCE(SUM(status = 'paid'), 0)    AS paid,
+                COALESCE(SUM(status = 'pending'), 0) AS pending,
+                COALESCE(SUM(status = 'failed'), 0)  AS failed,
+                COALESCE(SUM(CASE WHEN status = 'paid' THEN amount_paise END), 0)    AS collected,
+                COALESCE(SUM(CASE WHEN status = 'pending' THEN amount_paise END), 0) AS awaiting
+           FROM registrations"
+    )->fetch();
+
+    $body  = "Arokya Payanam 2026 - registrations digest\r\n"
+           . "Generated " . date('d M Y, h:i A') . " (IST) - automatic, every 2 days\r\n\r\n"
+           . "Totals: " . (int)$sum['total'] . " registration(s)\r\n"
+           . "  Paid:    " . (int)$sum['paid'] . "  (Rs " . owli_rupees((int)$sum['collected']) . " collected)\r\n"
+           . "  Pending: " . (int)$sum['pending'] . "  (Rs " . owli_rupees((int)$sum['awaiting']) . " awaiting payment)\r\n"
+           . "  Failed:  " . (int)$sum['failed'] . "\r\n";
+
+    foreach (['paid' => 'PAID', 'pending' => 'PENDING (awaiting payment)', 'failed' => 'FAILED / abandoned'] as $st => $title) {
+        $stq = $db->prepare(
+            "SELECT reference, status, category, name, mobile, email, coupon_code, amount_paise, created_at
+               FROM registrations WHERE status = ? ORDER BY created_at ASC LIMIT " . (OWLI_DIGEST_ROWS + 1)
+        );
+        $stq->execute([$st]);
+        $rows = $stq->fetchAll();
+        $body .= "\r\n=== " . $title . " (" . count($rows) . ") ===\r\n";
+        if (!$rows) {
+            $body .= "(none)\r\n";
+            continue;
+        }
+        $more = count($rows) > OWLI_DIGEST_ROWS ? array_pop($rows) : null;
+        foreach ($rows as $r) {
+            $body .= owli_digest_line($r) . "\r\n";
+        }
+        if ($more !== null) {
+            $body .= "(list capped at " . OWLI_DIGEST_ROWS . " rows - the admin console has the full list)\r\n";
+        }
+    }
+
+    $body .= "\r\nFull list, filters and CSV export: https://owlihealthcare.com/admin/\r\n"
+           . "This is an automated summary - no reply is needed.\r\n"
+           . "Owl I Health Care Centre";
+
+    $subject = 'Arokya Payanam 2026 - registrations digest ('
+             . (int)$sum['total'] . ' total, ' . (int)$sum['paid'] . ' paid)';
+    return [$subject, $body];
+}
+
+/** Sends the digest when one is due (>= 2 days since the last successful one). */
+function owli_maybe_digest(PDO $db): void
+{
+    try {
+        $to = trim((string)(owli_config()['admin']['digest_to'] ?? ''));
+        if ($to === '') {
+            $to = trim((string)(owli_config()['mail_from'] ?? ''));
+        }
+        if ($to === '' || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            return;   // nowhere to send: skip quietly, no stamp
+        }
+        $st = $db->prepare("SELECT sval FROM settings WHERE skey = ?");
+        $st->execute([OWLI_DIGEST_KEY]);
+        $last = $st->fetchColumn();
+        if (is_string($last) && (time() - (int)$last) < OWLI_DIGEST_GAP) {
+            return;   // not due yet
+        }
+        [$subject, $body] = owli_build_digest($db);
+        $from    = (string)(owli_config()['mail_from'] ?? 'registrations@owlihealthcare.com');
+        $headers = "From: Owl I Health Care Centre <" . $from . ">\r\n"
+                 . "Content-Type: text/plain; charset=UTF-8";
+        if (!@mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers)) {
+            error_log('owli digest: mail() failed - will retry on the next cron run');
+            return;
+        }
+        $db->prepare(
+            "INSERT INTO settings (skey, sval) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE sval = VALUES(sval), updated_at = NOW()"
+        )->execute([OWLI_DIGEST_KEY, (string)time()]);
+    } catch (Throwable $e) {
+        error_log('owli digest: ' . $e->getMessage());
     }
 }

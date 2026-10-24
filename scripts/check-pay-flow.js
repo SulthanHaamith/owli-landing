@@ -10,8 +10,8 @@
  *          the payment page loaded in the new tab AND hijacked the form page.
  *
  * HOW IT WORKS: loads the REAL module inside a Node VM with a fake DOM,
- *          drives the submit handler through six scenarios and asserts the
- *          navigation contract for each:
+ *          drives the submit handler through eight scenarios (A-H) and
+ *          asserts the navigation + label contracts for each:
  *
  *            A  normal payment     -> one tab (about:blank) that is then
  *                                      navigated to Coaxlure with opener=null;
@@ -37,6 +37,12 @@
  *            H  paid box after payment verified -> the same ticket +
  *                                      WhatsApp actions plus the "Done"
  *                                      button, in one tidy row
+ *
+ *          LABEL CONTRACT (added 2026-10-26): every rendered action must
+ *          carry a NON-EMPTY text label. The WhatsApp button shipped with
+ *          href/target/rel set but textContent never assigned — an empty
+ *          bordered pill that looked invisible in the white status box.
+ *          The harness now fails on any label-less action.
  *
  * HOW TO RUN:  node scripts/check-pay-flow.js      (exit code 1 = FAIL)
  *              Run it before every push that touches js/event-register.js,
@@ -281,6 +287,10 @@ function assertTicketActions(w, label) {
   const wa  = items.find((c) => c.tag === 'a' && String(c.href).indexOf('https://wa.me/916379610554') === 0);
   A(label + ': "Download ticket (PDF)" points at api/ticket.php', !!dl, dl && dl.href);
   A(label + ': "Get ticket on WhatsApp" is rendered', !!wa, wa && wa.href);
+  if (wa) {
+    A(label + ': the WhatsApp button carries its visible label (invisible-empty-pill bug)', String(wa.textContent || '').trim().length > 0, JSON.stringify(wa.textContent));
+  }
+  A(label + ': every action in the row has a visible text label', items.every((c) => String(c.textContent || '').trim().length > 0), items.map((c) => JSON.stringify(c.textContent)).join(','));
   if (wa) {
     const decoded = decodeURIComponent(wa.href);
     A(label + ': the wa.me link targets the OFFICIAL clinic number', String(wa.href).indexOf('https://wa.me/916379610554?') === 0, wa.href.slice(0, 40) + '…');

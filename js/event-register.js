@@ -274,11 +274,16 @@
         dlFree.setAttribute('download', b.reference + '-entry-ticket.pdf');
         dlFree.textContent = t('evf_download_ticket');
 
-        /* Free-coupon registrations get the same WhatsApp handoff button. */
+        /* Free-coupon registrations get the same WhatsApp handoff button.
+           2026-10-26 fix: the label is REQUIRED — this button shipped as an
+           empty bordered pill (href set, textContent never assigned), which
+           looked invisible in the white status box. The pay-flow harness now
+           fails any action without a visible label. */
         var waFree = document.createElement('a');
         waFree.className = 'btn btn-secondary ev-get-wa';
         waFree.href = 'https://wa.me/916379610554?text='
           + encodeURIComponent(t('evf_wa_text') + ' ' + b.reference);
+        waFree.textContent = t('evf_get_wa');
         waFree.setAttribute('target', '_blank');
         waFree.setAttribute('rel', 'noopener noreferrer');
 
@@ -376,6 +381,7 @@
     wa.className = 'btn btn-secondary ev-get-wa';
     wa.href = 'https://wa.me/916379610554?text='
       + encodeURIComponent(t('evf_wa_text') + ' ' + ref);
+    wa.textContent = t('evf_get_wa');   /* the label — without it this renders as an empty, invisible pill */
     wa.setAttribute('target', '_blank');
     wa.setAttribute('rel', 'noopener noreferrer');
 

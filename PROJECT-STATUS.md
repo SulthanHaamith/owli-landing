@@ -44,7 +44,7 @@ with an event registration + payment backend for **Arokya Payanam 2026**:
 | API | ✅ healthy — `mode:"open"` — **registration is LIVE at ₹10 (General)** |
 | Prices (live DB) | student ₹299 · doctor ₹399 · bni ₹399 · **general ₹10 (test price)** |
 | Docs off the web | ✅ `GO-LIVE-STEPS.md`, `README.md`, `scripts/`, `sql/`, `api/_bootstrap.php` → all HTTP 403 |
-| Validation suite (local) | ✅ **57/57 checks passed** · pay-flow regression `check-pay-flow.js` **6/6 scenarios PASS** |
+| Validation suite (local) | ✅ **59/59 checks passed** · pay-flow regression `check-pay-flow.js` **all scenarios PASS** (incl. the new label contract) |
 | Coaxlure integration | ✅ live-tested — the ₹10 test payment was captured and detected as paid |
 | Payment navigation (new tab only) | ✅ fixed 2026-10-24 — the form page no longer hijacks itself to the payment page (was a `noopener`+`window.open` return-value bug); guarded by `scripts/check-pay-flow.js` |
 | Coupons in live DB | ❌ **none yet** (`EARLY10`/`PAYANAM20` → `invalid`) |
@@ -119,7 +119,32 @@ DELETE FROM payment_attempts WHERE registration_id IN
 DELETE FROM registrations WHERE reference IN ('AP26-WC4DV9','AP26-5DC2FK');
 ```
 
-### Step 5 — re-run the validation suite
+### Step 5 — set the digest recipient (one line, enables the 2-day admin email)
+
+The cron now sends an automatic **registrations digest every 2 days** — every
+entry, grouped Paid / Pending / Failed, with money totals. It needs a
+recipient. File Manager → `owli-config.php` → inside the `'admin'` block add:
+
+```php
+'admin' => [
+    'password_hash' => '…unchanged…',
+    'digest_to'     => 'arokyapayanam@gmail.com',   // where the digest goes
+],
+```
+
+Save — instant, no deploy. (If `digest_to` is empty it falls back to
+`mail_from`, i.e. `registrations@owlihealthcare.com`.) Test it from the hPanel
+Terminal:
+
+```bash
+php domains/owlihealthcare.com/public_html/api/cron-recheck.php
+```
+
+— when a digest is due it sends one immediately; on Hostinger `mail()` really
+sends, unlike the local Docker container (which has no mail agent and simply
+logs a retry line).
+
+### Step 6 — re-run the validation suite
 
 In hPanel Terminal (after step 1):
 
@@ -132,7 +157,7 @@ checks (59/59 after the two new doc-block checks). Everything else stays as-is �
 no redeploy needed for any of these steps
 (they are all DB/config-side).
 
-### Step 6 — known open items (low priority, non-blocking)
+### Step 7 — known open items (low priority, non-blocking)
 
 | Item | Notes |
 |---|---|
@@ -201,7 +226,17 @@ Single-use codes stop working after one use (`used_up`).
 - **Coupons panel** — generate/deactivate codes; printed once, database-only.
 - **Export CSV** — filter-aware, UTF-8 BOM for Excel, includes Source column.
 
-### Ticket delivery: WhatsApp handoff + team downloads (owner request)
+### Ticket delivery: WhatsApp handoff + team downloads (owner request, label bug fixed 2026-10-26)
+
+The WhatsApp handoff button initially shipped **invisible**: every property
+(href, target, rel) was assigned but its **text label never was** — an empty
+bordered pill inside the white status box. Found via the owner's report
+("Get ticket via whatsapp is not visible"), root-caused by reading
+`showPaid()`, and fixed by setting `textContent = t('evf_get_wa')` in both the
+paid and free-coupon paths. `scripts/check-pay-flow.js` now enforces a **label
+contract**: every rendered action must carry a non-empty visible label, so a
+label-less button can never pass the gate again. Cache bump
+`event-register.js?v=10` (events page).
 
 - **"Get ticket on WhatsApp"** — the paid success box (both the paid-after-
   payment path and the free-coupon path) now offers a third button. It opens
@@ -219,6 +254,17 @@ Single-use codes stop working after one use (`used_up`).
   `api/ticket.php` PDF the attendee gets. The team can forward it, print it,
   or hand it over at the desk. Paid rows only (the endpoint enforces that
   server-side; pending rows show the recheck button instead).
+- **Confirmation email carries the ticket link** (owner request 2026-10-26):
+  the email now includes
+  `https://owlihealthcare.com/api/ticket.php?ref=<ID>` plus a "re-download any
+  time" note, so the attendee has the ticket even if they never return to the
+  site.
+- **Automatic admin digest, every 2 days** (owner request 2026-10-26): the
+  cron's pass 3 emails **every registration** — grouped PAID / PENDING /
+  FAILED with totals and collected money — to `admin.digest_to` (falls back
+  to `mail_from`). Best-effort by design: the schedule stamp is written only
+  after a successful send, so failures retry next run; 1,500-row cap per mail
+  with a pointer to the console.
 
 ### Abandoned payments: pending → failed sweep + admin categorization (owner request, 2026-10-24)
 
@@ -296,7 +342,8 @@ re-skin scoped to `.ev-status-box .btn-secondary`).
 1. Run the **two ALTERs** in §3 Step 1 (phpMyAdmin).
 2. Generate the **three coupon packs** in the admin console (§3 Step 2).
 3. Decide the ₹10 test-price window (§3 Step 3 — General is still ₹10).
-4. Re-run `php public_html/scripts/validate.php` after the ALTERs (§3 Step 5).
+4. Set **`digest_to`** in `owli-config.php` (§3 Step 5) — enables the 2-day admin email.
+5. Re-run `php public_html/scripts/validate.php` after the ALTERs (§3 Step 6).
 
 ---
 

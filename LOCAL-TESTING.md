@@ -189,7 +189,7 @@ node scripts/check-pay-flow.js   # exit 1 on any contract violation
 Loads the **real** `js/event-register.js` module inside a Node VM with a fake
 DOM (whose `window.open` faithfully reproduces the HTML spec rule that caused
 the 2026-10-24 double-navigation bug: `window.open(url,'_blank','noopener')`
-returns `null` even on success) and drives six scenarios:
+returns `null` even on success) and drives eight scenarios:
 
 - **A** normal payment → exactly **one** tab, pre-opened as `about:blank`, then
   navigated to Coaxlure with `opener=null`; the form page never navigates; the
@@ -198,11 +198,18 @@ returns `null` even on success) and drives six scenarios:
 - **C** free coupon → tab closed, zero navigation, button re-enabled
 - **D** server validation error → tab closed, button re-enabled
 - **E** network failure → tab closed, button re-enabled
-- **F** "Reopen the payment page" → `preventDefault` always runs, second tab to
-  the same URL, form page stays put
+- **F** waiting box → status-check only, NO reopen-payment link, one status
+  call per click, no new tab
+- **G/H** paid boxes (free coupon + payment verified) → ticket download +
+  WhatsApp handoff to the official number, and — added 2026-10-26 — a
+  **label contract**: every rendered action must carry a non-empty text
+  label. (The WhatsApp button once shipped with `href` set but
+  `textContent` never assigned — an empty bordered pill that looked
+  invisible inside the white status box. The harness now fails on any
+  label-less action.)
 
 **Regression-proof:** run against the pre-fix code it fails 8 assertions;
-against the fixed code all six scenarios pass. Keep it that way.
+against the fixed code all scenarios pass. Keep it that way.
 
 ---
 

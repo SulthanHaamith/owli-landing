@@ -41,6 +41,9 @@ return [
        then paste the printed $2y$... line below. Empty = console disabled. */
     'admin' => [
         'password_hash' => '',
+        // Where the automatic every-2-days registrations digest email goes
+        // (sent by the cron's pass 3). Empty = fall back to mail_from.
+        'digest_to' => '',
     ],
 
     'db' => [

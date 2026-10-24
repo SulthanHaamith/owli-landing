@@ -3,7 +3,9 @@
  * CRON-RECHECK.PHP — run by Hostinger Cron Jobs (command line only).
  *
  * PURPOSE: Re-checks pending payments with Coaxlure so people who paid and then
- *          closed the browser are still confirmed.
+ *          closed the browser are still confirmed, then (pass 2) closes the book
+ *          on long-abandoned attempts and (pass 3) sends the every-2-days admin
+ *          digest email (owli_maybe_digest in _bootstrap.php).
  * HOW:     hPanel -> Advanced -> Cron Jobs -> Custom, every 5 minutes:
  *            /usr/bin/php /home/<USER>/domains/owlihealthcare.com/public_html/api/cron-recheck.php
  *          (the exact path is shown at the top of hPanel -> Cron Jobs)
@@ -52,6 +54,16 @@ try {
     $failed = owli_fail_stale_attempts($db);
 } catch (Throwable $e) {
     error_log('owli cron sweep: ' . $e->getMessage());
+}
+
+/* Pass 3 — admin digest (owner request 2026-10-26): one email every 2 days
+   with EVERY registration, to admin.digest_to (falls back to mail_from).
+   Best-effort: the schedule stamp lives in the settings table and is only
+   written after a successful send, so failures retry on the next run. */
+try {
+    owli_maybe_digest($db);
+} catch (Throwable $e) {
+    error_log('owli cron digest: ' . $e->getMessage());
 }
 
 echo date('c')

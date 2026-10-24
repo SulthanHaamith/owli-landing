@@ -306,7 +306,7 @@ The form on `/events/` (`#register-form`) takes the attendee's details, works ou
 
 | File | Role |
 |---|---|
-| `js/event-register.js` | Form behaviour: category fields, price list, validation, payment redirect, status check on return. Locks the Pay button in `preview`, unlocks only in `open` (client + server must agree). **New-tab payment flow:** the Coaxlure page opens in a new tab while the form polls `status.php` (2s for 30s, then 5s, max ~10 min) and shows a "do not refresh / go back" warning; paid flips the the paid box with **Download ticket (PDF)**, **Get ticket on WhatsApp** (a `wa.me` link to the official clinic number with the event name + Booking ID pre-typed) and **Done** |
+| `js/event-register.js` | Form behaviour: category fields, price list, validation, payment redirect, status check on return. Locks the Pay button in `preview`, unlocks only in `open` (client + server must agree). **New-tab payment flow:** the Coaxlure page opens in a new tab while the form polls `status.php` (2s for 30s, then 5s, max ~10 min) and shows a "do not refresh / go back" warning; paid flips the the paid box with **Download ticket (PDF)**, **Get ticket on WhatsApp** (a `wa.me` link to the official clinic number with the event name + Booking ID pre-typed) and **Done**. The confirmation email also carries a direct ticket-download link |
 | `api/quote.php` | Price display (`?category=all` returns every price; `?category=student&coupon=X` previews a coupon). Reports the server's `mode` — `open` / `preview` / `closed` |
 | `api/register.php` | Validates, re-prices, saves a *pending* registration, creates the Coaxlure order + pay link. **Refuses (503 `not_open`) unless the server switch says `'open'`** |
 | `api/status.php` | Checks payment with Coaxlure from the server and marks the registration *paid* |
@@ -317,6 +317,14 @@ The form on `/events/` (`#register-form`) takes the attendee's details, works ou
 | `admin/index.php` | Staff console (see "Admin console" above): list, statuses, recheck button, filtered CSV export |
 | `api/admin-pass.php` | CLI helper that prints a `password_hash()` for the console |
 | `scripts/validate.php` | Pre-deploy validation of every component (PHP/DB/API/admin/cron/protection) |
+
+**Automatic admin digest (every 2 days).** The 5-minute cron's third pass
+(`owli_maybe_digest()`) emails the admin a summary of **every registration**
+grouped Paid / Pending / Failed with totals and money collected. The recipient
+is `admin => digest_to` in `owli-config.php` (falls back to `mail_from`); set
+it on the server — no deploy, no Git. The 2-day schedule is a stamp in the
+`settings` table, written **only after a successful send**, so a failed mail
+retries on the next cron run and never silently skips a day.
 
 **Changing prices or adding offers** (phpMyAdmin → SQL; no code change). Examples are at the bottom of `sql/schema.sql`: change a tier price, add a date-limited early-bird tier, or add coupon codes (`percent`, `flat`, `fixed_price`; per category; max uses). Amounts are in paise (₹299 = `29900`).
 
