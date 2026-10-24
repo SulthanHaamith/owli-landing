@@ -230,6 +230,55 @@ not hit, since a retry updates rather than inserts).
 
 ---
 
+## Coupon packs to create (phpMyAdmin, one-time)
+
+Paste into phpMyAdmin → SQL. Codes live **only in the database** (never in the
+repo). Reusable = `max_uses NULL`; each free guest code = `max_uses 1` so it
+dies after one use (free rows count as paid — see `owli_quote()` in
+`api/_bootstrap.php`).
+
+```sql
+-- 10% off, reusable by anyone:
+INSERT INTO coupons (code, discount_type, value) VALUES ('EARLY10', 'percent', 10);
+
+-- 20% off, reusable by anyone:
+INSERT INTO coupons (code, discount_type, value) VALUES ('PAYANAM20', 'percent', 20);
+
+-- 20 single-use FREE tickets (100% off, one guest each):
+INSERT INTO coupons (code, discount_type, value, max_uses) VALUES
+  ('FREEAP26-PAGHP7', 'percent', 100, 1),
+  ('FREEAP26-E4ZYAW', 'percent', 100, 1),
+  ('FREEAP26-2CXG9T', 'percent', 100, 1),
+  ('FREEAP26-O6OTHC', 'percent', 100, 1),
+  ('FREEAP26-Q7QAUM', 'percent', 100, 1),
+  ('FREEAP26-4UR3C4', 'percent', 100, 1),
+  ('FREEAP26-9OZER4', 'percent', 100, 1),
+  ('FREEAP26-WUAM50', 'percent', 100, 1),
+  ('FREEAP26-KU67H0', 'percent', 100, 1),
+  ('FREEAP26-ZDVTCG', 'percent', 100, 1),
+  ('FREEAP26-SCM1B3', 'percent', 100, 1),
+  ('FREEAP26-2B5OCJ', 'percent', 100, 1),
+  ('FREEAP26-FPJZKJ', 'percent', 100, 1),
+  ('FREEAP26-TDFFB3', 'percent', 100, 1),
+  ('FREEAP26-W7GDKF', 'percent', 100, 1),
+  ('FREEAP26-GKFD4M', 'percent', 100, 1),
+  ('FREEAP26-T9B8A9', 'percent', 100, 1),
+  ('FREEAP26-XDP1J4', 'percent', 100, 1),
+  ('FREEAP26-KL9NP9', 'percent', 100, 1),
+  ('FREEAP26-DIMEZP', 'percent', 100, 1);
+```
+
+Verify: `SELECT code, discount_type, value, max_uses FROM coupons;` → 22 rows.
+
+Hand the `FREEAP26-*` codes out one per invited guest. A used code stops
+working for everyone else (`used_up`); a free registration is confirmed
+**instantly** with no payment page — the attendee sees the success box and the
+confirmation email, and the row appears in the admin console as paid (₹0).
+
+Switch any coupon off later: `UPDATE coupons SET active = 0 WHERE code = '...';`
+
+---
+
 ## Safety rules
 
 - **Never commit credentials.** `owli-config.php` lives only on the server

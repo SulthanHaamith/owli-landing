@@ -122,6 +122,25 @@ ON DUPLICATE KEY UPDATE id = id;
 --   INSERT INTO coupons (code, discount_type, value, category)
 --   VALUES ('BNI100', 'flat', 10000, 'bni');
 --
+-- Single-use FREE ticket (100% off) — one code per guest. A Rs 0 price made
+-- by a coupon is confirmed INSTANTLY on the server, with no payment page:
+--   INSERT INTO coupons (code, discount_type, value, max_uses)
+--   VALUES ('FREEAP26-ABC123', 'percent', 100, 1);
+--
 -- Switch a coupon off:
 --   UPDATE coupons SET active = 0 WHERE code = 'EARLY10';
+--
+-- REUSABLE codes (max_uses NULL = unlimited):
+--   INSERT INTO coupons (code, discount_type, value) VALUES ('EARLY10', 'percent', 10);
+--   INSERT INTO coupons (code, discount_type, value) VALUES ('PAYANAM20', 'percent', 20);
+--
+-- COUPON RULES (see api/_bootstrap.php owli_quote()):
+--   * percent 10 on Rs 299 -> Rs 30 off (whole rupees, rounded).
+--   * A coupon that covers the WHOLE price makes the registration FREE:
+--     confirmed instantly, no payment page (Rs 0 cannot be charged online).
+--   * max_uses is counted on PAID rows only. A free (coupon-paid) row IS a
+--     paid row — so a 100% code with max_uses = 1 is single-use, as intended.
+--   * The full list of codes created for launch (EARLY10, PAYANAM20, the 20
+--     FREEAP26-* guest codes) is in GO-LIVE-STEPS.md — codes live in the
+--     database, never in this file.
 -- ------------------------------------------------------------

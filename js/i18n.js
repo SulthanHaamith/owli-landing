@@ -453,6 +453,7 @@ const translations = {
     evf_err_generic: 'Something went wrong. Please try again, or contact us on WhatsApp.',
     evf_checking: 'Checking your payment…',
     evf_paid: 'Payment verified. Your registration is confirmed. Registration ID:',
+    evf_free_success: 'Registration confirmed — your coupon covered the full amount, no payment needed. Registration ID:',
     evf_pending: 'We have not received confirmation of your payment yet. If you have paid, it will be confirmed shortly. Registration ID:',
     evf_recheck: 'Check again'
   },
@@ -871,6 +872,7 @@ const translations = {
     evf_err_generic: 'ஏதோ தவறு நேர்ந்தது. மீண்டும் முயற்சிக்கவும் அல்லது வாட்ஸ்அப்பில் தொடர்பு கொள்ளவும்.',
     evf_checking: 'உங்கள் கட்டணத்தைச் சரிபார்க்கிறோம்…',
     evf_paid: 'கட்டணம் சரிபார்க்கப்பட்டது. உங்கள் பதிவு உறுதிசெய்யப்பட்டது. பதிவு எண்:',
+    evf_free_success: 'உங்கள் பதிவு உறுதிசெய்யப்பட்டது — உங்கள் கூப்பன் முழு தொகையையும் ஏற்றுக்கொண்டது, கட்டணம் தேவையில்லை. பதிவு எண்:',
     evf_pending: 'உங்கள் கட்டணத்திற்கான உறுதிப்படுத்தல் இன்னும் கிடைக்கவில்லை. நீங்கள் செலுத்தியிருந்தால் விரைவில் உறுதிசெய்யப்படும். பதிவு எண்:',
     evf_recheck: 'மீண்டும் சரிபார்'
   }

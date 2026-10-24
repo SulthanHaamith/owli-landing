@@ -520,10 +520,14 @@ function owli_send_confirmation(PDO $db, int $regId): void
             return;
         }
         $from = (string)(owli_config()['mail_from'] ?? 'registrations@owlihealthcare.com');
+        $amt = (int)$r['amount_paise'];
+        $amountLine = $amt === 0
+            ? "Amount: FREE (coupon applied - no payment needed)"
+            : "Amount paid: Rs " . owli_rupees($amt);
         $body = "Dear " . $r['name'] . ",\r\n\r\n"
               . "Your registration for Arokya Payanam 2026 is confirmed.\r\n\r\n"
               . "Registration ID: " . $r['reference'] . "\r\n"
-              . "Amount paid: Rs " . owli_rupees((int)$r['amount_paise']) . "\r\n"
+              . $amountLine . "\r\n"
               . "Date: Sunday, 15 November 2026, 9:00 A.M. - 4:00 P.M.\r\n"
               . "Venue: AR Group of Institutions, Kadayam, Tirunelveli\r\n\r\n"
               . "Please keep this ID for the event. Questions? WhatsApp +91 6379610554 or arokyapayanam@gmail.com.\r\n\r\n"

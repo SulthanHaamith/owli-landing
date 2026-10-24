@@ -225,6 +225,17 @@
       body: JSON.stringify(collect())
     }).then(function (res) {
       var b = res.body || {};
+      if (b.ok && b.free === true) {
+        /* 100%-off coupon: the SERVER already confirmed the registration —
+           no payment page exists. Show the success box like a paid return. */
+        store(b.reference);
+        statusBox.hidden = false;
+        statusBox.className = 'ev-status-box is-paid';
+        statusBox.textContent = t('evf_free_success') + ' ' + b.reference;
+        submitBtn.disabled = false;
+        submitBtn.firstElementChild.textContent = t('evf_pay');
+        return;
+      }
       if (b.ok && typeof b.payment_url === 'string' && /^https:\/\/app\.coaxlure\.com\//.test(b.payment_url)) {
         store(b.reference);
         window.location.href = b.payment_url;

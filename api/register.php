@@ -148,7 +148,13 @@ try {
         owli_json(['ok' => false, 'error' => 'rate_limited', 'message' => 'Too many attempts. Please try again in a few minutes.'], 429);
     }
 
-    /* Already paid with this mobile + email? Don't charge twice. */
+    /* One ticket per mobile + email pair:
+       - PAID   -> this pair is locked: refuse a second registration outright.
+       - PENDING -> NOT a duplicate: the retry block below REUSES that same row
+         (same reference, fresh payment attempt), so two people sharing one
+         number+email can never create two rows — every submission before
+         payment updates the single row for the pair, and only that row can
+         ever become paid. */
     $dup = $db->prepare("SELECT reference FROM registrations WHERE mobile = ? AND email = ? AND status = 'paid' LIMIT 1");
     $dup->execute([$mobile, $email]);
     $existingPaid = $dup->fetchColumn();
@@ -170,12 +176,14 @@ try {
             : 'That coupon code is not valid.');
     }
     $final = (int)$q['final_paise'];
-    if ($final < 100) {
-        /* Coaxlure rejects amounts below Rs 1 (100 paise), so nothing smaller can be
-           paid online at all. The old Rs 100 policy floor was removed so a small
-           real-money TEST payment (Rs 10 = 1000 paise; README §10 go-live step 5)
-           is possible before launch. Free (Rs 0) tickets remain impossible — there
-           is no free-ticket flow yet. Real ticket prices live in the tiers table. */
+    /* Free-ticket flow: a coupon that covers the WHOLE price (100% off, or a flat
+       coupon >= base) makes the final amount Rs 0. That is confirmed instantly —
+       no Coaxlure order is created (Rs 0 cannot be charged online). Any other
+       price below Rs 1 (100 paise, Coaxlure's minimum) is still refused. The old
+       Rs 100 policy floor was removed so a small real-money TEST payment
+       (Rs 10 = 1000 paise; README §10 go-live step 5) is possible before launch. */
+    $isFree = $final === 0 && $q['coupon'] !== null;
+    if ($final < 100 && !$isFree) {
         owli_json(['ok' => false, 'error' => 'amount_too_low', 'message' => 'Please contact the organisers for this registration.'], 422);
     }
 
@@ -231,6 +239,14 @@ try {
         if ($regId === 0) {
             throw new RuntimeException('reference_generation_failed');
         }
+    }
+
+    /* Coupon covered the whole price: confirm instantly, no payment page.
+       owli_mark_paid() flips the fresh pending row to paid (once) and sends
+       the standard confirmation email — exactly like a paid registration. */
+    if ($isFree) {
+        owli_mark_paid($db, $regId, null);
+        owli_json(['ok' => true, 'reference' => $reference, 'amount' => 0, 'free' => true]);
     }
 
     $labels = ['student' => 'Student', 'doctor' => 'Doctor', 'bni' => 'BNI Member', 'general' => 'General'];
