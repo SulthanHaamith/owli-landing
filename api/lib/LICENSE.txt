@@ -1,0 +1,22 @@
+Vendored third-party libraries used by api/ticket.php (the PDF ticket).
+Everything here ships inside the repo so the ticket works on any host
+without Composer, and every license permits redistribution.
+
+1) tFPDF 1.34 - api/lib/tfpdf.php
+   UTF-8 extension of FPDF by Ian Back and Tycho Veltmeijer.
+   License: GNU Lesser General Public License (LGPL).
+   Why: renders Tamil attendee names - the PDF core fonts cannot.
+   tFPDF needs its own TTF metrics parser: api/lib/font/unifont/ttfonts.php.
+
+2) QR Code generator (PHP) - api/lib/qrcode.php
+   Kazuhiko Arase, 2009 (the library behind the phpqrcode project).
+   License: MIT - http://www.opensource.org/licenses/mit-license.php
+   Why: produces the raw QR module matrix (isDark) that we draw as
+   vector squares with tFPDF - no GD/Imagick required on the server.
+   "QR Code" is a registered trademark of DENSO WAVE INCORPORATED.
+
+3) MuktaMalar Regular + Bold - api/lib/font/unifont/MuktaMalar-*.ttf
+   (Google Fonts, Ek Type) and api/lib/font/unifont/LICENSE-OFL.txt
+   License: SIL Open Font License 1.1 (see that file).
+   Why: ONE font family covering Latin + Tamil + digits, so a single
+   AddFont() renders every ticket safely whatever script the name uses.

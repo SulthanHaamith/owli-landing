@@ -454,6 +454,9 @@ const translations = {
     evf_checking: 'Checking your payment…',
     evf_paid: 'Payment verified. Your registration is confirmed. Registration ID:',
     evf_free_success: 'Registration confirmed — your coupon covered the full amount, no payment needed. Registration ID:',
+    evf_download_ticket: 'Download ticket (PDF)',
+    evf_ticket_hint: 'Your ticket has the Booking ID and a QR code. Show it at the desk — scanning it verifies this registration instantly. You can download it again anytime from this page with your Booking ID.',
+    evf_done: 'Done',
     evf_pending: 'We have not received confirmation of your payment yet. If you have paid, it will be confirmed shortly. Registration ID:',
     evf_recheck: 'Check again'
   },
@@ -873,6 +876,9 @@ const translations = {
     evf_checking: 'உங்கள் கட்டணத்தைச் சரிபார்க்கிறோம்…',
     evf_paid: 'கட்டணம் சரிபார்க்கப்பட்டது. உங்கள் பதிவு உறுதிசெய்யப்பட்டது. பதிவு எண்:',
     evf_free_success: 'உங்கள் பதிவு உறுதிசெய்யப்பட்டது — உங்கள் கூப்பன் முழு தொகையையும் ஏற்றுக்கொண்டது, கட்டணம் தேவையில்லை. பதிவு எண்:',
+    evf_download_ticket: 'சீட்டைப் பதிவிறக்கு (PDF)',
+    evf_ticket_hint: 'உங்கள் சீட்டில் புக்கிங் எண் மற்றும் QR குறியீடு உள்ளன. அரங்கில் காட்டுங்கள் — ஸ்கேன் செய்தால் இந்தப் பதிவு உடனடியாக சரிபார்க்கப்படும். புக்கிங் எண்ணை வைத்து இந்தப் பக்கத்தில் எப்போது வேண்டுமானாலும் மீண்டும் பதிவிறக்கலாம்.',
+    evf_done: 'முடிந்தது',
     evf_pending: 'உங்கள் கட்டணத்திற்கான உறுதிப்படுத்தல் இன்னும் கிடைக்கவில்லை. நீங்கள் செலுத்தியிருந்தால் விரைவில் உறுதிசெய்யப்படும். பதிவு எண்:',
     evf_recheck: 'மீண்டும் சரிபார்'
   }

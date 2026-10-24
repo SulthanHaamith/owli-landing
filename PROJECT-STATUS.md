@@ -44,7 +44,7 @@ with an event registration + payment backend for **Arokya Payanam 2026**:
 | API | ✅ healthy — `mode:"open"` — **registration is LIVE at ₹10 (General)** |
 | Prices (live DB) | student ₹299 · doctor ₹399 · bni ₹399 · **general ₹10 (test price)** |
 | Docs off the web | ✅ `GO-LIVE-STEPS.md`, `README.md`, `scripts/`, `sql/`, `api/_bootstrap.php` → all HTTP 403 |
-| Validation suite (local) | ✅ **56/56 checks passed** |
+| Validation suite (local) | ✅ **57/57 checks passed** |
 | Coaxlure integration | ✅ live-tested — the ₹10 test payment was captured and detected as paid |
 | Coupons in live DB | ❌ **none yet** (`EARLY10`/`PAYANAM20` → `invalid`) |
 | `source` column on live DB | ❌ **not yet** — the ALTER is still pending (step 1 below) |
@@ -118,7 +118,7 @@ php domains/owlihealthcare.com/public_html/scripts/validate.php
 ```
 
 Expect the **`registrations.source`** check to pass now, plus the existing
-56/56. Everything else stays as-is — no redeploy needed for any of these steps
+57/57. Everything else stays as-is — no redeploy needed for any of these steps
 (they are all DB/config-side).
 
 ### Step 6 — known open items (low priority, non-blocking)

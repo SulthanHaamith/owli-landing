@@ -227,11 +227,29 @@
       var b = res.body || {};
       if (b.ok && b.free === true) {
         /* 100%-off coupon: the SERVER already confirmed the registration —
-           no payment page exists. Show the success box like a paid return. */
+           no payment page exists. Show the paid box (ticket download
+           included: a free coupon registration IS a paid row at Rs 0). */
         store(b.reference);
         statusBox.hidden = false;
         statusBox.className = 'ev-status-box is-paid';
         statusBox.textContent = t('evf_free_success') + ' ' + b.reference;
+
+        var dlFree = document.createElement('a');
+        dlFree.className = 'btn btn-primary';
+        dlFree.href = API + 'ticket.php?ref=' + encodeURIComponent(b.reference);
+        dlFree.setAttribute('download', b.reference + '-entry-ticket.pdf');
+        dlFree.textContent = t('evf_download_ticket');
+
+        var rowFree = document.createElement('div');
+        rowFree.className = 'ev-paid-row';
+        rowFree.appendChild(dlFree);
+        statusBox.appendChild(rowFree);
+
+        var hintFree = document.createElement('p');
+        hintFree.className = 'ev-ticket-hint';
+        hintFree.textContent = t('evf_ticket_hint');
+        statusBox.appendChild(hintFree);
+
         submitBtn.disabled = false;
         submitBtn.firstElementChild.textContent = t('evf_pay');
         return;
@@ -261,6 +279,48 @@
     });
   });
 
+  /* ---------- paid confirmation (shared by every paid path) ----------
+     Shows the success message + the reference, then the DOWNLOAD TICKET
+     button. The PDF (api/ticket.php?ref=...) carries the Booking ID and a
+     QR code that encodes this page's URL — scanning it re-opens the page and
+     the status box verifies the booking as PAID instantly. */
+  function showPaid(ref) {
+    store('');
+    statusBox.hidden = false;
+    statusBox.className = 'ev-status-box is-paid';
+
+    statusBox.textContent = t('evf_paid') + ' ' + ref;
+
+    var row = document.createElement('div');
+    row.className = 'ev-paid-row';
+
+    var dl = document.createElement('a');
+    dl.className = 'btn btn-primary';
+    dl.href = API + 'ticket.php?ref=' + encodeURIComponent(ref);
+    dl.setAttribute('download', ref + '-entry-ticket.pdf');
+    dl.textContent = t('evf_download_ticket');
+
+    var done = document.createElement('button');
+    done.type = 'button';
+    done.className = 'btn btn-secondary';
+    done.textContent = t('evf_done');
+    done.addEventListener('click', function () {
+      try { localStorage.removeItem(STORE); } catch (e) {}
+      window.location.hash = '';
+      window.location.href = '#event-top';
+      statusBox.hidden = true;
+    });
+
+    row.appendChild(dl);
+    row.appendChild(done);
+    statusBox.appendChild(row);
+
+    var hint = document.createElement('p');
+    hint.className = 'ev-ticket-hint';
+    hint.textContent = t('evf_ticket_hint');
+    statusBox.appendChild(hint);
+  }
+
   /* ---------- payment status (after returning from Coaxlure) ---------- */
   function showStatus(ref, tries) {
     statusBox.hidden = false;
@@ -269,9 +329,7 @@
     api('status.php?ref=' + encodeURIComponent(ref)).then(function (res) {
       var b = res.body || {};
       if (b.ok && b.status === 'paid') {
-        store('');
-        statusBox.className = 'ev-status-box is-paid';
-        statusBox.textContent = t('evf_paid') + ' ' + b.reference;
+        showPaid(ref);
         return;
       }
       if (b.ok && b.status === 'pending') {

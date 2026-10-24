@@ -879,6 +879,23 @@ body.events-page {
 }
 .ev-status-box.is-paid { border-left-color: var(--color-secondary); color: var(--color-primary); }
 .ev-status-box .btn { margin-top: 10px; }
+
+/* Paid confirmation box: the reference and the Download ticket button sit
+   on one tidy row, then the ticket hint below it. */
+.ev-status-box.is-paid .ev-paid-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.ev-status-box.is-paid .ev-paid-row .btn { margin-top: 0; flex: 0 0 auto; }
+.ev-ticket-hint {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--color-light-text);
+}
 .ev-cat-block[hidden] { display: none; }
 @media (min-width: 640px) {
   .ev-form { padding: 32px; }
