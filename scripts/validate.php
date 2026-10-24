@@ -261,7 +261,7 @@ if ($siteUrl !== '') {
        .htaccess must refuse them (GO-LIVE-STEPS.md contains coupon SQL and
        server details; README/CLAUDE/API-TROUBLESHOOTING describe the security
        model and the debugging method). */
-    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md'] as $doc) {
+    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md', '/LOCAL-TESTING.md', '/PROJECT-STATUS.md'] as $doc) {
         [$dc] = probe($siteUrl . $doc);
         check("doc $doc blocked from the web", in_array($dc, [403, 404], true), 'HTTP ' . $dc);
     }

@@ -34,6 +34,7 @@
 | "How do I run the ₹10 payment test / open registration?" | `GO-LIVE-STEPS.md` |
 | "Something does not work — how do I find out why?" | **this file** |
 | "How does the whole system work?" | `README.md` §5 / §10 |
+| "How do I set up / use the local Docker stack and the checkers?" | `LOCAL-TESTING.md` |
 | "Is the deployment healthy right now?" | `php scripts/validate.php` (§2, Step 6) |
 
 ---

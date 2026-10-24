@@ -92,6 +92,7 @@ owli-healthcare/
 ├── GO-LIVE-STEPS.md        # Runbook: Rs 10 live payment test + opening registration
 ├── PROJECT-STATUS.md       # Live status snapshot: what works, what's left, decisions
 ├── API-TROUBLESHOOTING.md  # API debugging runbook: reproduce → log → cause → verify
+├── LOCAL-TESTING.md        # How to run/test everything locally: Docker stack, checkers, verification
 └── README.md               # This file — how to use and maintain the site
 ```
 

@@ -119,7 +119,8 @@ php domains/owlihealthcare.com/public_html/scripts/validate.php
 ```
 
 Expect the **`registrations.source`** check to pass now, plus the existing
-57/57. Everything else stays as-is — no redeploy needed for any of these steps
+checks (59/59 after the two new doc-block checks). Everything else stays as-is —
+no redeploy needed for any of these steps
 (they are all DB/config-side).
 
 ### Step 6 — known open items (low priority, non-blocking)
@@ -195,7 +196,7 @@ Single-use codes stop working after one use (`used_up`).
 
 - **Preview mode** (3-state: closed/preview/open) with the server-side switch —
   the whole point: flipping only the JS file can never open payments.
-- **Validation suite** `scripts/validate.php` — 56 checks, gates deploys, safe to
+- **Validation suite** `scripts/validate.php` — 59 checks, gates deploys, safe to
   paste (no credentials ever printed).
 - **i18n checker** `scripts/check-i18n.js` — EN/TA parity (355/355 keys).
 - **Pay-flow regression** `scripts/check-pay-flow.js` — drives the real form
@@ -237,5 +238,5 @@ confirmation email sent. A free coupon skips the payment half entirely.
 | Cron (payment recheck) | hPanel, every 5 min, `/usr/bin/php .../api/cron-recheck.php` |
 | Validation | `php public_html/scripts/validate.php` (hPanel Terminal) |
 | API debugging runbook | `API-TROUBLESHOOTING.md` — workflow, endpoint codes, log prefixes, real case studies |
-| Local preview | `http://localhost:8800/` (Docker: `owli-web`, `owli-db`) |
+| Local preview | `http://localhost:8800/` (Docker: `owli-web`, `owli-db`) — full setup + checkers: `LOCAL-TESTING.md` |
 | Admin console | `https://owlihealthcare.com/admin/` |
