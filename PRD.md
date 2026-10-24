@@ -220,7 +220,7 @@ The page at `/events/` must present Arokya Payanam 2026 details:
 | Registration API | Implemented | `api/register.php`, `api/quote.php`, `api/status.php`. |
 | Database schema/pricing | Implemented | `sql/schema.sql` with tiers, coupons, registrations, attempts, settings. |
 | Coaxlure dev integration | Verified locally | Auth/order/payment-link/PENDING status exercised on 23 Oct 2026. |
-| Paid-payment verification | **Not complete** | A real ₹1 test payment is still required to confirm the provider’s paid-status wording. |
+| Paid-payment verification | **Not complete** | A real ₹10 test payment is still required to confirm the provider’s paid-status wording. |
 | Production configuration | **Not verified** | Hostinger DB import, production secrets, cron, and live credentials require confirmation. |
 | Final content/assets | **Not complete** | Real testimonials, gallery/blog imagery, OG image, and some social links remain placeholders. |
 | Automated project test suite | **Not present** | No package/test runner; PHP CLI is unavailable in the current host shell. |
@@ -239,7 +239,7 @@ The page at `/events/` must present Arokya Payanam 2026 details:
 
 ### P0 — must complete before public registration
 
-1. **Complete a real paid-payment test.** Use the documented ₹1 test procedure, verify the database changes to `paid`, and confirm `paymentStatus` matching in `_bootstrap.php`.
+1. **Complete a real paid-payment test.** Use the documented ₹10 test procedure, verify the database changes to `paid`, and confirm `paymentStatus` matching in `_bootstrap.php`.
 2. **Configure and verify production infrastructure.** Import the schema, create a least-privilege database user, place `owli-config.php` outside `public_html`, configure live Coaxlure credentials, and set the production payment host allowlist.
 3. **Configure the cron job.** Run `cron-recheck.php` every five minutes and confirm it can update abandoned-browser payments.
 4. **Reconcile the registration switch.** Keep registration closed until production is validated; make the source-of-truth docs and `registrationOpen` value agree.

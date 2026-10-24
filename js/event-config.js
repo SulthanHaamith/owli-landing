@@ -15,8 +15,8 @@
  * │              still being verified.                           │
  * │  'open'    — Buttons say "Register Now", the form submits    │
  * │              and the server accepts registrations. Flip to   │
- * │              this ONLY after live Coaxlure credentials and  │
- * │              a successful Rs 1 test payment (README §10).    │
+ * │              this ONLY after live Coaxlure credentials and │
+ * │              a successful Rs 10 test payment (README §10).   │
  * │  'closed'  — Everything reads "Registration Opens Soon" and │
  * │              the form is locked. Use to take it down again.  │
  * └──────────────────────────────────────────────────────────────┘

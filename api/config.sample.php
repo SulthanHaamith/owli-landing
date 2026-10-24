@@ -14,7 +14,7 @@
  *   'preview' -> quote.php returns prices (demo/progress on /events/), but
  *                register.php refuses with 503 not_open. The Pay button is
  *                disabled. Use while the payment integration is verified.
- *   'open'    -> full registration + payment. Flip only after the Rs 1 test.
+ *   'open'    -> full registration + payment. Flip only after the Rs 10 test.
  *   If the key is missing, the old rule applies: filled credentials = open.
  *
  * NOTE: This file is a TEMPLATE and holds no secrets — but the web server

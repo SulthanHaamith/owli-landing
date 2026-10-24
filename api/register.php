@@ -170,8 +170,12 @@ try {
             : 'That coupon code is not valid.');
     }
     $final = (int)$q['final_paise'];
-    if ($final < 10000) {
-        /* Coaxlure rejects < 100 paise; we also refuse free/near-free here (no free-ticket flow yet). */
+    if ($final < 100) {
+        /* Coaxlure rejects amounts below Rs 1 (100 paise), so nothing smaller can be
+           paid online at all. The old Rs 100 policy floor was removed so a small
+           real-money TEST payment (Rs 10 = 1000 paise; README §10 go-live step 5)
+           is possible before launch. Free (Rs 0) tickets remain impossible — there
+           is no free-ticket flow yet. Real ticket prices live in the tiers table. */
         owli_json(['ok' => false, 'error' => 'amount_too_low', 'message' => 'Please contact the organisers for this registration.'], 422);
     }
 
