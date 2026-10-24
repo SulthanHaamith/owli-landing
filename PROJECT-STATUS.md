@@ -192,6 +192,18 @@ Single-use codes stop working after one use (`used_up`).
 - **Coupons panel** — generate/deactivate codes; printed once, database-only.
 - **Export CSV** — filter-aware, UTF-8 BOM for Excel, includes Source column.
 
+### Waiting box, now (2026-10-25)
+
+The waiting box (while the Coaxlure tab is open beside the page) shows: the
+Booking ID + "checking here every few seconds…", a **"Check payment status now"**
+button (one server-verified status call; re-arms while pending), and the amber
+do-not-refresh warning. The old **"Reopen the payment page" link is removed** by
+owner request — the payment tab is already open; if the attendee closed it, the
+pending row survives and re-submitting the form creates a fresh attempt on the
+same row (no duplicate person, no double charge). The "invisible until hover"
+secondary-button bug inside the white status box is fixed (green-on-white
+re-skin scoped to `.ev-status-box .btn-secondary`).
+
 ### Other shipped items
 
 - **Preview mode** (3-state: closed/preview/open) with the server-side switch —

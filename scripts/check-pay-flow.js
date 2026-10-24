@@ -21,9 +21,11 @@
  *            C  free coupon         -> tab closed; zero navigation anywhere
  *            D  validation error    -> tab closed; button re-enabled
  *            E  network failure     -> tab closed; button re-enabled
- *            F  "Reopen the payment page" -> preventDefault always runs;
- *                                      a new tab opens to the same URL;
- *                                      the form page stays put
+ *            F  waiting box: status-check ONLY -> NO reopen-payment link
+ *                                      anywhere (owner request 2026-10-25);
+ *                                      the "Check payment status now"
+ *                                      button fires ONE status.php call
+ *                                      and opens NO new tab
  *
  * HOW TO RUN:  node scripts/check-pay-flow.js      (exit code 1 = FAIL)
  *              Run it before every push that touches js/event-register.js,
@@ -97,7 +99,7 @@ function buildWorld(opts) {
   const submitBtn = el('button');
   submitBtn.firstElementChild = { textContent: '' };
   const statusBox = el('div');
-  const state = { opened: [], location: { href: '' }, timers: [] };
+  const state = { opened: [], location: { href: '' }, timers: [], statusCalls: 0 };
 
   const ok = (body) => Promise.resolve({ status: 200, json: () => Promise.resolve(body) });
   const fetchImpl = (p) => {
@@ -106,6 +108,7 @@ function buildWorld(opts) {
       return ok({ ok: true, mode: 'open', open: true, prices: { student: 299, doctor: 399, bni: 399, general: 449 } });
     }
     if (s.indexOf('status.php') >= 0) {
+      state.statusCalls++;
       return ok({ ok: true, status: 'pending', reference: REF });
     }
     if (s.indexOf('register.php') >= 0) {
@@ -200,16 +203,17 @@ async function scenarioA() {
   A('the tab is left open for the attendee to pay', !!tab && !tab.closeCalled, 'closeCalled=' + (tab && tab.closeCalled));
   A('same-page payment polling is armed', w.state.timers.length > 0, 'timers=' + w.state.timers.length);
 
-  console.log('F) "Reopen the payment page" link (same world as A)');
-  const relink = w.statusBox.children.find((c) => String(c.className).indexOf('ev-pay-relink') >= 0);
-  if (!relink) { A('relink rendered in the waiting box', false, 'not found'); return; }
-  const evt = { prevented: false, preventDefault() { this.prevented = true; } };
-  relink.listeners.click(evt);
+  console.log('F) waiting box: status-check only — no reopen link (owner request 2026-10-25)');
+  const anchors = w.statusBox.children.filter((c) => c.tag === 'a' || String(c.className).indexOf('ev-pay-relink') >= 0);
+  A('NO reopen-payment link is rendered in the waiting box', anchors.length === 0, 'anchors=' + anchors.length);
+  const checkBtn = w.statusBox.children.find((c) => String(c.className).indexOf('ev-check-now') >= 0);
+  if (!checkBtn) { A('"Check payment status now" button rendered', false, 'not found'); return; }
+  const before = w.state.statusCalls;
+  checkBtn.listeners.click();
   await tick();
-  A('preventDefault ALWAYS runs (no default anchor navigation)', evt.prevented === true, 'prevented=' + evt.prevented);
-  A('a second tab opens for the same attempt', w.state.opened.length === 2, 'opened=' + w.state.opened.length);
-  const second = w.state.opened[1];
-  A('the second tab goes to the same payment URL (same attempt, no new order)', !!second && second.tab.location.href === PAY_URL, second && second.tab.location.href);
+  await tick();
+  A('the check button fires ONE status.php call', w.state.statusCalls === before + 1, 'statusCalls ' + before + ' -> ' + w.state.statusCalls);
+  A('the check button opens NO new tab (payment tab count unchanged)', w.state.opened.length === 1, 'opened=' + w.state.opened.length);
   A('the form page still did not navigate', w.state.location.href === '', w.state.location.href || '(unchanged)');
 }
 

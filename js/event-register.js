@@ -294,7 +294,7 @@
            strand the booking, and the ticket downloads the moment payment is
            verified server-side. */
         store(b.reference);
-        showWaiting(b.reference, b.payment_url);
+        showWaiting(b.reference);
         if (payTab && !payTab.closed) {
           /* THE one navigation: the pre-opened tab goes to Coaxlure, this
              page stays right here and keeps watching. The handle is dropped
@@ -390,43 +390,70 @@
     if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
   }
 
-  function showWaiting(ref, payUrl) {
+  function showWaiting(ref) {
     stopPolling();
     statusBox.hidden = false;
     statusBox.className = 'ev-status-box is-pending';
     statusBox.textContent = t('evf_wait_open') + ' ' + ref + ' — ' + t('evf_wait_checking');
 
-    var relink = document.createElement('a');
-    relink.className = 'btn btn-secondary ev-pay-relink';
-    relink.href = payUrl;
-    relink.textContent = t('evf_reopen_pay');
-    relink.addEventListener('click', function (e) {
-      /* Re-clicking the link keeps the SAME attempt (register.php reuses the
-         pending row) — no new order, no double charge.
-         preventDefault ALWAYS runs first: with a blocked popup the anchor's
-         default action would silently navigate THIS page to Coaxlure, and
-         with 'noopener' window.open returns null even on success — so the
-         return value cannot be trusted to decide anything. Same pre-open
-         pattern as the submit handler. */
-      e.preventDefault();
-      var w2 = null;
-      try { w2 = window.open('about:blank', '_blank'); } catch (e5) { w2 = null; }
-      if (w2) {
-        try { w2.opener = null; } catch (e6) {}
-        w2.location.href = payUrl;   /* reopen in a new tab; this page stays put */
-      } else {
-        window.location.href = payUrl;   /* popup blocked: leave this page instead */
-      }
-    });
+    /* Owner-requested change (2026-10-25): NO "Reopen the payment page"
+       action in the waiting box. The payment tab is already open in the
+       browser; a reopen path invites tab confusion and a second attempt
+       against the same order. The only action here is CHECKING — on demand,
+       on this page, with the server as the only source of truth.
+       (If the attendee closes the payment tab, the booking still resolves:
+       the running poll ladder, cron, and the ~10-min timeout message cover
+       that case; re-submitting the form creates a fresh attempt on the SAME
+       pending row — no duplicate person, no double charge.) */
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'btn btn-secondary ev-check-now';
+    check.textContent = t('evf_check_now');
+    check.addEventListener('click', function () { checkOnce(ref); });
 
     var warn = document.createElement('p');
     warn.className = 'ev-pay-warning';
     warn.textContent = t('evf_dont_refresh');
 
     statusBox.appendChild(document.createElement('br'));
-    statusBox.appendChild(relink);
+    statusBox.appendChild(check);
     statusBox.appendChild(warn);
     submitBtn.disabled = true;
+  }
+
+  /* One immediate, on-demand status check — the "Check payment status now"
+     button in the waiting box. Deliberately NOT a second polling ladder:
+     that would double the request cadence. This is a single status.php call
+     while the regular ladder keeps its own schedule. status.php verifies
+     with Coaxlure server-side and self-throttles rechecks to one per 5s per
+     attempt, so extra clicks are cheap and can never spam Coaxlure.
+     paid   -> stop everything, flip the box to the ticket download
+     failed -> stop everything, clear the stored ref, re-enable the form
+     else   -> stay in the waiting state and re-arm the button */
+  function checkOnce(ref) {
+    var btn = statusBox.querySelector('.ev-check-now');
+    if (btn) { btn.disabled = true; btn.textContent = t('evf_checking'); }
+    api('status.php?ref=' + encodeURIComponent(ref)).then(function (res) {
+      var b = res.body || {};
+      if (b.ok && b.status === 'paid') {
+        stopPolling();
+        submitBtn.disabled = false;
+        submitBtn.firstElementChild.textContent = t('evf_pay');
+        showPaid(ref);
+        return;
+      }
+      if (b.ok && b.status === 'failed') {
+        stopPolling();
+        store('');
+        statusBox.hidden = true;
+        submitBtn.disabled = false;
+        submitBtn.firstElementChild.textContent = t('evf_pay');
+        return;
+      }
+      if (btn) { btn.disabled = false; btn.textContent = t('evf_check_now'); }
+    }).catch(function () {
+      if (btn) { btn.disabled = false; btn.textContent = t('evf_check_now'); }
+    });
   }
 
   function pollStatus(ref) {

@@ -892,7 +892,23 @@ body.events-page {
   color: #6d4c00;
   text-align: left;
 }
-.ev-status-box .ev-pay-relink { margin-top: 12px; }
+/* Action buttons inside the WHITE status box must be visible on it:
+   the site's .btn-secondary (transparent bg + WHITE text + WHITE border)
+   is designed for dark surfaces — on the white .ev-status-box it rendered
+   white-on-white, i.e. invisible except on hover (owner bug report
+   2026-10-25). Re-skin it for light surfaces; this single scoped rule
+   covers the waiting box's "Check payment status now", the pending box's
+   "Check again" and the paid box's "Done" button. */
+.ev-status-box .btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-secondary);
+}
+.ev-status-box .btn-secondary:hover,
+.ev-status-box .btn-secondary:focus-visible {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
 
 /* Paid confirmation box: the reference and the Download ticket button sit
    on one tidy row, then the ticket hint below it. */
