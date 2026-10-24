@@ -484,6 +484,19 @@
         </form>
 
         <!-- ============================================
+             PAYMENT STATUS BOX
+             PURPOSE: Sits DIRECTLY after the registration form
+                      (owner request 2026-10-26 — the payment-verified
+                      confirmation must be the first thing under the
+                      form, before the lookup card). js/event-register.js
+                      polls status.php and fills this box: waiting
+                      message + "do not refresh" warning while the
+                      payment is pending in the other tab, then the paid
+                      box with the ticket download.
+             ============================================ -->
+        <div class="ev-status-box" id="evf-status" role="status" aria-live="polite" hidden></div>
+
+        <!-- ============================================
              ALREADY REGISTERED? — BOOKING-ID LOOKUP
              PURPOSE: A returning attendee types their Booking ID
              (AP26-XXXXXX); the page asks the server, and if the booking
@@ -505,13 +518,6 @@
           <!-- The three paid actions render inside this box after a successful lookup -->
           <div class="ev-lookup-result" id="evf-lookup-result" hidden></div>
         </div>
-
-        <!-- Shown when the attendee returns from the payment page -->
-        <!-- Shown while the attendee pays in the other tab, and after they return.
-             js/event-register.js polls status.php and fills this box: waiting
-             message + "do not refresh" warning while payment is pending,
-             then the paid box with the ticket download. -->
-        <div class="ev-status-box" id="evf-status" role="status" aria-live="polite" hidden></div>
       </div>
     </section>
 

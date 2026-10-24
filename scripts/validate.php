@@ -316,9 +316,21 @@ note('committed client mode: ' . (preg_match("~registrationMode:\s*'(\w+)'~", $e
 
 /* 10 ─ Booking-ID lookup section (owner request 2026-10-26) --------- */
 /* The "Already registered? Get your ticket" card must exist and carry
-   its i18n hooks; the JS must render the paid actions for a paid ID. */
+   its i18n hooks; the JS must render the paid actions for a paid ID.
+   ORDER CONTRACT (owner request 2026-10-26, second report): the payment
+   status box (#evf-status — the "Payment verified" box) must sit
+   DIRECTLY after the registration form, BEFORE the lookup card. */
 $evp = (string)@file_get_contents(__DIR__ . '/../events/index.html');
 check('events page has the #ticket-lookup card', str_contains($evp, 'id="ticket-lookup"'));
+$posForm  = strpos($evp, '</form>');                    /* the register form closes here */
+$posStat  = strpos($evp, 'id="evf-status"');
+$posLook  = strpos($evp, 'id="ticket-lookup"');
+check('payment status box directly after the register form (before the lookup card)',
+    $posForm !== false && $posStat !== false && $posLook !== false
+    && $posStat > $posForm && $posStat < $posLook,
+    $posForm === false || $posStat === false || $posLook === false
+        ? 'missing element(s)'
+        : ($posStat > $posLook ? 'status box is AFTER the lookup card — swap them back' : 'form < status < lookup'));
 check('events page has #ticket-lookup-form', str_contains($evp, 'id="ticket-lookup-form"'));
 $evr = (string)@file_get_contents(__DIR__ . '/../js/event-register.js');
 check('event-register.js wires the lookup (status.php + evf_lookup_bad)', str_contains($evr, 'ticket-lookup-form') && str_contains($evr, 'evf_lookup_bad'));
