@@ -15,7 +15,8 @@
  *               preview/closed), status (reference format)
  *            6. Admin console reachability + auth state
  *            7. Cron job file present and web-protected
- *            8. Web protection of internal files (.htaccess rules)
+ *            8. Web protection of internal files (Apache .htaccess 403, or the
+ *               files' own PHP self-guard 404 — either counts as protected)
  *            9. Coaxlure reachability — WITHOUT sending credentials.
  *               (Only the API host is contacted with an empty auth call.
  *               The real credentials/tokens never appear in any output.)
@@ -239,8 +240,11 @@ if ($siteUrl !== '') {
 echo "\n6) Cron job\n";
 check('api/cron-recheck.php exists', is_file(__DIR__ . '/../api/cron-recheck.php'));
 if ($siteUrl !== '') {
+    /* 403 = Apache .htaccess denial (Hostinger production: fires before PHP runs).
+       404 = the file's own PHP self-guard (local dev server: .htaccess is ignored).
+       Both mean "not served". 200 would be a real failure. */
     [$cronCode] = probe($siteUrl . '/api/cron-recheck.php');
-    check('cron-recheck.php blocked from the web', $cronCode === 404, 'HTTP ' . $cronCode);
+    check('cron-recheck.php blocked from the web', in_array($cronCode, [403, 404], true), 'HTTP ' . $cronCode);
 }
 
 /* 7 ─ Internal file protection --------------------------------------- */
@@ -248,7 +252,7 @@ echo "\n7) Internal file protection\n";
 if ($siteUrl !== '') {
     foreach (['_bootstrap.php', 'config.sample.php', 'admin-pass.php'] as $file) {
         [$code3] = probe($siteUrl . '/api/' . $file);
-        check("api/$file blocked from the web", $code3 === 404, 'HTTP ' . $code3);
+        check("api/$file blocked from the web", in_array($code3, [403, 404], true), 'HTTP ' . $code3);
     }
 }
 
