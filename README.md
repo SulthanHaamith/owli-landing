@@ -89,6 +89,7 @@ owli-healthcare/
 ├── CLAUDE.md               # Complete project specification (for developers)
 ├── prompt.md               # Build phase instructions (for developers)
 ├── GO-LIVE-STEPS.md        # Runbook: Rs 10 live payment test + opening registration
+├── PROJECT-STATUS.md       # Live status snapshot: what works, what's left, decisions
 └── README.md               # This file — how to use and maintain the site
 ```
 
@@ -344,7 +345,7 @@ It verifies: PHP ≥ 8.2 + required extensions, config presence/shape, DB connec
 
 **Go-live steps**
 
-> For the current deployment there is a concrete operator runbook with the exact SQL, switch flips and verification checklist: **`GO-LIVE-STEPS.md`** (steps 5–6 below in expanded, current-state form).
+> For the current deployment there is a concrete operator runbook with the exact SQL, switch flips and verification checklist: **`GO-LIVE-STEPS.md`** (steps 5–6 below in expanded, current-state form). For the one-page "where everything stands right now" snapshot — verified live state, remaining owner steps, and every decision taken — see **`PROJECT-STATUS.md`**.
 
 1. hPanel → Databases: create the MySQL database + user. phpMyAdmin → Import `sql/schema.sql`.
 2. Copy `api/config.sample.php` to `owli-config.php` in the folder **above** `public_html` and fill in the DB details and the Coaxlure Client ID + Secret (Coaxlure → Business API → Integration). Never put these in Git. Set `registration.mode` to `'preview'` first — the event page then shows ticket prices and a working form demo, while the server still refuses submissions.
