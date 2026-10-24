@@ -41,7 +41,7 @@
   <!-- Shared site styles first, then the events-only styles -->
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/responsive.css">
-  <link rel="stylesheet" href="../css/events.css?v=1">
+  <link rel="stylesheet" href="../css/events.css?v=2">
 
   <!-- Structured data: helps Google show this as an Event -->
   <script type="application/ld+json">
@@ -483,6 +483,29 @@
           </fieldset>
         </form>
 
+        <!-- ============================================
+             ALREADY REGISTERED? — BOOKING-ID LOOKUP
+             PURPOSE: A returning attendee types their Booking ID
+             (AP26-XXXXXX); the page asks the server, and if the booking
+             is PAID it shows the SAME three actions the payment success
+             box shows (Download ticket, Get ticket on WhatsApp, Done).
+             Pending/failed/unknown IDs get a clear "not found" message.
+             js/event-register.js wires this (#ticket-lookup).
+             ============================================ -->
+        <div class="ev-ticket-lookup" id="ticket-lookup">
+          <h3 data-i18n="evf_lookup_title">Already registered? Get your ticket</h3>
+          <p class="ev-lookup-sub" data-i18n="evf_lookup_sub">Enter your Booking ID (for example AP26-AB12CD) to download your entry ticket again.</p>
+          <form class="ev-lookup-form" id="ticket-lookup-form" novalidate>
+            <label class="sr-only" for="evf-lookup-ref" data-i18n="evf_lookup_label">Booking ID</label>
+            <input id="evf-lookup-ref" name="ref" type="text" inputmode="latin" autocapitalize="characters"
+                   autocomplete="off" spellcheck="false" placeholder="AP26-XXXXXX" maxlength="12">
+            <button type="submit" class="btn btn-secondary" data-i18n="evf_lookup_btn">Find my ticket</button>
+          </form>
+          <p class="ev-error ev-lookup-error" id="evf-lookup-error" role="alert" hidden></p>
+          <!-- The three paid actions render inside this box after a successful lookup -->
+          <div class="ev-lookup-result" id="evf-lookup-result" hidden></div>
+        </div>
+
         <!-- Shown when the attendee returns from the payment page -->
         <!-- Shown while the attendee pays in the other tab, and after they return.
              js/event-register.js polls status.php and fills this box: waiting
@@ -539,9 +562,9 @@
   </div>
 
   <!-- i18n.js first (translations + language toggle), then registration state -->
-  <script src="../js/i18n.js?v=7"></script>
+  <script src="../js/i18n.js?v=8"></script>
   <script src="../js/event-config.js?v=6"></script>
   <!-- Registration form: category fields, price, payment redirect, status check -->
-  <script src="../js/event-register.js?v=10"></script>
+  <script src="../js/event-register.js?v=11"></script>
 </body>
 </html>

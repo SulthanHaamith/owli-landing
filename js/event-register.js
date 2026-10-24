@@ -590,4 +590,98 @@
   var refParam = (new URLSearchParams(window.location.search).get('ref') || '').toUpperCase();
   var ref = /^AP26-[A-Z0-9]{6}$/.test(refParam) ? refParam : stored();
   if (/^AP26-[A-Z0-9]{6}$/.test(ref)) showStatus(ref, 0);
+
+  /* ---------- Booking-ID lookup ("Already registered? Get your ticket") ----------
+     Owner request 2026-10-26: a section AFTER the register form where an attendee
+     can type their Booking ID. Valid + PAID -> the SAME three actions the payment
+     success box shows (Download ticket, Get ticket on WhatsApp, Done). Anything
+     else (bad format, unknown, pending, failed) -> "invalid ticket" message.
+
+     Reuses showPaid()'s building blocks but renders into the lookup result box
+     (the paid status box above the form must not double as the lookup target).
+     The server stays the only source of truth: status.php checks with Coaxlure
+     when needed; a paid answer means the PDF endpoint will accept the ID. */
+  var lookupForm = document.getElementById('ticket-lookup-form');
+  if (lookupForm) {
+    var lookupInput = document.getElementById('evf-lookup-ref');
+    var lookupError = document.getElementById('evf-lookup-error');
+    var lookupResult = document.getElementById('evf-lookup-result');
+    var lookupBtn = lookupForm.querySelector('button[type="submit"]');
+
+    function lookupRender(ref2) {
+      lookupResult.textContent = t('evf_lookup_ok') + ' ' + ref2;
+
+      var row = document.createElement('div');
+      row.className = 'ev-paid-row';
+
+      var dl = document.createElement('a');
+      dl.className = 'btn btn-primary';
+      dl.href = API + 'ticket.php?ref=' + encodeURIComponent(ref2);
+      dl.setAttribute('download', ref2 + '-entry-ticket.pdf');
+      dl.textContent = t('evf_download_ticket');   /* LABEL CONTRACT: every action is labelled */
+
+      var wa = document.createElement('a');
+      wa.className = 'btn btn-secondary ev-get-wa';
+      wa.href = 'https://wa.me/916379610554?text='
+        + encodeURIComponent(t('evf_wa_text') + ' ' + ref2);
+      wa.textContent = t('evf_get_wa');             /* label — the invisible-pill bug, never again */
+      wa.setAttribute('target', '_blank');
+      wa.setAttribute('rel', 'noopener noreferrer');
+
+      var done = document.createElement('button');
+      done.type = 'button';
+      done.className = 'btn btn-secondary';
+      done.textContent = t('evf_done');
+      done.addEventListener('click', function () {
+        lookupResult.hidden = true;
+        lookupResult.textContent = '';
+        lookupInput.value = '';
+      });
+
+      row.appendChild(dl);
+      row.appendChild(wa);
+      row.appendChild(done);
+      lookupResult.appendChild(row);
+
+      var hint = document.createElement('p');
+      hint.className = 'ev-ticket-hint';
+      hint.textContent = t('evf_ticket_hint');
+      lookupResult.appendChild(hint);
+
+      lookupResult.hidden = false;
+    }
+
+    lookupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var raw2 = (lookupInput.value || '').toUpperCase().trim();
+      lookupError.hidden = true;
+      lookupResult.hidden = true;
+      lookupResult.textContent = '';
+
+      /* ^AP26-XXXXXX$ — 6 chars after the dash. Note: the first probe pattern
+         used {4}-… and wrongly rejected every valid ID; the status endpoint and
+         the rest of the flow all treat the reference as AP26- + 6 chars. */
+      if (!/^AP26-[A-Z0-9]{6}$/.test(raw2)) {
+        lookupError.textContent = t('evf_lookup_bad');
+        lookupError.hidden = false;
+        return;
+      }
+
+      if (lookupBtn) { lookupBtn.disabled = true; }
+      api('status.php?ref=' + encodeURIComponent(raw2)).then(function (res) {
+        var b = res.body || {};
+        if (b.ok && b.status === 'paid') {
+          lookupRender(raw2);
+        } else {
+          lookupError.textContent = t('evf_lookup_bad');
+          lookupError.hidden = false;
+        }
+      }).catch(function () {
+        lookupError.textContent = t('evf_err_generic');
+        lookupError.hidden = false;
+      }).then(function () {
+        if (lookupBtn) { lookupBtn.disabled = false; }
+      });
+    });
+  }
 })();

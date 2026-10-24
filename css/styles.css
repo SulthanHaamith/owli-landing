@@ -1723,6 +1723,10 @@ body.lightbox-open {
 .form-fallback a {
   color: var(--color-secondary);
   font-weight: 500;
+  /* Touch-target safety — same 40px floor as .contact-info-item a */
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 .form-fallback a:hover {
@@ -1774,6 +1778,11 @@ body.lightbox-open {
   color: var(--color-secondary);
   font-weight: 500;
   font-size: 0.9rem;
+  /* Touch-target safety: inline links wrapped to at least 40px tall so a
+     phone tap lands on the link, not its neighbours. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 .contact-info-item a:hover {
@@ -1890,6 +1899,12 @@ body.lightbox-open {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   transition: color 0.3s ease, padding-left 0.3s ease;
+  /* Touch-target safety: footer links are short rows of text; the extra
+     vertical space keeps each one above the 40px minimum tap height
+     without changing the visual rhythm (the gap is transparent). */
+  display: flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 /* Hover — link shifts right slightly and brightens */

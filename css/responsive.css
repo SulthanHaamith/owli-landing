@@ -975,12 +975,18 @@ textarea,
 }
 
 /* Inline links within paragraphs shouldn't force 44px height
-   on the text — instead we add padding to the tap area */
+   on the text — instead we add padding to the tap area.
+   The mobile audit found these still landed at ~27-31px tall, so
+   the padding is raised from 4px to 11px: 11 + 11 + 18px line ≈ 40px
+   — the minimum tap height the audit enforces — while inline text
+   keeps its natural rhythm. */
 p a,
 .footer-links a,
 .footer-contact a,
-.contact-info-item a {
-  min-height: auto;
-  padding-top: 4px;
-  padding-bottom: 4px;
+.contact-info-item a,
+.form-fallback a,
+.ev-footer a {
+  min-height: 40px;
+  padding-top: 11px;
+  padding-bottom: 11px;
 }

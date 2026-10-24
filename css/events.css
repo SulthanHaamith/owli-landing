@@ -133,6 +133,11 @@ body.events-page {
   color: var(--color-dark-text);
   white-space: nowrap;
   border-bottom: 2px solid transparent;
+  /* Touch-target safety (WCAG 2.5.5): 11px top/bottom + 22px text ≈ 44px tall —
+     comfortably above the 40px floor the mobile audit enforces. */
+  min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .ev-subnav a:hover {
@@ -755,6 +760,11 @@ body.events-page {
 .ev-footer a {
   color: var(--color-white);
   text-decoration: underline;
+  /* Touch-target safety: footer links are inline text; 40px tall keeps a
+     phone tap from landing between the link and its neighbours. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 /* Floating buttons — 48px on phones like the homepage */
@@ -929,4 +939,101 @@ body.events-page {
 .ev-cat-block[hidden] { display: none; }
 @media (min-width: 640px) {
   .ev-form { padding: 32px; }
+}
+
+/* ============================================
+   BOOKING-ID LOOKUP (#ticket-lookup) — owner request 2026-10-26:
+   "add a section after register to if they pass the ticket id in the
+   input it should validate and give the three options that we show
+   when the payment confirmed. If not show as invalid ticket."
+   Same card language as .ev-form so the two read as one unit.
+   Mobile-first: the input + button share a row ≥640px, stack below it.
+   ============================================ */
+.ev-ticket-lookup {
+  max-width: 640px;
+  margin: 20px auto 28px;
+  padding: 20px 18px 24px;
+  background-color: var(--color-white);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(45, 90, 61, 0.12);
+  text-align: left;
+}
+.ev-ticket-lookup h3 {
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.ev-lookup-sub {
+  font-size: 0.85rem;
+  color: var(--color-light-text);
+  text-align: center;
+  margin-bottom: 14px;
+}
+.ev-lookup-form {
+  display: flex;
+  flex-direction: column;          /* stacked on phones — thumb friendly */
+  gap: 10px;
+}
+.ev-lookup-form input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 16px;                 /* 16px stops iOS zoom-on-focus */
+  letter-spacing: 0.03em;          /* IDs are easier to type accurately spaced */
+  text-transform: uppercase;       /* display only — JS normalises anyway */
+  border: 1.5px solid var(--color-light-green);
+  border-radius: 8px;
+  background: var(--color-white);
+  color: var(--color-dark-text);
+}
+.ev-lookup-form input:focus {
+  outline: 3px solid rgba(91, 140, 90, 0.35);
+  border-color: var(--color-secondary);
+}
+.ev-lookup-form .btn { min-height: 48px; }
+.ev-lookup-error { text-align: center; margin: 10px 0 0; }
+.ev-lookup-error[hidden] { display: none; }
+/* The result box reuses the paid-box look: green edge + the three actions */
+.ev-lookup-result {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--color-background);
+  border-left: 5px solid var(--color-secondary);
+  color: var(--color-primary);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ev-lookup-result[hidden] { display: none; }
+.ev-lookup-result .ev-paid-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.ev-lookup-result .ev-paid-row .btn { margin-top: 0; flex: 1 1 100%; }
+.ev-lookup-result .ev-paid-row .btn { margin-top: 0; }
+.ev-lookup-result .btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-secondary);
+}
+.ev-lookup-result .btn-secondary:hover,
+.ev-lookup-result .btn-secondary:focus-visible {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+.ev-lookup-result .ev-ticket-hint {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--color-light-text);
+}
+@media (min-width: 640px) {
+  .ev-lookup-form { flex-direction: row; }   /* input + button share the row */
+  .ev-lookup-form input { flex: 1; min-width: 0; }
+  .ev-lookup-form .btn { flex: 0 0 auto; padding: 0 22px; }
+  .ev-lookup-result .ev-paid-row .btn { flex: 0 0 auto; }  /* buttons share a row on wide screens */
 }

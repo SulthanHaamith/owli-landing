@@ -20,6 +20,12 @@
  *            9. Coaxlure reachability — WITHOUT sending credentials.
  *               (Only the API host is contacted with an empty auth call.
  *               The real credentials/tokens never appear in any output.)
+ *           10. Booking-ID lookup on /events/ (#ticket-lookup present; the
+ *               three ticket actions appear for a paid ID, the invalid
+ *               message for anything else — owner request 2026-10-26)
+ *           11. Documentation split: CHANGE-LOG.md + docs/CLAUDE-*.md must
+ *               be web-blocked like every other .md (root .htaccess covers
+ *               them; these checks make a silent regression impossible)
  *
  * SECURITY: No credential is ever echoed — only booleans about config
  *          structure. Safe to paste the output anywhere.
@@ -261,7 +267,7 @@ if ($siteUrl !== '') {
        .htaccess must refuse them (GO-LIVE-STEPS.md contains coupon SQL and
        server details; README/CLAUDE/API-TROUBLESHOOTING describe the security
        model and the debugging method). */
-    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md', '/LOCAL-TESTING.md', '/PROJECT-STATUS.md'] as $doc) {
+    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md', '/API-TROUBLESHOOTING.md', '/LOCAL-TESTING.md', '/PROJECT-STATUS.md', '/CHANGE-LOG.md', '/PRD.md', '/prompt.md'] as $doc) {
         [$dc] = probe($siteUrl . $doc);
         check("doc $doc blocked from the web", in_array($dc, [403, 404], true), 'HTTP ' . $dc);
     }
@@ -307,6 +313,19 @@ check('js/event-config.js exists', is_file(__DIR__ . '/../js/event-config.js'));
 $ec = (string)@file_get_contents(__DIR__ . '/../js/event-config.js');
 check('js/event-config.js declares registrationMode', str_contains($ec, 'registrationMode'));
 note('committed client mode: ' . (preg_match("~registrationMode:\s*'(\w+)'~", $ec, $m) ? $m[1] : 'unknown'));
+
+/* 10 ─ Booking-ID lookup section (owner request 2026-10-26) --------- */
+/* The "Already registered? Get your ticket" card must exist and carry
+   its i18n hooks; the JS must render the paid actions for a paid ID. */
+$evp = (string)@file_get_contents(__DIR__ . '/../events/index.html');
+check('events page has the #ticket-lookup card', str_contains($evp, 'id="ticket-lookup"'));
+check('events page has #ticket-lookup-form', str_contains($evp, 'id="ticket-lookup-form"'));
+$evr = (string)@file_get_contents(__DIR__ . '/../js/event-register.js');
+check('event-register.js wires the lookup (status.php + evf_lookup_bad)', str_contains($evr, 'ticket-lookup-form') && str_contains($evr, 'evf_lookup_bad'));
+$i18 = (string)@file_get_contents(__DIR__ . '/../js/i18n.js');
+check('lookup strings exist in BOTH languages', str_contains($i18, 'evf_lookup_ok') && substr_count($i18, 'evf_lookup_bad') === 2);
+$ecss = (string)@file_get_contents(__DIR__ . '/../css/events.css');
+check('lookup card styled in events.css', str_contains($ecss, '.ev-ticket-lookup'));
 
 /* ------------------------------------------------------------------ */
 /* Report                                                              */

@@ -75,6 +75,7 @@ function page(string $title, string $body, int $status = 200): never
     $t = e($title);
     echo "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n"
         . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+      . "<meta name=\"theme-color\" content=\"#2D5A3D\">\n"
         . "<meta name=\"robots\" content=\"noindex, nofollow\">\n"
         . "<title>$t — Arokya Payanam Admin</title>\n"
         . "<link rel=\"icon\" href=\"/images/favicon.png\">\n"
@@ -99,6 +100,7 @@ body{margin:0;font:15px/1.5 Poppins,Arial,sans-serif;color:var(--color-dark-text
 .badge{background:rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:12px}
 .btn{display:inline-block;border:0;border-radius:8px;padding:8px 16px;font:600 14px/1 Poppins,Arial,sans-serif;
 cursor:pointer;text-decoration:none;background:var(--color-secondary);color:#fff}
+.btn,.btn.small{min-height:40px} /* touch-target floor — the console is used on phones at the desk */
 .btn:hover{filter:brightness(1.07)}
 .btn.small{padding:6px 12px;font-size:12px}
 .btn.ghost{background:transparent;color:inherit;border:1px solid currentColor}
@@ -123,7 +125,8 @@ summary{cursor:pointer;color:var(--color-accent);font-size:12.5px;font-weight:60
 .chip.active b{color:#fff}
 form.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 form.filters label{display:flex;flex-direction:column;font-size:12px;color:var(--color-light-text);gap:4px}
-select,input[type=text],input[type=password]{border:1px solid #ccc;border-radius:8px;padding:8px 10px;font:14px Poppins,Arial,sans-serif;background:#fff;color:var(--color-dark-text)}
+select,input[type=text],input[type=password]{border:1px solid #ccc;border-radius:8px;padding:10px 12px;font:16px Poppins,Arial,sans-serif;background:#fff;color:var(--color-dark-text);min-height:44px}
+/* 16px font: stops iOS zoom-on-focus; 44px: comfortable thumb target (the console is used on phones at the desk) */
 input[type=text]{min-width:220px}
 .notice{border-radius:8px;padding:10px 14px;margin:14px 0;font-size:14px}
 .notice.ok{background:#DFF2E4;color:#1E5C33}.notice.err{background:#F8E1E1;color:#8B2E2E}

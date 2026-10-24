@@ -464,6 +464,12 @@ const translations = {
     evf_get_wa: 'Get ticket on WhatsApp',
     evf_wa_text: 'Hello! Please send me the Arokya Payanam 2026 entry ticket. My Booking ID is:',
     evf_done: 'Done',
+    evf_lookup_title: 'Already registered? Get your ticket',
+    evf_lookup_sub: 'Enter your Booking ID (for example AP26-AB12CD) to download your entry ticket again.',
+    evf_lookup_label: 'Booking ID',
+    evf_lookup_btn: 'Find my ticket',
+    evf_lookup_ok: 'Booking confirmed — your entry ticket:',
+    evf_lookup_bad: 'We could not find that Booking ID. Please check it and try again. If you paid but do not have an ID yet, contact us on WhatsApp.',
     evf_pending: 'We have not received confirmation of your payment yet. If you have paid, it will be confirmed shortly. Registration ID:',
     evf_recheck: 'Check again'
   },
@@ -893,6 +899,12 @@ const translations = {
     evf_get_wa: 'WhatsApp-இல் சீட்டைப் பெறுங்கள்',
     evf_wa_text: 'வணக்கம்! Arokya Payanam 2026 நுழைவுச் சீட்டை எனக்கு அனுப்புங்கள். என் புக்கிங் எண்:',
     evf_done: 'முடிந்தது',
+    evf_lookup_title: 'ஏற்கனவே பதிவு செய்துவிட்டீர்களா? உங்கள் சீட்டைப் பெறுங்கள்',
+    evf_lookup_sub: 'உங்கள் புக்கிங் எண்ணை (எ.கா. AP26-AB12CD) உள்ளிட்டு உங்கள் நுழைவுச் சீட்டை மீண்டும் பதிவிறக்குங்கள்.',
+    evf_lookup_label: 'புக்கிங் எண்',
+    evf_lookup_btn: 'என் சீட்டைத் தேடு',
+    evf_lookup_ok: 'பதிவு உறுதிசெய்யப்பட்டது — உங்கள் நுழைவுச் சீட்டு:',
+    evf_lookup_bad: 'அந்தப் புக்கிங் எண் கிடைக்கவில்லை. சரிபார்த்து மீண்டும் முயற்சிக்கவும். கட்டணம் செலுத்திவிட்டு எண் இல்லையெனில், வாட்ஸ்அப்பில் தொடர்பு கொள்ளவும்.',
     evf_pending: 'உங்கள் கட்டணத்திற்கான உறுதிப்படுத்தல் இன்னும் கிடைக்கவில்லை. நீங்கள் செலுத்தியிருந்தால் விரைவில் உறுதிசெய்யப்படும். பதிவு எண்:',
     evf_recheck: 'மீண்டும் சரிபார்'
   }
