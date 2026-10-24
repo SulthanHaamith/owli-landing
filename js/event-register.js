@@ -18,6 +18,15 @@
  *            (localStorage "owli-reg-ref"), never personal details.
  *
  * DEPENDENCIES: i18n.js (translations) and event-config.js must load first.
+ *
+ * PAYMENT NAVIGATION CONTRACT (enforced by scripts/check-pay-flow.js):
+ *   - The Coaxlure payment page opens in exactly ONE new tab.
+ *   - When that tab opens, THIS page never navigates to the payment page
+ *     (no double navigation — see the submit handler for why window.open's
+ *     return value must not be trusted when 'noopener' is passed).
+ *   - A blocked popup is the ONLY case where this page redirects itself.
+ *   - The pre-opened tab is closed on every non-payment outcome
+ *     (free coupon, validation error, rate limit, network failure).
  */
 (function () {
   var form = document.getElementById('register-form');
@@ -220,6 +229,29 @@
     submitBtn.disabled = true;
     submitBtn.firstElementChild.textContent = t('evf_wait');
 
+    /* Open the payment tab NOW, inside the click gesture — the only moment a
+       browser reliably allows window.open. The tab shows a short note until
+       the registration is confirmed, then it is pointed at Coaxlure (or
+       closed if the flow ends without a payment).
+       Deliberately NOT 'noopener' here: per the HTML spec window.open(url,
+       '_blank','noopener') returns null EVEN ON SUCCESS, and branching on
+       that return value is what made BOTH the new tab and this page
+       navigate to the payment page (the double-navigation bug). The opener
+       link is severed manually instead, right here. */
+    var payTab = null;
+    try { payTab = window.open('about:blank', '_blank'); } catch (e2) { payTab = null; }
+    if (payTab) {
+      try {
+        payTab.opener = null;
+        payTab.document.title = 'Redirecting\u2026';
+        payTab.document.body.style.cssText = 'margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font:16px/1.5 system-ui,sans-serif;color:#0f3d2e;';
+        payTab.document.body.textContent = 'Taking you to the secure payment page\u2026';
+      } catch (e3) { /* tab not writable yet — harmless */ }
+    }
+    var closePayTab = function () {
+      if (payTab) { try { payTab.close(); } catch (e4) {} payTab = null; }
+    };
+
     api('register.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -227,6 +259,7 @@
     }).then(function (res) {
       var b = res.body || {};
       if (b.ok && b.free === true) {
+        closePayTab();   /* free coupon: no payment will happen */
         /* 100%-off coupon: the SERVER already confirmed the registration —
            no payment page exists. Show the paid box (ticket download
            included: a free coupon registration IS a paid row at Rs 0). */
@@ -262,16 +295,24 @@
            verified server-side. */
         store(b.reference);
         showWaiting(b.reference, b.payment_url);
-        var w = window.open(b.payment_url, '_blank', 'noopener');
-        if (!w) {
-          /* Popup blocked: fall back to the old full-page redirect, which
-             is a navigation the browser never blocks. */
-          window.location.href = b.payment_url;
+        if (payTab && !payTab.closed) {
+          /* THE one navigation: the pre-opened tab goes to Coaxlure, this
+             page stays right here and keeps watching. The handle is dropped
+             so this page can never touch the tab again. */
+          payTab.location.href = b.payment_url;
+          payTab = null;
+          pollStatus(b.reference);
           return;
         }
-        pollStatus(b.reference);
+        /* Popup was truly blocked (payTab === null), or the attendee closed
+           the blank tab early: a tab is impossible now, so the only
+           automatic route left is leaving this page. register.php has
+           already stored the booking, so returning to /events/ (or the
+           5-minute cron re-check) still completes it. */
+        window.location.href = b.payment_url;
         return;
       }
+      closePayTab();   /* no payment will happen: never leave a blank tab open */
       if (b.error === 'validation' && b.field) {
         setError(b.field, b.message || t('evf_err_generic'));
       } else if (b.error === 'already_registered') {
@@ -286,6 +327,7 @@
       submitBtn.disabled = false;
       submitBtn.firstElementChild.textContent = t('evf_pay');
     }).catch(function () {
+      closePayTab();   /* network/parse failure: no blank tab left behind */
       formError.textContent = t('evf_err_generic');
       submitBtn.disabled = false;
       submitBtn.firstElementChild.textContent = t('evf_pay');
@@ -360,10 +402,21 @@
     relink.textContent = t('evf_reopen_pay');
     relink.addEventListener('click', function (e) {
       /* Re-clicking the link keeps the SAME attempt (register.php reuses the
-         pending row) — no new order, no double charge. */
-      var w2 = window.open(payUrl, '_blank', 'noopener');
-      if (!w2) return;
+         pending row) — no new order, no double charge.
+         preventDefault ALWAYS runs first: with a blocked popup the anchor's
+         default action would silently navigate THIS page to Coaxlure, and
+         with 'noopener' window.open returns null even on success — so the
+         return value cannot be trusted to decide anything. Same pre-open
+         pattern as the submit handler. */
       e.preventDefault();
+      var w2 = null;
+      try { w2 = window.open('about:blank', '_blank'); } catch (e5) { w2 = null; }
+      if (w2) {
+        try { w2.opener = null; } catch (e6) {}
+        w2.location.href = payUrl;   /* reopen in a new tab; this page stays put */
+      } else {
+        window.location.href = payUrl;   /* popup blocked: leave this page instead */
+      }
     });
 
     var warn = document.createElement('p');

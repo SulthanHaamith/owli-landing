@@ -44,8 +44,9 @@ with an event registration + payment backend for **Arokya Payanam 2026**:
 | API | ✅ healthy — `mode:"open"` — **registration is LIVE at ₹10 (General)** |
 | Prices (live DB) | student ₹299 · doctor ₹399 · bni ₹399 · **general ₹10 (test price)** |
 | Docs off the web | ✅ `GO-LIVE-STEPS.md`, `README.md`, `scripts/`, `sql/`, `api/_bootstrap.php` → all HTTP 403 |
-| Validation suite (local) | ✅ **57/57 checks passed** |
+| Validation suite (local) | ✅ **57/57 checks passed** · pay-flow regression `check-pay-flow.js` **6/6 scenarios PASS** |
 | Coaxlure integration | ✅ live-tested — the ₹10 test payment was captured and detected as paid |
+| Payment navigation (new tab only) | ✅ fixed 2026-10-24 — the form page no longer hijacks itself to the payment page (was a `noopener`+`window.open` return-value bug); guarded by `scripts/check-pay-flow.js` |
 | Coupons in live DB | ❌ **none yet** (`EARLY10`/`PAYANAM20` → `invalid`) |
 | `source` column on live DB | ❌ **not yet** — the ALTER is still pending (step 1 below) |
 | Test rows in live DB | ₹10 paid row `AP26-WC4DV9` (paid ✅); `AP26-5DC2FK` (pending, real unpaid Coaxlure order) |
@@ -196,7 +197,14 @@ Single-use codes stop working after one use (`used_up`).
   the whole point: flipping only the JS file can never open payments.
 - **Validation suite** `scripts/validate.php` — 56 checks, gates deploys, safe to
   paste (no credentials ever printed).
-- **i18n checker** `scripts/check-i18n.js` — EN/TA parity (347/347 keys).
+- **i18n checker** `scripts/check-i18n.js` — EN/TA parity (355/355 keys).
+- **Pay-flow regression** `scripts/check-pay-flow.js` — drives the real form
+  module in a Node VM across six scenarios and enforces the navigation
+  contract: **the payment page opens in exactly one new tab; the form page
+  never navigates to it** (popup blocked is the one documented exception), the
+  tab is closed on every non-payment outcome, and `preventDefault` always runs
+  on the reopen link. Catches the `window.open(…, 'noopener')` returns-null-on-
+  success trap that caused the double-navigation bug.
 - **Credential hygiene** — `owli-config.php` above `public_html` + git-ignored;
   admin console stores a bcrypt hash, never the password; live/dev Coaxlure
   credentials only in the CSVs on the local machine (chmod 600), never in Git.

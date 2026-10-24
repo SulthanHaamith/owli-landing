@@ -175,7 +175,11 @@ Private/incognito window → `https://owlihealthcare.com/events/`:
 
 1. Category: **General** — the form must show **₹10**
 2. Full name, 10-digit mobile, **your real email**, address — all mandatory
-3. "Proceed to Payment" → Coaxlure's hosted page (`app.coaxlure.com/customer/coaxlure-payment/...`) → **pay the ₹10** (UPI/card)
+3. "Proceed to Payment" → Coaxlure's hosted page opens **in a new tab**
+   (`app.coaxlure.com/customer/coaxlure-payment/...`); the form page stays
+   open and shows "Complete your payment in the new tab…" → **pay the ₹10**
+   (UPI/card). If the browser blocked the popup, the form page itself
+   redirects to the payment page instead (documented fallback).
 4. Note your **Registration ID** (`AP26-XXXXXX`) from the confirmation screen
 
 Repeat the test with the **same mobile + email** if needed — the pending row is

@@ -57,7 +57,8 @@ owli-healthcare/
 │   └── .htaccess           # Restrict direct access to internal PHP files
 ├── scripts/
 │   ├── validate.php        # Pre-deploy check: PHP, config, DB, API, admin, cron, Coaxlure reachability
-│   └── check-i18n.js       # EN/TA translation parity + used-key coverage (node)
+│   ├── check-i18n.js       # EN/TA translation parity + used-key coverage (node)
+│   └── check-pay-flow.js   # Pay-button navigation contract regression (node)
 ├── sql/
 │   ├── schema.sql          # MySQL tables and initial category prices
 │   └── .htaccess
@@ -342,7 +343,7 @@ docker exec owli-web php /srv/public_html/scripts/validate.php   # local Docker
 php public_html/scripts/validate.php                             # Hostinger (hPanel Terminal)
 ```
 
-It verifies: PHP ≥ 8.2 + required extensions, config presence/shape, DB connection, all 5 tables, the 4 price tiers, live endpoint behaviour (`quote.php` prices; `register.php` correctly refusing with 503 while in preview/closed — the probe is skipped when the server is open so it never creates a real order on a live system; `status.php` rejecting unknown refs), admin console reachability + that it leaks no data before login, cron job file + its web-block, internal-file protection, Coaxlure host reachability (empty request, no credentials), and the static pages. Exit code 1 on any failure, so it can gate deploys. **Run it on Hostinger right after the first deploy and before opening registration.** For translation parity: `node scripts/check-i18n.js` (exits 1 on any missing key).
+It verifies: PHP ≥ 8.2 + required extensions, config presence/shape, DB connection, all 5 tables, the 4 price tiers, live endpoint behaviour (`quote.php` prices; `register.php` correctly refusing with 503 while in preview/closed — the probe is skipped when the server is open so it never creates a real order on a live system; `status.php` rejecting unknown refs), admin console reachability + that it leaks no data before login, cron job file + its web-block, internal-file protection, Coaxlure host reachability (empty request, no credentials), and the static pages. Exit code 1 on any failure, so it can gate deploys. **Run it on Hostinger right after the first deploy and before opening registration.** For translation parity: `node scripts/check-i18n.js` (exits 1 on any missing key). For the payment navigation contract (the Pay button opens exactly one new tab and the form page never navigates to the payment page; popup blocked is the only exception): `node scripts/check-pay-flow.js` (exits 1 on any violation). Run both after any change to `js/event-register.js`.
 
 **Go-live steps**
 
