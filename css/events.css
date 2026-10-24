@@ -880,6 +880,20 @@ body.events-page {
 .ev-status-box.is-paid { border-left-color: var(--color-secondary); color: var(--color-primary); }
 .ev-status-box .btn { margin-top: 10px; }
 
+/* "Do not refresh" warning while the Coaxlure tab is open in the other tab */
+.ev-status-box .ev-pay-warning {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  background: #fff8e1;                    /* soft amber = caution, not error */
+  border-left: 4px solid #f9a825;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: #6d4c00;
+  text-align: left;
+}
+.ev-status-box .ev-pay-relink { margin-top: 12px; }
+
 /* Paid confirmation box: the reference and the Download ticket button sit
    on one tidy row, then the ticket hint below it. */
 .ev-status-box.is-paid .ev-paid-row {

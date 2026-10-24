@@ -37,6 +37,7 @@
   var statusBox = document.getElementById('evf-status');
   var STORE = 'owli-reg-ref';
   var serverMode = 'closed';   /* reported by api/quote.php ('open'|'preview'|'closed') */
+  var pollTimer = null;        /* setInterval handle while waiting for payment */
 
   /* The client-side mode from js/event-config.js (old boolean flag still honoured). */
   function clientMode() {
@@ -255,8 +256,20 @@
         return;
       }
       if (b.ok && typeof b.payment_url === 'string' && /^https:\/\/app\.coaxlure\.com\//.test(b.payment_url)) {
+        /* New-tab flow: the attendee pays in the Coaxlure tab while THIS page
+           keeps watching. The page is never lost, so back/refresh does not
+           strand the booking, and the ticket downloads the moment payment is
+           verified server-side. */
         store(b.reference);
-        window.location.href = b.payment_url;
+        showWaiting(b.reference, b.payment_url);
+        var w = window.open(b.payment_url, '_blank', 'noopener');
+        if (!w) {
+          /* Popup blocked: fall back to the old full-page redirect, which
+             is a navigation the browser never blocks. */
+          window.location.href = b.payment_url;
+          return;
+        }
+        pollStatus(b.reference);
         return;
       }
       if (b.error === 'validation' && b.field) {
@@ -321,7 +334,88 @@
     statusBox.appendChild(hint);
   }
 
-  /* ---------- payment status (after returning from Coaxlure) ---------- */
+  /* ---------- payment status (after returning from Coaxlure) ----------
+     Polling ladder, bounded so the API is never spammed:
+       - while waiting on the same page (new-tab flow): ~every 2s for the
+         first 30s, then ~every 5s up to 10 min (the link's own expiry).
+       - after coming back from a redirect: at most 6 retries, 5s apart.
+     The SERVER remains the only source of truth (status.php asks Coaxlure);
+     this page only stops asking once the server says paid/failed. */
+  var POLL_FAST_MAX = 15;   /* 15 × 2s  = 30s of fast checks */
+  var POLL_MAX      = 240; /* then up to ~10 min at 5s */
+
+  function stopPolling() {
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+  }
+
+  function showWaiting(ref, payUrl) {
+    stopPolling();
+    statusBox.hidden = false;
+    statusBox.className = 'ev-status-box is-pending';
+    statusBox.textContent = t('evf_wait_open') + ' ' + ref + ' — ' + t('evf_wait_checking');
+
+    var relink = document.createElement('a');
+    relink.className = 'btn btn-secondary ev-pay-relink';
+    relink.href = payUrl;
+    relink.textContent = t('evf_reopen_pay');
+    relink.addEventListener('click', function (e) {
+      /* Re-clicking the link keeps the SAME attempt (register.php reuses the
+         pending row) — no new order, no double charge. */
+      var w2 = window.open(payUrl, '_blank', 'noopener');
+      if (!w2) return;
+      e.preventDefault();
+    });
+
+    var warn = document.createElement('p');
+    warn.className = 'ev-pay-warning';
+    warn.textContent = t('evf_dont_refresh');
+
+    statusBox.appendChild(document.createElement('br'));
+    statusBox.appendChild(relink);
+    statusBox.appendChild(warn);
+    submitBtn.disabled = true;
+  }
+
+  function pollStatus(ref) {
+    var n = 0;
+    function step() {
+      n++;
+      api('status.php?ref=' + encodeURIComponent(ref)).then(function (res) {
+        var b = res.body || {};
+        if (b.ok && b.status === 'paid') {
+          stopPolling();
+          submitBtn.disabled = false;
+          submitBtn.firstElementChild.textContent = t('evf_pay');
+          showPaid(ref);
+          return;
+        }
+        if (b.ok && b.status === 'failed') {
+          stopPolling();
+          store('');
+          statusBox.hidden = true;
+          submitBtn.disabled = false;
+          submitBtn.firstElementChild.textContent = t('evf_pay');
+          return;
+        }
+        if (n >= POLL_MAX) {
+          /* ~10 min: the payment link has expired. The registration stays
+             pending; the attendee can pay again from the form. */
+          stopPolling();
+          statusBox.className = 'ev-status-box is-pending';
+          statusBox.textContent = t('evf_timeout') + ' ' + ref;
+          submitBtn.disabled = false;
+          submitBtn.firstElementChild.textContent = t('evf_pay');
+          return;
+        }
+        pollTimer = setTimeout(step, n <= POLL_FAST_MAX ? 2000 : 5000);
+      }).catch(function () {
+        if (n >= POLL_MAX) { stopPolling(); statusBox.hidden = true; return; }
+        pollTimer = setTimeout(step, 5000);
+      });
+    }
+    step();
+  }
+
   function showStatus(ref, tries) {
     statusBox.hidden = false;
     statusBox.className = 'ev-status-box';
