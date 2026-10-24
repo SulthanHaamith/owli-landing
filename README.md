@@ -90,6 +90,7 @@ owli-healthcare/
 ├── prompt.md               # Build phase instructions (for developers)
 ├── GO-LIVE-STEPS.md        # Runbook: Rs 10 live payment test + opening registration
 ├── PROJECT-STATUS.md       # Live status snapshot: what works, what's left, decisions
+├── API-TROUBLESHOOTING.md  # API debugging runbook: reproduce → log → cause → verify
 └── README.md               # This file — how to use and maintain the site
 ```
 

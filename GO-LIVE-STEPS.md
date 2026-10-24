@@ -223,7 +223,8 @@ not hit, since a retry updates rather than inserts).
    the public form locks again, payments impossible).
 2. Send me: the registration reference, the **"Coaxlure said"** string, and the
    time of payment. Keep the row in the DB — `payment_attempts.raw_status`
-   preserves the evidence.
+   preserves the evidence. (The full evidence-gathering method — reproduce,
+   read the log line, read the DB evidence — is in **`API-TROUBLESHOOTING.md`**.)
 3. I adjust the paid-detection matcher (`coax_fetch_status()` in
    `api/_bootstrap.php` — today it matches `paid` case-insensitively on
    `orderStatus`/`paymentStatus`), push, and we repeat Phase B.

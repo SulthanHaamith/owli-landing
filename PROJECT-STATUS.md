@@ -4,7 +4,8 @@
 > everything we changed, and every decision/wish the owner requested. It is a
 > live snapshot — read it to know exactly where things stand and what is left.
 > Technical background: `README.md` (how to run/maintain), `CLAUDE.md` (the
-> specification), `GO-LIVE-STEPS.md` (the payment-test runbook).
+> specification), `GO-LIVE-STEPS.md` (the payment-test runbook),
+> `API-TROUBLESHOOTING.md` (the debugging runbook).
 >
 > **Last updated: 2026-10-24.** Git: `main` = 980d624 (clean, pushed, deployed).
 > This file is web-blocked by the root `.htaccess` — it is for the team, not the public.
@@ -227,5 +228,6 @@ confirmation email sent. A free coupon skips the payment half entirely.
 | Registration switches | Server: `owli-config.php`; client: `js/event-config.js` |
 | Cron (payment recheck) | hPanel, every 5 min, `/usr/bin/php .../api/cron-recheck.php` |
 | Validation | `php public_html/scripts/validate.php` (hPanel Terminal) |
+| API debugging runbook | `API-TROUBLESHOOTING.md` — workflow, endpoint codes, log prefixes, real case studies |
 | Local preview | `http://localhost:8800/` (Docker: `owli-web`, `owli-db`) |
 | Admin console | `https://owlihealthcare.com/admin/` |
