@@ -36,7 +36,7 @@
 window.OWLI_EVENT = {
   /* MAIN SWITCH for the built-in registration form (/events/#register-form).
      'preview' | 'open' | 'closed' — see the box comment above. */
-  registrationMode: 'preview',
+  registrationMode: 'open',
 
   /* Optional external link (legacy). If set, buttons open it instead of the form. */
   registrationUrl: '',
