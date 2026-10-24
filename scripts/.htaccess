@@ -1,0 +1,7 @@
+# OWLI — scripts/ is a CLI-only folder.
+# validate.php prints booleans about the server (safe output, but it has no
+# business being runnable from a URL) and check-i18n.js is a Node tool.
+# Both are used from a terminal:  php scripts/validate.php  /  node scripts/check-i18n.js
+# Apache denies every request to this folder (CLI is unaffected — .htaccess
+# only governs web requests).
+Require all denied

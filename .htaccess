@@ -1,0 +1,28 @@
+# ============================================================
+# OWLI — ROOT .HTACCESS (server-level protection)
+#
+# PURPOSE: The GitHub deployment publishes the whole repository
+# into public_html/ — including project docs. Those files are NOT
+# meant for the web: GO-LIVE-STEPS.md once listed every coupon
+# code (anyone could read them at /GO-LIVE-STEPS.md). This file
+# makes Apache refuse them BEFORE PHP or static serving runs.
+#
+# WHAT IS BLOCKED (403):
+#   *.md   — README.md, CLAUDE.md, GO-LIVE-STEPS.md, PRD.md, prompt.md
+#   *.sql  — sql/schema.sql (also blocked by sql/.htaccess)
+#   *.log  — any stray log file
+#   *.ini  — any stray config file
+#
+# NOTES:
+#   - Hostinger's Apache honours .htaccess (verified live: api/.htaccess
+#     answers 403 before PHP runs).
+#   - The local Docker Apache also honours it (AllowOverride All for the
+#     docroot), so localhost:8800 behaves the same way.
+#   - scripts/ has its own stricter .htaccess (everything denied) —
+#     validate.php is a CLI tool, not a web page.
+#   - Nothing public references any blocked file, so no page breaks.
+# ============================================================
+
+<FilesMatch "\.(md|sql|log|ini)$">
+  Require all denied
+</FilesMatch>

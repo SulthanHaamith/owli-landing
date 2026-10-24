@@ -167,6 +167,29 @@ function owli_db(): PDO
 /* Pricing: tiers + coupons (all decided on the server)                */
 /* ------------------------------------------------------------------ */
 
+/** Shared: uniquely-named AP26-XXXXXX booking references.
+ *  Used by BOTH the public form (api/register.php) and the admin console's
+ *  "add entry" action, so staff-added rows and website rows share the same
+ *  reference format. The alphabet skips I, L, O, 0 and 1 so a reference
+ *  read out over the phone is never ambiguous. Uniqueness is checked against
+ *  the DB; callers that INSERT keep their own duplicate-key retry. */
+function owli_new_reference(PDO $db): string
+{
+    $alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    for ($try = 0; $try < 8; $try++) {
+        $ref = 'AP26-';
+        for ($i = 0; $i < 6; $i++) {
+            $ref .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+        }
+        $st = $db->prepare("SELECT 1 FROM registrations WHERE reference = ?");
+        $st->execute([$ref]);
+        if ($st->fetchColumn() === false) {
+            return $ref;
+        }
+    }
+    throw new RuntimeException('reference_generation_failed');
+}
+
 /**
  * Works out the price for a category (+ optional coupon code).
  * Returns: ok, base_paise, discount_paise, final_paise, coupon (code|null),

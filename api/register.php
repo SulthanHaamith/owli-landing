@@ -209,14 +209,10 @@ try {
         $regId     = (int)$reg['id'];
         $reference = (string)$reg['reference'];
     } else {
-        $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        /* Shared generator (also used by the admin console's add-entry form). */
         $regId = 0;
-        $reference = '';
         for ($try = 0; $try < 5 && $regId === 0; $try++) {
-            $reference = 'AP26-';
-            for ($i = 0; $i < 6; $i++) {
-                $reference .= $alphabet[random_int(0, strlen($alphabet) - 1)];
-            }
+            $reference = owli_new_reference($db);
             try {
                 $db->prepare(
                     "INSERT INTO registrations (reference, category, name, address, mobile, email,

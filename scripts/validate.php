@@ -139,6 +139,9 @@ try {
         $found = $db->query("SHOW COLUMNS FROM registrations LIKE " . $db->quote($c))->fetchColumn();
         check("registrations.$c", (bool)$found);
     }
+    $srcCol = $db->query("SHOW COLUMNS FROM registrations LIKE 'source'")->fetchColumn();
+    check('registrations.source (staff-entry audit column)', (bool)$srcCol,
+        $srcCol ? '' : 'run the ALTER in GO-LIVE-STEPS.md "Add the source column"');
 } catch (Throwable $e) {
     check('connects with configured credentials', false, 'DB error: ' . $e->getMessage());
 }
@@ -254,6 +257,15 @@ if ($siteUrl !== '') {
         [$code3] = probe($siteUrl . '/api/' . $file);
         check("api/$file blocked from the web", in_array($code3, [403, 404], true), 'HTTP ' . $code3);
     }
+    /* Project docs are deployed into public_html/ by GitHub — the root
+       .htaccess must refuse them (GO-LIVE-STEPS.md contains coupon SQL and
+       server details; README/CLAUDE describe the security model). */
+    foreach (['/GO-LIVE-STEPS.md', '/README.md', '/CLAUDE.md'] as $doc) {
+        [$dc] = probe($siteUrl . $doc);
+        check("doc $doc blocked from the web", in_array($dc, [403, 404], true), 'HTTP ' . $dc);
+    }
+    [$sc2] = probe($siteUrl . '/scripts/validate.php');
+    check('scripts/ blocked from the web', in_array($sc2, [403, 404], true), 'HTTP ' . $sc2);
 }
 
 /* 8 ─ Coaxlure reachability (no credentials sent) -------------------- */

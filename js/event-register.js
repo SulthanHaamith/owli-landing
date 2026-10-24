@@ -299,6 +299,20 @@
     if (e.key === 'Enter') { e.preventDefault(); refreshPrice(true); }
   });
 
+  /* Coupon auto-apply: the price updates itself ~0.8s after typing stops, so
+     the Apply click is optional. Coupon verification stays 100% server-side
+     (quote.php now, register.php re-validates on submit) — codes are never
+     shipped to the browser, hashed or otherwise, because a client-side
+     hash table would let anyone verify guesses offline with no rate limit.
+     One call per coupon is the whole cost; the free-coupon case needs no
+     second call at all (register.php returns free:true and this page shows
+     the success box without ever opening a payment page). */
+  var couponTimer = null;
+  couponInput.addEventListener('input', function () {
+    clearTimeout(couponTimer);
+    couponTimer = setTimeout(function () { refreshPrice(true); }, 800);
+  });
+
   showCategory();
   applyOpenState();
 

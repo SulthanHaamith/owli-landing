@@ -48,9 +48,14 @@ CREATE TABLE IF NOT EXISTS coupons (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- One row per person registering.
+-- source: 'web'   = the attendee used the public form (audit trail — the admin
+--                  console refuses to delete these rows, ever, by design)
+--         'staff' = added by an organiser in the admin console ("Add entry",
+--                  recorded as paid; these ARE deletable from the console)
 CREATE TABLE IF NOT EXISTS registrations (
   id             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   reference      VARCHAR(16)  NOT NULL UNIQUE,
+  source         ENUM('web','staff') NOT NULL DEFAULT 'web',
   status         ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending',
   category       ENUM('student','doctor','bni','general') NOT NULL,
   name           VARCHAR(100) NOT NULL,
@@ -140,7 +145,9 @@ ON DUPLICATE KEY UPDATE id = id;
 --     confirmed instantly, no payment page (Rs 0 cannot be charged online).
 --   * max_uses is counted on PAID rows only. A free (coupon-paid) row IS a
 --     paid row — so a 100% code with max_uses = 1 is single-use, as intended.
---   * The full list of codes created for launch (EARLY10, PAYANAM20, the 20
---     FREEAP26-* guest codes) is in GO-LIVE-STEPS.md — codes live in the
---     database, never in this file.
+--   * Codes are generated in the ADMIN CONSOLE (Coupons panel) or typed as
+--     INSERTs here in phpMyAdmin — codes live in the database only. Never
+--     put real coupon codes in a committed file: everything in the repo is
+--     published to public_html/ (blocked at the web server by the root
+--     .htaccess, but the repo itself is public to anyone with the GitHub link).
 -- ------------------------------------------------------------

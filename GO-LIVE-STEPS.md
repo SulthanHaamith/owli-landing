@@ -230,50 +230,50 @@ not hit, since a retry updates rather than inserts).
 
 ---
 
-## Coupon packs to create (phpMyAdmin, one-time)
+## One-time DB additions (phpMyAdmin)
 
-Paste into phpMyAdmin → SQL. Codes live **only in the database** (never in the
-repo). Reusable = `max_uses NULL`; each free guest code = `max_uses 1` so it
-dies after one use (free rows count as paid — see `owli_quote()` in
-`api/_bootstrap.php`).
+### Add the `source` column (enables staff entries in the admin console)
+
+Fresh `sql/schema.sql` imports already have it; the live database was created
+before this feature, so run this once (phpMyAdmin → SQL):
 
 ```sql
--- 10% off, reusable by anyone:
-INSERT INTO coupons (code, discount_type, value) VALUES ('EARLY10', 'percent', 10);
-
--- 20% off, reusable by anyone:
-INSERT INTO coupons (code, discount_type, value) VALUES ('PAYANAM20', 'percent', 20);
-
--- 20 single-use FREE tickets (100% off, one guest each):
-INSERT INTO coupons (code, discount_type, value, max_uses) VALUES
-  ('FREEAP26-PAGHP7', 'percent', 100, 1),
-  ('FREEAP26-E4ZYAW', 'percent', 100, 1),
-  ('FREEAP26-2CXG9T', 'percent', 100, 1),
-  ('FREEAP26-O6OTHC', 'percent', 100, 1),
-  ('FREEAP26-Q7QAUM', 'percent', 100, 1),
-  ('FREEAP26-4UR3C4', 'percent', 100, 1),
-  ('FREEAP26-9OZER4', 'percent', 100, 1),
-  ('FREEAP26-WUAM50', 'percent', 100, 1),
-  ('FREEAP26-KU67H0', 'percent', 100, 1),
-  ('FREEAP26-ZDVTCG', 'percent', 100, 1),
-  ('FREEAP26-SCM1B3', 'percent', 100, 1),
-  ('FREEAP26-2B5OCJ', 'percent', 100, 1),
-  ('FREEAP26-FPJZKJ', 'percent', 100, 1),
-  ('FREEAP26-TDFFB3', 'percent', 100, 1),
-  ('FREEAP26-W7GDKF', 'percent', 100, 1),
-  ('FREEAP26-GKFD4M', 'percent', 100, 1),
-  ('FREEAP26-T9B8A9', 'percent', 100, 1),
-  ('FREEAP26-XDP1J4', 'percent', 100, 1),
-  ('FREEAP26-KL9NP9', 'percent', 100, 1),
-  ('FREEAP26-DIMEZP', 'percent', 100, 1);
+ALTER TABLE registrations
+  ADD COLUMN source ENUM('web','staff') NOT NULL DEFAULT 'web' AFTER reference;
 ```
 
-Verify: `SELECT code, discount_type, value, max_uses FROM coupons;` → 22 rows.
+After it, the admin console gains: **+ Add entry** (records an offline cash /
+UPI payment as a PAID row, `source='staff'`, with a live price preview and
+optional coupon) and **Delete this staff entry** — staff rows only. Rows made
+by the public website (`source='web'`) are permanent records and can never be
+deleted from the console.
 
-Hand the `FREEAP26-*` codes out one per invited guest. A used code stops
-working for everyone else (`used_up`); a free registration is confirmed
-**instantly** with no payment page — the attendee sees the success box and the
-confirmation email, and the row appears in the admin console as paid (₹0).
+### Coupon packs (created by the ADMIN console — never stored in the repo)
+
+The console now manages coupon codes for you, so coupon values never sit in a
+committed file:
+
+**Admin console → Coupons panel ("Generate codes")** — collapsed card below the stats. Pick:
+
+| Field | Reusable 10% | Reusable 20% | Single-use FREE tickets |
+|---|---|---|---|
+| Type | percent | percent | percent |
+| Value | 10 | 20 | 100 |
+| How many | 1 | 1 | 20 |
+| Uses per code | unlimited | unlimited | 1 |
+| Prefix | EARLY | PAYANAM | FREEAP26- |
+
+The generator invents the code suffixes (mixing letters + digits, unique),
+inserts them, and prints the full list **once** — that page is the only place
+they are ever shown together. Hand the `FREEAP26-*` codes out one per invited
+guest. A used code stops working for everyone else (`used_up`); a free
+registration is confirmed **instantly** with no payment page — the attendee
+sees the success box and the confirmation email, and the row appears in the
+admin console as paid (₹0).
+
+How coupon use is counted (`owli_quote()` in `api/_bootstrap.php`):
+`max_uses NULL` = unlimited (counted on PAID rows only; free rows count as
+paid). Verify anytime: `SELECT code, discount_type, value, max_uses, active FROM coupons;`
 
 Switch any coupon off later: `UPDATE coupons SET active = 0 WHERE code = '...';`
 
@@ -281,9 +281,12 @@ Switch any coupon off later: `UPDATE coupons SET active = 0 WHERE code = '...';`
 
 ## Safety rules
 
-- **Never commit credentials.** `owli-config.php` lives only on the server
-  (git-ignored); live Coaxlure credentials never appear in this repo, local or
-  otherwise. The admin console stores a hash, never the password.
+- **Never commit credentials — or coupon codes.** `owli-config.php` lives only
+  on the server (git-ignored); live Coaxlure credentials never appear in this
+  repo. The admin console stores a hash, never the password, and coupon codes
+  are generated in the console (database-only). The root `.htaccess` blocks
+  `.md`/`.sql`/`.log`/`.ini` files from the web, but treat the repository
+  itself as public: nothing secret goes in any committed file.
 - The test charges **real money** (₹10, live credentials). That is the point —
   there is no sandbox.
 - The ₹10 tier is live during Phase B — anyone who finds the form in that
