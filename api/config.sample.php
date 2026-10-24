@@ -61,6 +61,11 @@ return [
         // Host(s) the attendee may be redirected to. String or list. If the dev server
         // returns a different pay-link host, the error log shows it; add it here for testing only.
         'allowed_pay_host' => ['app.coaxlure.com'],
+        // Working checkout route. Coaxlure's /payment-link default returns
+        // /customer/coaxlure-payments/ (plural), which the checkout app does
+        // not serve (blank page) — the working route is /customer/coaxlure-payment/.
+        // This value is passed as merchantDomain; only change it if Coaxlure says so.
+        'pay_page_base' => 'https://app.coaxlure.com/customer/coaxlure-payment',
     ],
     'mail_from' => 'registrations@owlihealthcare.com', // create this mailbox in hPanel -> Emails
 ];

@@ -64,6 +64,13 @@ the test passes, that commit *is* the go-live commit, so nothing is wasted.
 "Register Now" but the server answers "not enabled yet" — confusing for a real
 visitor, so don't leave it sitting overnight.
 
+> **Status 2026-10-24 (after the first attempt + fixes):** A2 is done (client
+> `'open'` deployed), the ₹10 tier is set, the server switch was flipped for the
+> first attempt, and the two payment-flow bugs it exposed are fixed but **not
+> yet deployed** — do Phase B0 when the fixes land. The owner's first ₹10
+> payment (`AP26-WC4DV9`) is captured by Coaxlure and should flip to paid after
+> the deploy + one recheck.
+
 ### Who does what
 
 | You (hPanel + browser) | Me (code / Git) |
@@ -106,6 +113,47 @@ during A they get the "not enabled yet" message — harmless, but move on to B.
 
 ## Phase B — the test (~10 min, live money)
 
+> **⚠️ Read this first — the 2026-10-24 first attempt found two real bugs, both
+> fixed (deploy required for B).** What happened then: the browser landed on a
+> blank `https://app.coaxlure.com/customer/` page with no way to pay, the ₹10
+> was actually captured by Coaxlure on a second link, and the site still showed
+> *pending* hours later. Root causes (both verified against the live API):
+>
+> 1. **Coaxlure's `/payment-link` default URL is broken.** It returns
+>    `/customer/coaxlure-payments/<token>` (plural) — a route the checkout app
+>    does not serve, hence the blank page. The working route is
+>    `/customer/coaxlure-payment/<token>` (singular), the same one the merchant
+>    app and the customer SMS use. Fix (in `coax_create_payment()`): the server
+>    now passes `'merchantDomain' => 'https://app.coaxlure.com/customer/coaxlure-payment'`
+>    (config key `pay_page_base`) and belt-and-braces rewrites any plural URL
+>    to the singular route.
+> 2. **Coaxlure rotates the payment token when the payment is captured**, so
+>    the create-time token stops working afterwards (`BA_4002` "Order not
+>    found") and a paid attendee would look *pending* forever. Fix (in
+>    `coax_fetch_status()`): status is now looked up by the stable **order id**
+>    first (stored since the first integration), token as fallback, and paid
+>    detection matches Coaxlure's real wording — `orderStatus: "PAID"` /
+>    `paymentStatus: "success"` (verified against a genuine paid live order:
+>    the owner's ₹10 payment, invoice `CLI-26104-114458`).
+>
+> So Phase B needs: **the fix deployed** (below), then the steps as written.
+> Your earlier ₹10 payment (`AP26-WC4DV9`) was genuinely captured by Coaxlure —
+> after the deploy, its row should flip to **paid** on the next recheck (cron
+> within 5 min, or click "Recheck payment now" in the admin console for
+> instant confirmation).
+
+### B0. Deploy the payment-flow fixes (once, ~5 min)
+
+I push the fixes → GitHub auto-deploys. Verify from a terminal:
+
+```bash
+curl -sS https://owlihealthcare.com/api/quote.php?category=all
+```
+
+No deploy marker to look for — instead verify behaviour after B1: the Pay
+button must now lead to `app.coaxlure.com/customer/coaxlure-payment/...`
+(**singular**, no trailing `/customer/` blank page).
+
 ### B1. Flip the server switch
 
 File Manager → `domains/owlihealthcare.com/owli-config.php` → Edit → the
@@ -127,7 +175,7 @@ Private/incognito window → `https://owlihealthcare.com/events/`:
 
 1. Category: **General** — the form must show **₹10**
 2. Full name, 10-digit mobile, **your real email**, address — all mandatory
-3. "Proceed to Payment" → Coaxlure's hosted page (`app.coaxlure.com`) → **pay the ₹10** (UPI/card)
+3. "Proceed to Payment" → Coaxlure's hosted page (`app.coaxlure.com/customer/coaxlure-payment/...`) → **pay the ₹10** (UPI/card)
 4. Note your **Registration ID** (`AP26-XXXXXX`) from the confirmation screen
 
 Repeat the test with the **same mobile + email** if needed — the pending row is
@@ -139,7 +187,7 @@ not hit, since a retry updates rather than inserts).
 | Check | Where | Expected |
 |---|---|---|
 | Admin console | `/admin/` → your reference | Status pill **Paid**, collected ₹10. If not yet: **"Recheck payment now"** |
-| Exact Coaxlure wording | Expand the row → payment attempt → **"Coaxlure said"** | Note the string (e.g. `order=completed payment=paid`) |
+| Exact Coaxlure wording | Expand the row → payment attempt → **"Coaxlure said"** | `order=paid payment=success by=order_id` (the verified live wording) |
 | Status endpoint | `https://owlihealthcare.com/api/status.php?ref=AP26-XXXXXX` | `"status":"paid"` |
 | Cron | hPanel cron output (within 5 min) | `checked=1 newly_paid=1` |
 | Confirmation email | The inbox of the address you registered | "Registration confirmed - Arokya Payanam 2026" — *only if* the `registrations@owlihealthcare.com` mailbox exists (hPanel → Emails). If it doesn't, the email is silently skipped — **payments are unaffected** |

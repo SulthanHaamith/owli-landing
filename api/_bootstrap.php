@@ -382,11 +382,24 @@ function coax_create_payment(PDO $db, array $reg, int $amountPaise, string $item
         error_log('owli: create-order response had no costDetails.totalAmount; amount not cross-checked');
     }
 
-    [$http2, $j2] = coax_call($db, 'POST', '/payment-link', ['orderTokenOrInvoiceId' => $token]);
+    /* VERIFIED 2026-10-24 (live): the default link Coaxlure returns points at
+       /customer/coaxlure-payments/<token> — a route the checkout app does
+       NOT serve (blank page, no order lookup, silently lands on /customer/).
+       The working route is /customer/coaxlure-payment/<token> (the same URL
+       the merchant app and the customer SMS use). merchantDomain is the
+       documented parameter for choosing it. */
+    $payBase = (string)(owli_config()['coaxlure']['pay_page_base'] ?? 'https://app.coaxlure.com/customer/coaxlure-payment');
+    [$http2, $j2] = coax_call($db, 'POST', '/payment-link', [
+        'orderTokenOrInvoiceId' => $token,
+        'merchantDomain'        => $payBase,
+    ]);
     $url = $j2['data']['paymentLinkUrl'] ?? null;
     if (empty($j2['status']) || !is_string($url)) {
         throw new RuntimeException('coax_payment_link_failed: ' . ($j2['code'] ?? $http2));
     }
+    /* Belt and braces: if the API ever ignores merchantDomain and returns the
+       dead plural route anyway, rewrite it to the working one. */
+    $url = str_replace('/coaxlure-payments/', '/coaxlure-payment/', $url);
 
     // Only ever redirect attendees to the expected Coaxlure host.
     // allowed_pay_host may be a single host or a list (the dev/test server may use a different host).
@@ -414,22 +427,47 @@ function coax_create_payment(PDO $db, array $reg, int $amountPaise, string $item
 
 /**
  * Asks Coaxlure whether an order is paid.
- * Only an explicit "paid" counts. Everything else stays pending.
+ *
+ * VERIFIED 2026-10-24 (live Rs 10 payment): Coaxlure ROTATES the order's
+ * payment token the moment the payment is captured, so the create-time token
+ * stops resolving afterwards ("Order not found", BA_4002) — a paid attendee
+ * would look pending forever. The ORDER ID is stable and survives rotation,
+ * and /payment-status accepts it, so it is preferred. The token stays as a
+ * fallback for rows that (unusually) have no order id.
+ *
+ * Only an explicit paid/success counts. Everything else stays pending.
  * Returns: paid (bool), raw (string for logging).
  */
-function coax_fetch_status(PDO $db, string $orderToken): array
+function coax_fetch_status(PDO $db, string $orderToken, string $orderId = ''): array
 {
-    [$http, $j] = coax_call($db, 'GET', '/payment-status?orderTokenOrPaymentId=' . rawurlencode($orderToken));
-    if ($http !== 200 || empty($j['status'])) {
-        return ['paid' => false, 'raw' => 'http=' . $http . ' code=' . ($j['code'] ?? '')];
+    $ids = [];
+    if ($orderId !== '') {
+        $ids[] = ['by' => 'order_id', 'value' => $orderId];
     }
-    $d     = is_array($j['data'] ?? null) ? $j['data'] : $j;
-    $order = strtolower((string)($d['orderStatus'] ?? ''));
-    $pay   = strtolower((string)($d['paymentStatus'] ?? ''));
-    return [
-        'paid' => ($pay === 'paid' || $order === 'paid'),
-        'raw'  => 'order=' . $order . ' payment=' . $pay,
-    ];
+    if ($orderToken !== '') {
+        $ids[] = ['by' => 'token', 'value' => $orderToken];
+    }
+
+    $raw = 'no_identifier';
+    foreach ($ids as $id) {
+        [$http, $j] = coax_call($db, 'GET', '/payment-status?orderTokenOrPaymentId=' . rawurlencode($id['value']));
+        if ($http !== 200 || empty($j['status'])) {
+            /* e.g. BA_4002 "Order not found" — a rotated token. Try the next identifier. */
+            $raw = 'http=' . $http . ' code=' . ($j['code'] ?? '') . ' by=' . $id['by'];
+            continue;
+        }
+        $d     = is_array($j['data'] ?? null) ? $j['data'] : $j;
+        $order = strtolower((string)($d['orderStatus'] ?? ''));
+        $pay   = strtolower((string)($d['paymentStatus'] ?? ''));
+        /* Verified wording for a completed live payment: orderStatus "PAID",
+           paymentStatus "success". "PENDING" orders return paymentStatus null. */
+        return [
+            'paid' => in_array($pay, ['paid', 'success', 'completed'], true)
+                   || in_array($order, ['paid', 'completed'], true),
+            'raw'  => 'order=' . $order . ' payment=' . $pay . ' by=' . $id['by'],
+        ];
+    }
+    return ['paid' => false, 'raw' => $raw];
 }
 
 /* ------------------------------------------------------------------ */
@@ -461,7 +499,7 @@ function owli_mark_paid(PDO $db, int $regId, ?int $attemptId): void
 /** Re-checks one payment attempt with Coaxlure. Returns 'paid' or 'pending'. */
 function owli_refresh_attempt(PDO $db, array $attempt): string
 {
-    $s = coax_fetch_status($db, (string)$attempt['coax_token']);
+    $s = coax_fetch_status($db, (string)$attempt['coax_token'], (string)($attempt['coax_order_id'] ?? ''));
     $db->prepare("UPDATE payment_attempts SET last_checked_at = NOW(), raw_status = ? WHERE id = ?")
        ->execute([substr($s['raw'], 0, 120), $attempt['id']]);
     if ($s['paid']) {
