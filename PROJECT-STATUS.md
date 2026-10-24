@@ -192,6 +192,25 @@ Single-use codes stop working after one use (`used_up`).
 - **Coupons panel** — generate/deactivate codes; printed once, database-only.
 - **Export CSV** — filter-aware, UTF-8 BOM for Excel, includes Source column.
 
+### Ticket delivery: WhatsApp handoff + team downloads (owner request)
+
+- **"Get ticket on WhatsApp"** — the paid success box (both the paid-after-
+  payment path and the free-coupon path) now offers a third button. It opens
+  a `wa.me` chat with the clinic's **official WhatsApp number** (+91 63796
+  10554 — the same number the site's floating button and footer already use)
+  with the event name and the **Booking ID pre-typed** into the message box;
+  the attendee presses send and the team replies with the PDF. Chosen over
+  the WhatsApp Business Cloud API deliberately: zero onboarding, zero
+  per-message fees, and it routes to the official channel while always naming
+  the Booking ID. The full Cloud API procedure (template, token, per-message
+  cost, where the credentials would live) is in CLAUDE.md's change log for
+  2026-10-25 if the owner ever wants automated sends instead.
+- **Team ticket download from the admin** — every paid row's expandable
+  details now carry a **"Download ticket (PDF)"** button, streaming the same
+  `api/ticket.php` PDF the attendee gets. The team can forward it, print it,
+  or hand it over at the desk. Paid rows only (the endpoint enforces that
+  server-side; pending rows show the recheck button instead).
+
 ### Waiting box, now (2026-10-25)
 
 The waiting box (while the Coaxlure tab is open beside the page) shows: the

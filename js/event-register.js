@@ -274,9 +274,18 @@
         dlFree.setAttribute('download', b.reference + '-entry-ticket.pdf');
         dlFree.textContent = t('evf_download_ticket');
 
+        /* Free-coupon registrations get the same WhatsApp handoff button. */
+        var waFree = document.createElement('a');
+        waFree.className = 'btn btn-secondary ev-get-wa';
+        waFree.href = 'https://wa.me/916379610554?text='
+          + encodeURIComponent(t('evf_wa_text') + ' ' + b.reference);
+        waFree.setAttribute('target', '_blank');
+        waFree.setAttribute('rel', 'noopener noreferrer');
+
         var rowFree = document.createElement('div');
         rowFree.className = 'ev-paid-row';
         rowFree.appendChild(dlFree);
+        rowFree.appendChild(waFree);
         statusBox.appendChild(rowFree);
 
         var hintFree = document.createElement('p');
@@ -355,6 +364,21 @@
     dl.setAttribute('download', ref + '-entry-ticket.pdf');
     dl.textContent = t('evf_download_ticket');
 
+    /* Official-channel WhatsApp handoff (owner request): a wa.me deep link
+       that opens a chat with the clinic's official WhatsApp number, with the
+       event name and the Booking ID already typed into the message box. The
+       attendee just presses send — the team replies with the PDF. This is
+       the zero-API / zero-fee path discussed in CLAUDE.md: it points to the
+       official event channel and always names the Booking ID, so the team
+       never has to ask "which registration is this about?". A link, not an
+       automatic send — nothing is sent without the attendee seeing it. */
+    var wa = document.createElement('a');
+    wa.className = 'btn btn-secondary ev-get-wa';
+    wa.href = 'https://wa.me/916379610554?text='
+      + encodeURIComponent(t('evf_wa_text') + ' ' + ref);
+    wa.setAttribute('target', '_blank');
+    wa.setAttribute('rel', 'noopener noreferrer');
+
     var done = document.createElement('button');
     done.type = 'button';
     done.className = 'btn btn-secondary';
@@ -367,6 +391,7 @@
     });
 
     row.appendChild(dl);
+    row.appendChild(wa);
     row.appendChild(done);
     statusBox.appendChild(row);
 

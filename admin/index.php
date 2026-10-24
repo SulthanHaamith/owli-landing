@@ -947,6 +947,17 @@ foreach ($rows as $r) {
           . '<button class="btn small" type="submit">Recheck payment now</button></form>'
         : '';
 
+    /* Ticket download for the team (owner request): streams the same PDF the
+       attendee gets, so staff can forward or re-print it on WhatsApp / email
+       or at the desk. Paid rows only — api/ticket.php itself enforces that
+       server-side, so this button simply disappears for other statuses.
+       No auth is needed on the URL beyond the unguessable Booking ID: the
+       endpoint is public by design for exactly this sharing use case. */
+    $ticketBtn = (string)$r['status'] === 'paid'
+        ? '<a class="btn small" href="../api/ticket.php?ref=' . e($ref) . '" download>'
+          . 'Download ticket (PDF)</a>'
+        : '';
+
     /* Delete exists ONLY for staff-added rows. The reference pattern is
        safe to embed in the confirm() text (letters/digits/hyphen only). */
     $delBtn = ($hasSource && (string)$r['source'] === 'staff')
@@ -977,7 +988,7 @@ foreach ($rows as $r) {
         . ($attRows
             ? '<table class="attempts"><tr><th>Attempt</th><th>Amount</th><th>Status</th><th>Coaxlure said</th><th>Created</th></tr>' . $attRows . '</table>'
             : '<p class="attempts muted">No payment attempt was ever created for this registration.</p>')
-        . '<p class="attempts">' . $recheckBtn . $delBtn . '</p>'
+        . '<p class="attempts">' . $recheckBtn . $ticketBtn . $delBtn . '</p>'
         . '</details></td></tr>';
 }
 

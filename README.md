@@ -306,7 +306,7 @@ The form on `/events/` (`#register-form`) takes the attendee's details, works ou
 
 | File | Role |
 |---|---|
-| `js/event-register.js` | Form behaviour: category fields, price list, validation, payment redirect, status check on return. Locks the Pay button in `preview`, unlocks only in `open` (client + server must agree). **New-tab payment flow:** the Coaxlure page opens in a new tab while the form polls `status.php` (2s for 30s, then 5s, max ~10 min) and shows a "do not refresh / go back" warning; paid flips the box to the ticket download |
+| `js/event-register.js` | Form behaviour: category fields, price list, validation, payment redirect, status check on return. Locks the Pay button in `preview`, unlocks only in `open` (client + server must agree). **New-tab payment flow:** the Coaxlure page opens in a new tab while the form polls `status.php` (2s for 30s, then 5s, max ~10 min) and shows a "do not refresh / go back" warning; paid flips the the paid box with **Download ticket (PDF)**, **Get ticket on WhatsApp** (a `wa.me` link to the official clinic number with the event name + Booking ID pre-typed) and **Done** |
 | `api/quote.php` | Price display (`?category=all` returns every price; `?category=student&coupon=X` previews a coupon). Reports the server's `mode` — `open` / `preview` / `closed` |
 | `api/register.php` | Validates, re-prices, saves a *pending* registration, creates the Coaxlure order + pay link. **Refuses (503 `not_open`) unless the server switch says `'open'`** |
 | `api/status.php` | Checks payment with Coaxlure from the server and marks the registration *paid* |
@@ -322,7 +322,7 @@ The form on `/events/` (`#register-form`) takes the attendee's details, works ou
 
 **Admin console (`/admin/`) — view registrations and export them**
 
-`admin/index.php` is a password-protected staff page (not linked from anywhere public, excluded in `robots.txt`) that shows every registration with its status, a summary (total / paid / pending / collected / awaiting), per-registration payment history, an instant **"Recheck payment now"** button for pending rows, filters (status, category, search) and a one-click **CSV export** that respects the current filters (UTF-8 BOM, so Excel opens Tamil text correctly).
+`admin/index.php` is a password-protected staff page (not linked from anywhere public, excluded in `robots.txt`) that shows every registration with its status, a summary (total / paid / pending / collected / awaiting), per-registration payment history, an instant **"Recheck payment now"** button for pending rows, a **"Download ticket (PDF)"** button on every paid row (so the team can share / re-print the same ticket the attendee gets), filters (status, category, search) and a one-click **CSV export** that respects the current filters (UTF-8 BOM, so Excel opens Tamil text correctly).
 
 Enable it on the server (no Git involved):
 

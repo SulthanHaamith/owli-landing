@@ -26,6 +26,17 @@
  *                                      the "Check payment status now"
  *                                      button fires ONE status.php call
  *                                      and opens NO new tab
+ *            G  free-coupon paid box -> "Download ticket (PDF)" AND the
+ *                                      "Get ticket on WhatsApp" handoff:
+ *                                      the wa.me link points at the
+ *                                      OFFICIAL clinic number (916379610554),
+ *                                      carries the Booking ID in the
+ *                                      pre-typed text, opens in a new tab
+ *                                      with rel=noopener (owner request
+ *                                      2026-10-25)
+ *            H  paid box after payment verified -> the same ticket +
+ *                                      WhatsApp actions plus the "Done"
+ *                                      button, in one tidy row
  *
  * HOW TO RUN:  node scripts/check-pay-flow.js      (exit code 1 = FAIL)
  *              Run it before every push that touches js/event-register.js,
@@ -109,7 +120,7 @@ function buildWorld(opts) {
     }
     if (s.indexOf('status.php') >= 0) {
       state.statusCalls++;
-      return ok({ ok: true, status: 'pending', reference: REF });
+      return ok(opts.statusReply || { ok: true, status: 'pending', reference: REF });
     }
     if (s.indexOf('register.php') >= 0) {
       if (opts.networkFail) return Promise.reject(new Error('simulated network failure'));
@@ -260,6 +271,53 @@ async function scenarioE() {
   A('the submit button is re-enabled', w.submitBtn.disabled === false, 'disabled=' + w.submitBtn.disabled);
 }
 
+/* Shared assertions for the paid box: the ticket download + the WhatsApp
+   handoff must both be there, wired exactly as the owner asked. */
+function assertTicketActions(w, label) {
+  const row = w.statusBox.children.find((c) => String(c.className).indexOf('ev-paid-row') >= 0);
+  if (!row) { A(label + ': paid row rendered', false, 'no .ev-paid-row'); return null; }
+  const items = row.children.filter((c) => c.tag === 'a' || c.tag === 'button');
+  const dl  = items.find((c) => c.tag === 'a' && String(c.href).indexOf('ticket.php?ref=') >= 0);
+  const wa  = items.find((c) => c.tag === 'a' && String(c.href).indexOf('https://wa.me/916379610554') === 0);
+  A(label + ': "Download ticket (PDF)" points at api/ticket.php', !!dl, dl && dl.href);
+  A(label + ': "Get ticket on WhatsApp" is rendered', !!wa, wa && wa.href);
+  if (wa) {
+    const decoded = decodeURIComponent(wa.href);
+    A(label + ': the wa.me link targets the OFFICIAL clinic number', String(wa.href).indexOf('https://wa.me/916379610554?') === 0, wa.href.slice(0, 40) + '…');
+    A(label + ': the pre-typed message names the Booking ID', decoded.indexOf(w.lastRef || REF) >= 0, decoded.slice(0, 100) + '…');
+    A(label + ': WhatsApp opens in a new tab', wa.attrs.target === '_blank', wa.attrs.target);
+    A(label + ': WhatsApp link is rel=noopener noreferrer', String(wa.attrs.rel || '').indexOf('noopener') >= 0, wa.attrs.rel);
+  }
+  return { items, dl, wa };
+}
+
+async function scenarioG() {
+  console.log('G) free-coupon paid box: ticket download + WhatsApp handoff (owner request)');
+  const w = buildWorld({ registerReply: { ok: true, free: true, reference: 'AP26-FREE01' } });
+  w.lastRef = 'AP26-FREE01';
+  await tick();
+  await submitAndSettle(w);
+  const r = assertTicketActions(w, 'free box');
+  if (r) A('free box: exactly two actions in the row (ticket + WhatsApp)', r.items.length === 2, 'items=' + r.items.length);
+}
+
+async function scenarioH() {
+  console.log('H) paid box after payment verified: ticket + WhatsApp + Done');
+  const w = buildWorld({
+    registerReply: { ok: true, reference: REF, amount: 449, payment_url: PAY_URL },
+    statusReply: { ok: true, status: 'paid', reference: REF },
+  });
+  w.lastRef = REF;
+  await tick();
+  await submitAndSettle(w);   /* the first poll step runs immediately -> paid box */
+  const r = assertTicketActions(w, 'paid box');
+  if (r) {
+    const done = r.items.find((c) => c.tag === 'button');
+    A('paid box: exactly three actions (ticket, WhatsApp, Done)', r.items.length === 3, 'items=' + r.items.length);
+    A('paid box: the Done button is rendered', !!done, done && done.textContent);
+  }
+}
+
 (async () => {
   console.log('PAY-FLOW REGRESSION — js/event-register.js navigation contract\n');
   await scenarioA();
@@ -271,6 +329,10 @@ async function scenarioE() {
   await scenarioD();
   console.log('');
   await scenarioE();
+  console.log('');
+  await scenarioG();
+  console.log('');
+  await scenarioH();
   console.log('\nRESULT: ' + (failures === 0 ? 'PASS — the payment flow honours the contract' : 'FAIL — ' + failures + ' contract violation(s) above'));
   process.exit(failures === 0 ? 0 : 1);
 })();
