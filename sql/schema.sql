@@ -83,13 +83,16 @@ CREATE TABLE IF NOT EXISTS registrations (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- One row per Coaxlure order created for a registration (a retry = a new row).
+-- 'failed' attempts are written ONLY by the abandoned-payment sweep in
+-- api/_bootstrap.php (owli_fail_stale_attempts) after one final Coaxlure
+-- check confirms no money ever arrived — the attempt's history row stays.
 CREATE TABLE IF NOT EXISTS payment_attempts (
   id              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   registration_id INT UNSIGNED NOT NULL,
   coax_token      VARCHAR(200) NOT NULL,
   coax_order_id   VARCHAR(100) NULL,
   amount_paise    INT UNSIGNED NOT NULL,
-  status          ENUM('pending','paid') NOT NULL DEFAULT 'pending',
+  status          ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending',
   raw_status      VARCHAR(120) NULL,
   created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   last_checked_at DATETIME NULL,

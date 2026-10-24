@@ -247,6 +247,48 @@ ALTER TABLE registrations
   ADD COLUMN source ENUM('web','staff') NOT NULL DEFAULT 'web' AFTER reference;
 ```
 
+### Extend `payment_attempts.status` (enables the abandoned-payment sweep)
+
+The sweep moves long-pending registrations to **failed** (see the next section),
+and it needs the attempt-level `failed` value too. Fresh schema imports already
+have it; run this once on the live DB:
+
+```sql
+ALTER TABLE payment_attempts
+  MODIFY status ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending';
+```
+
+### How long-pending payments become "failed" (the abandoned-payment sweep)
+
+**Why:** a pending row is "money that might still arrive" in the dashboard
+numbers. But Coaxlure's payment links die after ~10 minutes and the cron keeps
+re-checking for 3 days — so a registration still pending after **2 days** is a
+person who never came back. The sweep closes the book on it.
+
+**How it works (in `owli_fail_stale_attempts()`, `api/_bootstrap.php`, run by the
+existing 5-minute cron as its second pass):**
+
+1. Every run, each attempt older than 2 days gets **one final Coaxlure check**.
+   If Coaxlure says paid, the registration is marked **paid** — money always
+   wins over the sweep, even at the last moment.
+2. If Coaxlure never saw the payment, the **attempt** is marked `failed`
+   (`raw_status: "expired link (unpaid after 2 days)"` — kept for the audit
+   trail), and if nothing live remains on the registration, the **registration**
+   flips to `failed` too. Staff-added and free-coupon rows have no attempt and
+   are never touched.
+3. Nothing is deleted — the CSV, the attempt history and the reference all keep
+   the record. `status.php` reports `failed` (no further Coaxlure calls), and the
+   attendee can simply **register again**: the same row is revived to pending at
+   the *current* tier price with a fresh payment attempt (no duplicate person).
+   The cron output now ends with `abandoned_failed=N`.
+
+**Verified locally (2026-10-24):** 3-day-old pending attempt → cron → attempt
+`failed`, registration `failed`, `status.php` says `failed`; re-registering the
+same mobile+email revived the **same reference** as pending with a new attempt.
+The dashboard now separates "pending < 1 hour" (someone actively paying right
+now) from "pending older" (probably gone), so stale rows are visible before the
+sweep even acts.
+
 After it, the admin console gains: **+ Add entry** (records an offline cash /
 UPI payment as a PAID row, `source='staff'`, with a live price preview and
 optional coupon) and **Delete this staff entry** — staff rows only. Rows made

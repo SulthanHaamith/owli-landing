@@ -503,6 +503,509 @@ owli-healthcare/
 
 (Newest first. Each entry records what changed, why, and how it was verified.)
 
+- **2026-10-24 — Abandoned payments: pending → failed sweep + admin categorization/sorting (owner request).** The owner asked: *"We can mark payments that are pending for a long time as failed. How to efficiently and properly do it. Add categorization options based on status and other stuffs. This makes easier to sort."* Two deliverables, both live-verified locally end-to-end. **(1) The sweep — the efficient-and-proper answer.** "A long time" is defined as **2 days** (`OWLI_PENDING_DAYS` in `api/_bootstrap.php`), chosen because Coaxlure's hosted payment links die after ~10 minutes and the cron's late-payment re-check pass covers 3 days — so a registration still pending after 2 days can no longer pay its *existing* attempt (the order is dead on Coaxlure's side), yet stays a candidate for the re-check pass long enough to catch genuinely late confirmations. The sweep runs as **pass 2 of the existing 5-minute cron** (`owli_fail_stale_attempts()` called from `api/cron-recheck.php`) — no new cron job, no new request surface, max 200 attempts per run. Safety rules: **money always wins** — each stale attempt gets ONE final Coaxlure check, and a paid answer calls `owli_mark_paid()` instead (a late payment can never be marked failed); nothing is deleted — the attempt keeps a `failed` status with the reason in `raw_status` (`expired link (unpaid after 2 days)`) for the audit trail, and the registration flips to `failed` only when no pending/paid attempt remains; rows with no attempt (staff entries, free-coupon registrations) are untouched; every action is wrapped in a transaction and logged (`owli sweep: …`). Cron output now ends `abandoned_failed=N`. Downstream effects, all deliberate: `status.php` reports `failed` directly from the stored row (no further Coaxlure calls for a dead booking — one early-exit branch keeps the pending path intact), and **`register.php` now reuses failed rows**: the mobile+email retry lookup changed from `status='pending' AND created_at > 2 DAY` to `status IN ('pending','failed')` with no time limit — a person whose booking was swept away simply registers again, gets the **same reference**, flips the row back to pending (the update path sets `status='pending', paid_at=NULL` when reviving a failed row) and pays at the **current** tier price with a fresh attempt; the paid-pair 409 lock and the free-coupon flow are unchanged. **Schema:** `payment_attempts.status` gained `'failed'` — `sql/schema.sql` updated for fresh imports, and the live DB needs one ALTER (documented in `GO-LIVE-STEPS.md` next to the `source` migration and in `PROJECT-STATUS.md` §3 Step 1): `ALTER TABLE payment_attempts MODIFY status ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending';`. **(2) Admin categorization + sorting — the "easier to sort" half.** **Filter chips** with live counts (All · Paid · Pending · Failed · Stale pending 7+ days · Last 24h · Staff-added) — each chip is a pre-baked filter combination so the questions the team actually asks ("who still owes money?", "today's walk-ins") are one click; **pending is split by age** in the summary line (within the last hour vs older) because a 5-minute-old pending row is someone actively paying while a 3-day-old one is probably gone — stale money no longer hides among fresh; **new filters:** Source (public website / added by staff), Coupon code (validated `^[A-Z0-9_-]{2,30}# CLAUDE.md — Owl I Health Care Centre
+
+> **This file is the single source of truth for building the clinic's landing page.**
+> Claude Code should read this before every task. All decisions, content, and structure live here.
+
+---
+
+## 1. PROJECT SUMMARY
+
+**What:** A bilingual (English/Tamil) clinic website with a static homepage and a PHP/MySQL-backed event registration flow for Arokya Payanam 2026.
+**Goal:** Maintain the clinic website and provide secure event registration with server-side pricing and Coaxlure payment verification.
+**Approach:** The clinic pages are static HTML/CSS/vanilla JavaScript. Event registration uses PHP endpoints and MySQL on Hostinger; local development uses Docker. Payment credentials must remain outside the repository and public web root.
+
+---
+
+## 2. TECH STACK
+
+| Layer       | Choice                | Notes                                          |
+|-------------|-----------------------|------------------------------------------------|
+| Markup      | Plain HTML5           | Semantic elements, no templating engine         |
+| Styling     | Hand-written CSS      | Custom properties for theming, separate responsive file |
+| JavaScript  | Vanilla JS (ES6+)     | No libraries, no bundler                       |
+| Icons       | Inline SVGs only | Hand-written SVGs; no icon library or CDN |
+| Fonts       | Google Fonts (`<link>`)| Poppins (EN), Noto Sans Tamil (TA)             |
+| Animations  | CSS-only + IntersectionObserver | Keyframes, transitions — no JS animation libs |
+| Build step  | **None**              | Static pages need no compilation; serve locally for API testing |
+| Backend     | PHP 8.2+               | Event registration endpoints under `api/`       |
+| Database    | MySQL / MariaDB        | Event tiers, coupons, registrations, payments    |
+| Hosting     | Hostinger Premium      | PHP/MySQL enabled; site files deployed to `public_html/` |
+
+### Project constraints
+- Keep the clinic pages in plain HTML/CSS/vanilla JavaScript; no JS frameworks or front-end build tools.
+- The event-registration backend is PHP + MySQL. Do not replace it with a browser-side payment integration.
+- Never expose Coaxlure credentials, generated tokens, database passwords, or attendee data in client-side files or Git.
+- Keep using plain CSS; no Sass/Less or required CSS build step.
+
+---
+
+## 3. DOMAIN & HOSTING
+
+- **Domain:** `owlihealthcare.com` (reported live by the site owner)
+- **Hosting provider:** Hostinger Premium Web Hosting
+- **Deployment:** GitHub deployment publishes the site into `public_html/` (the owner reports pushes deploy automatically); File Manager/FTP remain available for server-only configuration.
+- **Runtime:** PHP 8.2+ and MySQL are available on the hosting plan. The clinic pages are static; the event form uses the PHP API in `api/` and the MySQL schema in `sql/schema.sql`.
+- **SSL:** Active for the domain.
+- **Secrets:** Keep `owli-config.php` outside `public_html` and outside Git. On Hostinger, place it in the parent directory described in `api/config.sample.php`.
+- **Local preview:** Docker web container serves `http://localhost:8800/`; the event page is `http://localhost:8800/events/`.
+
+### Deployment and server configuration
+- The owner reports the domain, Premium hosting, SSL, PHP 8.2–8.5 and MySQL are active.
+- The owner reports GitHub pushes deploy the site into `public_html/`. Use the repository's configured deployment workflow for project changes, and verify deployment before considering a change live.
+- Use hPanel/File Manager for server-only setup: create the production DB/user, import `sql/schema.sql`, configure PHP/cron, and place `owli-config.php` outside `public_html`.
+- Do not remove existing site files or upload a replacement site as part of routine deployment.
+- For local PHP/API testing, use the Docker preview URLs and local config details documented in `README.md` §10. Local container hostnames/passwords are not production settings.
+
+---
+
+## 4. CLINIC DETAILS
+
+Use these exact details everywhere on the site.
+
+```
+Name:      Owl I Health Care Centre
+Address:   1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli, Tirunelveli - 627604
+Phone:     +91 6379610554
+WhatsApp:  +91 6379610554
+Email:     owli2026@gmail.com
+Hours:     Monday to Sunday: 9:00 AM – 8:00 PM
+           Open all days.
+Domain:    owlihealthcare.com
+```
+
+---
+
+## 5. COLOR PALETTE — "Forest Calm"
+
+Define as CSS custom properties in `:root`.
+
+| Token              | Hex       | Usage                          |
+|--------------------|-----------|--------------------------------|
+| `--color-primary`    | `#2D5A3D` | Headers, nav, footer background |
+| `--color-secondary`  | `#5B8C5A` | Buttons, CTAs                   |
+| `--color-light-green`| `#A8C5A0` | Highlight sections, accents     |
+| `--color-background` | `#F4EDE4` | Page background (cream)         |
+| `--color-accent`     | `#8B6F47` | Warm brown details              |
+| `--color-white`      | `#FFFFFF` | Cards, light sections           |
+| `--color-dark-text`  | `#1A1A1A` | Body text                       |
+| `--color-light-text` | `#6B7B6B` | Subtle/secondary text           |
+
+---
+
+## 6. TYPOGRAPHY
+
+- **English:** "Poppins" via Google Fonts — Headings 600/700, Body 300/400
+- **Tamil:** "Noto Sans Tamil" via Google Fonts
+- Load via `<link>` tags, no npm/build step required
+- Tamil font applied automatically when language is switched to Tamil
+
+---
+
+## 7. BILINGUAL SUPPORT (English / Tamil)
+
+| Aspect             | Implementation                                                  |
+|--------------------|-----------------------------------------------------------------|
+| Toggle location    | Header — `EN \| தமிழ்` button                                    |
+| How it works       | JS swaps text content of elements with `data-i18n="key"` attribute |
+| Translation store  | Single JS object in `i18n.js` with `en` and `ta` keys            |
+| Persistence        | `localStorage` saves selected language                           |
+| Default language   | English                                                          |
+| Page reload?       | No — swap happens in-place                                       |
+
+**Every user-visible string must be in the i18n system.** No hardcoded display text in HTML.
+
+---
+
+## 8. SITE STRUCTURE
+
+Single-page layout. Navigation uses anchor links to scroll between sections.
+
+| #  | Section           | ID                  | Background        |
+|----|-------------------|---------------------|-------------------|
+| 1  | Header / Nav      | `#header`           | White → shadow on scroll |
+| 2  | Hero              | `#hero`             | Image + dark overlay |
+| 3  | About             | `#about`            | Cream (`--color-background`) |
+| 4  | Services          | `#services`         | White              |
+| 5  | Why Choose Us     | `#why-us`           | Light green (`--color-light-green`) |
+| 6  | Our Team          | `#team`             | Cream              |
+| 7  | Testimonials      | `#testimonials`     | White              |
+| 8  | Gallery           | `#gallery`          | Cream              |
+| 9  | Blog Preview      | `#blog`             | White              |
+| 9B | FAQ               | `#faq`              | Light green (`--color-light-green`) |
+| 10 | CTA Banner        | `#cta-banner`       | Dark green (`--color-primary`) |
+| 11 | Contact / Booking | `#contact`          | Cream              |
+| 12 | Footer            | `#footer`           | Dark green (`--color-primary`) |
+| —  | Floating Buttons  | Fixed bottom-right  | WhatsApp + Phone call, stacked vertically |
+
+---
+
+## 9. SECTION CONTENT DETAILS
+
+### 9.1 Header / Nav
+- Text logo: "Owl I" + small leaf/owl inline SVG
+- Nav links: Home, About, Services, Our Team, Gallery, Blog, FAQ, Contact
+- "Arokya Payanam 2026" button (`.btn-event`, warm brown accent — `--color-accent`) → links to `/events/`. Sits beside "Book Now" in `.nav-actions`, deliberately a different color so it reads as a distinct, time-limited announcement rather than a regular site CTA.
+- "Book Now" CTA button (green) → scrolls to `#contact`
+- Language toggle: `EN | தமிழ்`
+- Mobile: hamburger → slide-in drawer. `.nav-actions` (lang toggle, event button, Book Now) is hidden below the 769px breakpoint, consistent with the pre-existing Book Now behavior — mobile visitors reach the event via the homepage popup, the hero button, or the footer link instead.
+- Sticky on scroll with subtle box-shadow
+
+### 9.2 Hero
+- Full viewport height (100vh)
+- Background: placeholder (gradient or CSS pattern). Mark for replacement.
+- Dark overlay for text contrast
+- **Heading EN:** "Heal Naturally. Live Fully."
+- **Heading TA:** "இயற்கையாக குணமாகுங்கள். முழுமையாக வாழுங்கள்."
+- **Subheading EN:** "Tirunelveli's trusted naturopathy and wellness center — holistic healing for body, mind, and soul."
+- Three CTAs: "Enquire on WhatsApp" + "Explore Services" (→ `#services`) + "Arokya Payanam 2026" (`.btn-event`, calendar icon, → `/events/`) — same accent color as the nav version, giving visitors a persistent (non-closable) way to reach the event page beyond the dismissable popup
+- CSS fade-in animation on load
+
+### 9.3 About
+- Two-column: text left, real clinic interior photo right (`images/about/clinic-interior.png`)
+- Philosophy: Drug-free healing, holistic approach, personalized plans, traditional + modern
+- Brief Vision & Mission statements
+- Leadership profiles now live in the combined **Our Team** section (`#team`) — see 9.6
+
+| #  | Name                     | Role                             |
+|----|--------------------------|-----------------------------------|
+| 1  | Abdul Salim Malik        | Founder & CEO                    |
+| 2  | Mrs. Jannath Firthouse    | Co-Founder & Managing Director   |
+
+### 9.4 Services
+- Grid: 3 col desktop, 2 tablet, 1 mobile
+- 11 cards with icon + name + 1-line description
+- Hover: translateY(-5px) + box-shadow
+- Sourced from the official "OWL i Health Care Centre" booklet (services the clinic actually offers, as opposed to conditions treated — see `CONDITIONS WE COMMONLY ADDRESS` in the booklet for the latter)
+
+**Full service list:**
+
+| #  | Service               | Description (EN)                                                          |
+|----|-----------------------|-----------------------------------------------------------------------------|
+| 1  | Massage Therapy       | Swedish, Ayurvedic oil, deep tissue, prenatal and postnatal massage        |
+| 2  | Hydrotherapy          | Steam bath, hip bath, and therapeutic water packs                         |
+| 3  | Fasting & Diet Therapy | Therapeutic fasting, individualized diet planning, and nutrition guidance |
+| 4  | Mud Therapy           | Mud bath, mud application, and mud pack                                   |
+| 5  | Foot Reflexology      | Gentle pressure-point therapy for relaxation and well-being               |
+| 6  | Aromatherapy          | Aromatherapy massage, essential oil inhalation, and diffusion             |
+| 7  | Yoga Therapy          | Therapeutic yoga, yoga nidra, and monthly yoga classes                    |
+| 8  | Acu Therapy           | Acupuncture, acupuncture stimulator, and moxa therapy                     |
+| 9  | Ozone Therapy         | Controlled oxygen-ozone therapy for individualized care                   |
+| 10 | Shirodhara            | Traditional oil-based relaxation therapy for the forehead                 |
+| 11 | Kizhi                 | Elakizhi, Njavarakizhi, and Podikizhi herbal poultice therapy             |
+
+#### Treatment details (View Details)
+- Every service card has a visible pill button "View Details" (EN) / "விவரங்களைக் காண்க" (TA); label flips to "Show Less" while open
+- Expands a panel inside the card showing: what the treatment involves (the card description), a note that the doctor recommends a personalised treatment plan, and a note that an assessment may be required before therapeutic procedures
+- No durations or fees are shown anywhere (clinic has not approved them; add only after written confirmation)
+- Panel includes a WhatsApp "Enquire on WhatsApp" button with the treatment name pre-filled in the message
+- Implemented in `js/treatment-details.js`; builds panels from i18n keys, observes `<html lang>` and re-renders on language switch; ARIA: `aria-expanded` / `aria-controls`
+
+### 9.5 Why Choose Us
+- Light green background section
+- 4 items (responsive: 4 col → 2x2 → stacked):
+  1. Experienced BNYS Doctors
+  2. 100% Natural Treatments
+  3. Personalized Care Plans
+  4. Affordable Wellness
+
+### 9.6 Our Team (`#team`)
+- Combined section: **Management & Leadership** sub-grid (2 leader cards) + **Our Doctors** sub-grid (2 doctor cards)
+- All 4 members retained — **REAL DATA** (no placeholders)
+- Layout: 2 cards side by side on desktop (max-width ~450px each), stacked on mobile
+- Each card shows: photo, name, designation, qualification, specialization, experience, and areas of expertise as styled pills/tags
+
+| #  | Name                  | Designation            | Qualification              | Experience | Specialization                                                              |
+|----|-----------------------|------------------------|----------------------------|------------|-----------------------------------------------------------------------------|
+| 1  | Dr. Jospin Sheela.A   | Chief Medical Officer  | BNYS, M.Sc(Psy), cCGO     | 6+ years   | Naturopathy, Yoga Therapy, Clinical Nutrition and Lifestyle Medicine         |
+| 2  | Dr. Jebakumar. A      | Medical Officer        | BNYS                       | 1+ year    | Naturopathy, Pain Management, Acupuncture, Rehabilitation                   |
+
+### 9.7 Testimonials
+- Carousel: CSS + vanilla JS (no library)
+- 5 placeholder testimonials (quote, first name, treatment type, 5 stars)
+- Auto-rotate every 5 seconds, prev/next buttons
+- `<!-- [PLACEHOLDER] Replace with real testimonials -->`
+
+### 9.8 Gallery
+- Grid: 3 col desktop, 2 mobile
+- 6–8 placeholder image slots
+- CSS lightbox on click (minimal JS)
+- `<!-- [PLACEHOLDER] Replace with real clinic photos -->`
+
+### 9.9 Blog Preview
+- 3 cards:
+  1. "5 Benefits of Hydrotherapy You Didn't Know"
+  2. "How Naturopathy Can Help Manage Diabetes Naturally"
+  3. "Yoga Asanas for Back Pain Relief"
+- Each: placeholder image, title, 2-line excerpt, "Read More →" (href="#")
+
+### 9.9B FAQ
+- 10 questions sourced from the official clinic booklet
+- Each rendered as a native `<details>/<summary>` element — accordion expand/collapse with no JS required
+- Content: appointments, consultation length, what to bring, continuing existing medicines, number of sessions needed, children/elderly eligibility, yoga without consultation, single-therapy visits, wellness-only visits, treatment suitability
+
+### 9.10 CTA Banner
+- Full-width, dark green background
+- **EN:** "Ready to Start Your Natural Healing Journey?"
+- **TA:** "உங்கள் இயற்கை குணமாகும் பயணத்தைத் தொடங்க தயாரா?"
+- Buttons: "Enquire on WhatsApp" → WhatsApp, "Call Now" → `tel:+916379610554`
+
+### 9.11 Contact / Booking
+- **Left column — Form:**
+  - Fields: Name, Phone (required); Email (optional), Service (dropdown: 11 services + Doctor Consultation / General Wellness Enquiry / Not Sure - Need Guidance), Message (optional)
+  - Validation: required fields, email regex, Indian phone format (10 digits, starts 6-9)
+  - Submit button label: "Request an Appointment" (EN) / "சந்திப்புக்கு கோரிக்கை அனுப்புங்கள்" (TA)
+  - Expectation note under form: "Appointments are confirmed after our team responds."
+  - Submit action: open WhatsApp with pre-filled message; success message is bilingual and appends the same confirmation line
+  - URL format: `https://wa.me/916379610554?text=Name: ...%0APhone: ...%0AService: ...%0AMessage: ...`
+  - Fallback: mailto link to owli2026@gmail.com
+- **Right column — Info:**
+  - Address, Phone (tel: link), WhatsApp (wa.me link), Email (mailto: link), Hours
+  - Google Maps embed (real coordinates: 8.7134811, 77.623205)
+
+### 9.12 Footer
+- Dark green background, light text
+- 4-column grid:
+  1. Logo + brief about + social icon (Instagram only — https://www.instagram.com/owli_healthcare; Facebook/YouTube hidden until the clinic provides URLs)
+  2. Quick Links (anchor links)
+  3. Top 6 Services
+  4. Contact info + Hours
+- Bottom bar: `© 2026 Owl I Health Care Centre. All Rights Reserved.`
+
+### 9.13 Floating Action Buttons (WhatsApp + Phone)
+
+Two fixed buttons, stacked vertically in the bottom-right corner of every page.
+
+```
+Position: fixed, bottom-right
+Layout:   vertical stack — Phone on top, WhatsApp below
+Z-index:  high (above all content)
+```
+
+**WhatsApp Button (bottom):**
+- Green circle (`#25D366` — official WhatsApp green) with WhatsApp SVG icon
+- CSS pulse animation to draw attention
+- Link: `https://wa.me/916379610554?text=Hi! I'd like to enquire about your services.`
+- Tooltip on hover: "Chat on WhatsApp"
+- ARIA label: "Chat with us on WhatsApp"
+
+**Phone Button (above WhatsApp):**
+- Circle using `--color-secondary` (`#5B8C5A`) with phone SVG icon
+- Subtle CSS pulse animation (slower/different rhythm than WhatsApp to avoid visual noise)
+- Link: `tel:+916379610554`
+- Tooltip on hover: "Call us now"
+- ARIA label: "Call Owl I Health Care Centre"
+
+**Styling details:**
+- Both buttons: 56px circles on desktop, 48px on mobile
+- Gap between buttons: 12px
+- Box shadow for depth: `0 4px 12px rgba(0,0,0,0.15)`
+- Hover: scale up slightly (`transform: scale(1.1)`) + deeper shadow
+- Mobile: position adjusted so they don't overlap content or browser UI (bottom: 20px, right: 16px)
+- Both buttons must be bilingual-aware (tooltips swap with language toggle)
+
+---
+
+## 10. SEO
+
+### Meta tags (in `<head>`)
+- `<title>`: Owl I Health Care Centre | Naturopathy Clinic in Tirunelveli
+- `<meta name="description">`: Tirunelveli's trusted naturopathy and wellness center. Drug-free natural treatments including Hydrotherapy, Yoga Therapy, Diet Therapy, Mud Therapy, and more.
+- `<meta name="keywords">`: naturopathy clinic tirunelveli, natural healing, yoga therapy, hydrotherapy, mud therapy, wellness center tirunelveli, BNYS doctor tirunelveli
+- Canonical: `https://owlihealthcare.com/`
+- Open Graph: og:title, og:description, og:image, og:url, og:type
+- Twitter Card: summary_large_image
+
+### Structured Data (JSON-LD)
+- Schema type: `MedicalBusiness`
+- Include: name, address, phone, email, opening hours, priceRange (₹₹)
+
+### Files
+- `sitemap.xml` — single page entry
+- `robots.txt` — allow all, reference sitemap
+
+---
+
+## 11. ACCESSIBILITY
+
+- Semantic HTML: `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`
+- "Skip to main content" link at top
+- ARIA labels on nav, buttons, form inputs, interactive elements
+- `alt` text on all images (including placeholders)
+- Keyboard navigable: proper tab order, visible focus indicators
+- Color contrast: verify dark text on cream, white text on dark green
+- Touch targets: minimum 44×44px on mobile
+
+---
+
+## 12. PERFORMANCE TARGETS
+
+- No heavy JS libraries — vanilla JS only
+- Lazy load images below the fold: `loading="lazy"`
+- Total page weight: under 1MB (excluding placeholder images)
+- Minimize DOM complexity
+- CSS animations only (no JS animation libraries)
+
+---
+
+## 13. DOCUMENTATION STANDARDS
+
+**Every file must be thoroughly commented for a complete beginner.**
+
+### HTML comments
+```html
+<!-- ============================================
+     SECTION: [NAME]
+     PURPOSE: [What this section does]
+     NOTES: [How to modify it]
+     ============================================ -->
+```
+
+### CSS comments
+```css
+/* ──────────────────────────────────────────────
+   [SECTION NAME]
+   [What these styles do and why]
+   ────────────────────────────────────────────── */
+```
+
+### JS comments
+```javascript
+/**
+ * [FUNCTION NAME]
+ * PURPOSE: [What it does]
+ * HOW IT WORKS: [Step-by-step explanation]
+ * PARAMS: [If any]
+ */
+```
+
+---
+
+## 14. PLACEHOLDER CONTENT CHECKLIST
+
+All placeholder content must be marked with `<!-- [PLACEHOLDER] -->` in HTML.
+This is the complete list of items the clinic owner needs to replace:
+
+| Item                        | Location              | Recommended Size / Format  | Status    |
+|-----------------------------|-----------------------|----------------------------|-----------|
+| Hero background image       | `images/hero/`        | 1920×800px, JPG            | Placeholder |
+| Gallery photos (6–8)        | `images/gallery/`     | 800×600px, JPG             | Placeholder |
+| Blog post images (3)        | `images/blog/`        | 600×400px, JPG             | Placeholder |
+| OG/social sharing image     | `images/og-image.jpg` | 1200×630px, JPG            | Placeholder |
+| Favicon                     | `images/favicon.ico`  | 32×32px or 64×64px         | Placeholder |
+| 5 real patient testimonials | In `i18n.js`          | Text only                  | Placeholder |
+| Social media profile URLs   | Footer links          | Full URLs                  | Placeholder |
+
+**Already completed (no longer placeholder):**
+- Doctor photos and details (2 doctors with real names, qualifications, and photos)
+- Clinic logo (owli-horizontal.png for header, owli-vertical.png for footer)
+- Google Maps embed (real coordinates: 8.7134811, 77.623205)
+- Clinic interior photo (`images/about/clinic-interior.png`)
+- Leadership section — Founder & CEO and Co-Founder & Managing Director profiles with real photos (`images/leadership/`)
+
+---
+
+## 15. DESIGN DIRECTION
+
+- **Tone:** Organic, natural, calming — like walking into a peaceful forest clinic
+- **Feel:** Professional but warm and approachable. Not clinical or hospital-sterile.
+- **Spatial composition:** Generous whitespace, breathing room between sections. Alternating backgrounds (cream ↔ white ↔ light green) for visual separation.
+- **Motion:** Subtle CSS fade-in on scroll via `IntersectionObserver`. Smooth scroll. WhatsApp button pulse. No heavy animation.
+- **Icons:** Nature-themed inline SVGs (leaf, water, sun, lotus, etc.)
+
+---
+
+## 16. FILE STRUCTURE
+
+Everything below goes into Hostinger's `public_html/` directory.
+
+```
+owli-healthcare/
+├── index.html                  # Single-page site with all sections
+├── events/
+│   └── index.html              # Arokya Payanam 2026 event page (/events/)
+├── css/
+│   ├── styles.css              # All base styles, layout, components
+│   ├── responsive.css          # Media queries for mobile/tablet/desktop
+│   ├── events.css              # Styles for the /events/ page only
+│   └── event-banner.css        # Homepage "Arokya Payanam 2026" popup
+├── js/
+│   ├── main.js                 # Nav toggle, sticky header, scroll animations
+│   ├── i18n.js                 # Translation object + language toggle logic
+│   ├── testimonials.js         # Testimonial carousel (auto-rotate + controls)
+│   ├── lightbox.js             # Gallery lightbox (open/close/navigate)
+│   ├── contact.js              # Form validation + WhatsApp URL builder
+│   ├── treatment-details.js    # Service card "View Details" panels
+│   ├── event-config.js         # Event registration state (one place to open/close it)
+│   ├── event-banner.js         # Homepage event popup (show/close, 24h dismissal)
+│   └── event-register.js       # /events/ registration form (category fields, price list, payment redirect)
+├── admin/index.php            # Password-protected staff console: registrations, statuses, recheck, CSV export, staff entries, coupon generator
+├── api/                        # PHP backend: register.php, quote.php, status.php, ticket.php (PDF ticket), cron-recheck.php, _bootstrap.php, admin-pass.php
+│   └── lib/                    # Vendored single-file libs for the PDF ticket: tfpdf.php, qrcode.php, LICENSE.txt, font/unifont/ (MuktaMalar EN+TA font, ttfonts.php)
+├── scripts/                    # validate.php (pre-deploy checks) + check-i18n.js (EN/TA parity) + check-pay-flow.js (payment navigation contract); CLI-only, blocked from the web
+├── .htaccess                  # Blocks repo-only files from the web (*.md, *.sql, *.log, *.ini → 403)
+├── sql/schema.sql              # MySQL tables + starting prices (import once via phpMyAdmin)
+├── images/
+│   ├── hero/                   # Hero background (1920×800px)
+│   ├── services/               # Service icons (SVG preferred)
+│   ├── doctors/                # Doctor photos (400×400px, square)
+│   ├── leadership/              # Founder/Co-Founder photos
+│   ├── about/                  # Clinic interior photo
+│   ├── events/                 # Event logo + organiser logo strip
+│   ├── gallery/                # Clinic gallery photos (800×600px)
+│   ├── blog/                   # Blog thumbnail images (600×400px)
+│   ├── logo.svg                # Clinic logo
+│   ├── og-image.jpg            # Social sharing image (1200×630px)
+│   └── favicon.ico             # Browser tab icon
+├── sitemap.xml                 # Sitemap — homepage + /events/
+├── robots.txt                  # Allow all crawlers
+├── GO-LIVE-STEPS.md            # Operator runbook: Rs 10 payment test + opening registration
+├── PROJECT-STATUS.md           # Live status snapshot: verified state, remaining steps, decisions
+├── API-TROUBLESHOOTING.md      # API debugging runbook: reproduce → log → cause → verify
+├── LOCAL-TESTING.md            # Local test stack: Docker setup, three checkers, manual verification techniques
+└── README.md                   # Full project documentation
+```
+
+---
+
+## 17. CONTACT LINKS REFERENCE
+
+### WhatsApp Links
+| Purpose           | URL                                                                                                  |
+|--------------------|------------------------------------------------------------------------------------------------------|
+| Floating button    | `https://wa.me/916379610554?text=Hi! I'd like to enquire about your services.`                       |
+| Enquire on WhatsApp | `https://wa.me/916379610554?text=Hi! I'd like to enquire about your services.`                        |
+| Contact form submit| `https://wa.me/916379610554?text=Name: [name]%0APhone: [phone]%0AEmail: [email]%0AService: [service]%0AMessage: [message]` |
+
+### Phone Link
+| Purpose           | URL                          |
+|--------------------|------------------------------|
+| Floating button    | `tel:+916379610554`          |
+| "Call Now" CTAs    | `tel:+916379610554`          |
+
+### Email Link
+| Purpose           | URL                              |
+|--------------------|----------------------------------|
+| Fallback contact   | `mailto:owli2026@gmail.com`      |
+
+---
+
+## 18. RULES FOR CLAUDE CODE
+
+1. **Read this file first** before every task.
+2. **Keep the public clinic pages static**, with no front-end build step. The event registration form requires the PHP/MySQL backend when served; direct `file://` opening can preview static content but cannot exercise the API.
+3. **All text bilingual** — every display string goes through the i18n system.
+4. **Mark every placeholder** with `<!-- [PLACEHOLDER] -->` comments.
+5. **Mobile-first** — base styles target mobile, enhance with `min-width` media queries.
+6. **WhatsApp + Phone are the primary CTAs** — booking, contact, floating buttons all route to WhatsApp and direct call.
+7. **Document thoroughly** — a beginner who has never coded should understand every line.
+8. **Test mentally at 375px, 768px, and 1440px** widths.
+9. **No hardcoded colors** — use CSS custom properties everywhere.
+10. **Semantic HTML** — proper landmark elements, ARIA labels, accessibility.
+
+), Registered age (last 24h / last 7 days / 7+ days); **7 sort orders** (newest, oldest, name A–Z, amount high→low, amount low→high, status-grouped pending→paid→failed via `FIELD()`, most recently paid) — the sort keys are a **whitelisted map of SQL fragments in code**, never user input, so only the direction ever varies; the **CSV export now honours the sort** as well as the filters (it uses the same `admin_order()`); the "Failed" stat card is relabelled "Failed / abandoned"; the footer documents the sweep. Implementation: `admin_where()` gained the source/coupon/age clauses (all whitelist-driven, bound parameters), new `admin_order()` + `admin_chip()` helpers, chip counts computed with one COUNT query per chip (fine at hundreds-of-rows scale; `idx_reg_status` exists for the status paths). **Verified locally (Docker, dev Coaxlure):** seeded a 3-day-old pending attempt → real cron run → `abandoned_failed=1`, attempt `failed` with the reason string, registration `failed`; `status.php` → `{"status":"failed"}` (no Coaxlure call); re-registering the same mobile+email → **same reference returned**, row revived to `pending` at the current ₹449 tier, new attempt row; paid pair still 409; amount sort confirmed in both the rendered table and the CSV (449 before 299 high→low, reversed low→high); `FIELD()` status sort groups pending→paid→failed; 59/59 `validate.php`, pay-flow regression, i18n parity, `php -l` on all five touched PHP files PASS. Test rows cleaned up afterwards; the admin lockout counters cleared.
+
 - **2026-10-25 — "Get ticket on WhatsApp" handoff + admin ticket downloads (owner request).** Two delivery additions: *"Add 'Get ticket on WhatsApp' option, point to official about event and its ID. Make the PDF downloadable from the admin — for the team to share."* **(1) WhatsApp handoff button (`evf_get_wa`, EN+TA).** The paid success box now renders THREE actions in one row: **Download ticket (PDF)** · **Get ticket on WhatsApp** · **Done** — and the free-coupon path (which builds its own row) gained the same WhatsApp button. The button is a plain `wa.me` deep link to the clinic's official number **+91 6379610554** — the same number the site's floating WhatsApp button, the contact section and the ticket footer already use — with the message pre-filled by the new i18n key `evf_wa_text` (*"Hello! Please send me the Arokya Payanam 2026 entry ticket. My Booking ID is:"*) + the Booking ID appended. So it names the event (official context), the Booking ID, and lands in the official channel; the attendee just presses send and the team replies with the PDF. **Why wa.me and not the Cloud API (deliberate):** WhatsApp has no free API for business-initiated sends — the Cloud API needs Meta onboarding, a template approval, a permanent token in the server config and per-message fees, and a second credential set to guard. The wa.me handoff is zero-cost, zero-new-secrets, and works from day one; the full Cloud API procedure was documented for the owner in the previous reply (template + token + hook in `owli_mark_paid()`) and remains the upgrade path if they ever want automated sends. **(2) Team ticket download from the admin console.** Every PAID row's expandable details now carry a **"Download ticket (PDF)"** button (`<a href="../api/ticket.php?ref=…">` with the `download` attribute) — the same PDF endpoint the attendee uses, so the team can forward/re-print it for attendees who lost theirs, or share it on WhatsApp from the console. Rendered only for paid rows; `api/ticket.php` enforces paid-only server-side anyway (404 for anything else), so the button can never leak a ticket for an unpaid seat — and its 403-404-vs-unknown-ref parity means console users learn nothing about pending refs. Pending rows keep the existing "Recheck payment now" button; staff rows keep "Delete". **Cache bumps:** `event-register.js?v=8→9` (events page), `i18n.js?v=6→7` (both pages — the file changed for the two new keys). Verified: `node --check` clean, `check-i18n.js` parity PASS (357/357, `evf_get_wa`+`evf_wa_text` present in both languages), `check-pay-flow.js` all scenarios PASS (the WhatsApp button is an `<a>` in the PAID box, which the harness doesn't render — scenarios A–F unchanged and green), `php -l` on the admin console, and a live paid-row render in the local Docker stack confirmed the button appears with the correct `wa.me/916379610554?text=…AP26-…` URL (URL-encoded, `rel="noopener noreferrer"`, opens in a new tab).
 
 - **2026-10-25 — Waiting box: status-check only (reopen link removed) + invisible-secondary-button bug fixed (owner requests).** Two owner requests in one review of the waiting box: *"In the warning tab instead of asking reopen the payment page, just give check status… don't give option to reopen payment page"*, and *"That button is not visible only on hover it is visible — check that as well."* **(1) The reopen link is gone.** `showWaiting()` no longer renders the "Reopen the payment page" anchor at all — the owner is right that it invites tab confusion and a second attempt against the same order (the payment tab is already open; if the attendee closed it, the pending row survives and re-submitting the form creates a fresh attempt on the SAME row — no duplicate person, no double charge). In its place: a **"Check payment status now"** button (`evf_check_now`, EN+TA) that fires exactly ONE `status.php` call — the server verifies with Coaxlure (self-throttled to one recheck per 5s per attempt, so extra clicks can never spam Coaxlure), and the button re-arms itself while still pending; `paid` flips the box to the ticket download, `failed` clears the stored ref and re-enables the form. The automatic poll ladder (2s→5s, ~10 min) keeps running unchanged — the on-demand button is additive, not a second ladder. **(2) The invisible button was a real CSS bug, not a hover quirk:** the site's `.btn-secondary` (transparent background, **white** text + **white** border) is designed for dark surfaces (hero, CTA banner, event gradient) — but `.ev-status-box` has a **white** background, so the secondary buttons inside it rendered white-on-white: invisible until hover/dark-mode changed the backdrop. This affected the waiting box button, the pending box's "Check again", and the paid box's "Done" equally. Fixed with one scoped re-skin in `events.css` (`.ev-status-box .btn-secondary` → green border + primary-green text, filling green on hover/focus) — no palette change, only the light-surface variant. **Regression guard:** scenario F of `scripts/check-pay-flow.js` was rewritten — it now asserts that **no anchor is rendered in the waiting box at all**, that the check button fires exactly one status call, and that no new tab opens; a future re-introduction of any reopen link fails the suite. **Also:** cache bumps `i18n.js?v=5→6` (both pages), `event-register.js?v=7→8` (events page), and `events.css` gained its first `?v=1` (it previously had none despite `.ev-*` edits — the stale-asset trap README §9 documents). Verified: `node --check`, `check-i18n.js` PASS (355/355, the new `evf_check_now` key in both languages), `check-pay-flow.js` all scenarios PASS (incl. the rewritten F), `validate.php` **59/59** in the local stack.

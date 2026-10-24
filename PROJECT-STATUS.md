@@ -55,21 +55,30 @@ with an event registration + payment backend for **Arokya Payanam 2026**:
 working checkout URL → pay → automatic paid detection. The two bugs the first
 attempt found were fixed and verified live (see §4).
 
+**New (2026-10-24): abandoned payments now resolve themselves.** Registrations
+pending for more than **2 days** are moved to `failed` by the cron's sweep
+(after one final Coaxlure check — a late payment still wins), and the admin
+console gained **sorting + one-click filter chips + new filters** (see §4).
+
 ---
 
 ## 3. What the owner must do next (exact steps)
 
-### Step 1 — one-time DB migration (phpMyAdmin → SQL)
+### Step 1 — two one-time DB migrations (phpMyAdmin → SQL)
 
 ```sql
 ALTER TABLE registrations
   ADD COLUMN source ENUM('web','staff') NOT NULL DEFAULT 'web' AFTER reference;
+
+ALTER TABLE payment_attempts
+  MODIFY status ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending';
 ```
 
-This enables the admin console's **Add entry** (offline cash/UPI payments) and
-**delete-staff-entries-only** features on the live DB. Until it runs, the console
-shows a polite notice and hides those features. The admin's `validate.php` output
-also flags it if missing.
+The first enables the admin console's **Add entry** (offline cash/UPI payments)
+and **delete-staff-entries-only** features. The second enables the
+**abandoned-payment sweep** (pending → failed after 2 days — see GO-LIVE-STEPS.md
+"abandoned-payment sweep"). Until they run, the console shows a polite notice
+and the cron skips the sweep. `validate.php` flags both if missing.
 
 ### Step 2 — create the coupon packs (admin console, not SQL)
 
@@ -211,7 +220,44 @@ Single-use codes stop working after one use (`used_up`).
   or hand it over at the desk. Paid rows only (the endpoint enforces that
   server-side; pending rows show the recheck button instead).
 
-### Waiting box, now (2026-10-25)
+### Abandoned payments: pending → failed sweep + admin categorization (owner request, 2026-10-24)
+
+**The sweep (efficient and safe by design):** "pending for a long time" is
+defined as **2 days** — far beyond any payment link's ~10-minute life and past
+the cron's 3-day re-check window, so nothing that could still pay is touched.
+The existing 5-minute cron runs it as a second pass: for each stale attempt it
+makes **one final Coaxlure check** (money beats expiry — a paid answer marks the
+row paid instead of failed), then flips the attempt to `failed` with the reason
+stored in `raw_status`, and the registration too when nothing live is left on
+it. Limits: 200 attempts per run, all in transactions, every action logged,
+nothing ever deleted — history is the point. `status.php` reports `failed`
+without another Coaxlure call, and the attendee can simply register again: the
+same row (same Booking ID) is revived to pending at the **current** price with a
+fresh attempt.
+
+**Admin categorization & sorting (the "easier to sort" half):**
+
+- **Filter chips** with live counts: All · Paid · Pending · Failed · Stale
+  pending (7+ days) · Last 24h · Staff-added — one click for the questions
+  the team actually asks, each showing its own number.
+- **Pending is split by age** in the summary line: "< 1 hour" (someone actively
+  paying) vs "older" (probably gone) — so stale money never hides among fresh.
+- **New filters:** Source (web/staff), Coupon code, Registered age (last 24h /
+  7 days / 7+ days).
+- **7 sort orders:** newest, oldest, name A–Z, amount high→low / low→high,
+  status-grouped (pending → paid → failed), most recently paid. Whitelisted
+  column fragments only — sort keys are code, not user input.
+- CSV export follows whatever filters **and sort** are active; the Failed stat
+  card is renamed "Failed / abandoned".
+
+**Verified locally end-to-end:** 3-day-old pending attempt → cron sweep →
+attempt `failed` ("expired link (unpaid after 2 days)") + registration
+`failed`; `status.php` → `failed`; re-registering the same mobile+email revived
+the **same reference** as pending at the current price with a new attempt; the
+paid-pair 409 lock unaffected; amount sort orders confirmed in the rendered
+table and the CSV; 59/59 validation, pay-flow regression and i18n parity PASS.
+**One ALTER needed on the live DB** (attempt status ENUM) — documented in
+`GO-LIVE-STEPS.md` next to the `source` migration.
 
 The waiting box (while the Coaxlure tab is open beside the page) shows: the
 Booking ID + "checking here every few seconds…", a **"Check payment status now"**
@@ -242,6 +288,15 @@ re-skin scoped to `.ev-status-box .btn-secondary`).
   credentials only in the CSVs on the local machine (chmod 600), never in Git.
 - **Mandatory fields** — full name + mobile enforced at every layer; labels marked `*`.
 - **Lucide CDN removed** — dead dependency, replaced by inline SVGs.
+
+---
+
+## 7. Pending owner actions (short list)
+
+1. Run the **two ALTERs** in §3 Step 1 (phpMyAdmin).
+2. Generate the **three coupon packs** in the admin console (§3 Step 2).
+3. Decide the ₹10 test-price window (§3 Step 3 — General is still ₹10).
+4. Re-run `php public_html/scripts/validate.php` after the ALTERs (§3 Step 5).
 
 ---
 

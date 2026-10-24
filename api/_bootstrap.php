@@ -532,6 +532,69 @@ function owli_refresh_attempt(PDO $db, array $attempt): string
     return 'pending';
 }
 
+/* ------------------------------------------------------------------ */
+/* Abandoned-payment sweep (pending -> failed)                          */
+/* ------------------------------------------------------------------ */
+
+/* How long a payment attempt may stay pending before it counts as ABANDONED.
+   Coaxlure's hosted payment links expire around 10 minutes and the cron
+   re-checks attempts for 3 days, so anything still pending after 2 days is a
+   person who never came back to pay — the order is dead on Coaxlure's side.
+   2 days keeps the row a candidate for the cron's late-payment re-checks,
+   then closes the book: the attempt's history row stays for the audit trail,
+   but the registration stops counting as money that might still arrive. */
+const OWLI_PENDING_DAYS = 2;
+
+/* Marks payment attempts that outlived every payment link as 'failed' — and
+   the registration too when nothing live is left on it. Rows with no attempt
+   (staff entries, free coupon registrations) are never touched, and a live
+   Coaxlure "PAID" answer always wins over the sweep (money beats expiry). */
+function owli_fail_stale_attempts(PDO $db): int
+{
+    $n = 0;
+    $rows = $db->query(
+        "SELECT id, registration_id, coax_token, coax_order_id
+           FROM payment_attempts
+          WHERE status = 'pending'
+            AND created_at < (NOW() - INTERVAL " . OWLI_PENDING_DAYS . " DAY)
+          ORDER BY created_at ASC
+          LIMIT 200"
+    )->fetchAll();
+    foreach ($rows as $a) {
+        try {
+            /* 1) Coaxlure gets the final word on money before we give up on
+               the attempt. Pending-attempts older than the window have not
+               been checked by anyone in that time (their window is over),
+               but a live "PAID" answer always wins over the sweep. */
+            $st = coax_fetch_status($db, (string)$a['coax_token'], (string)($a['coax_order_id'] ?? ''));
+            if ($st['paid']) {
+                owli_mark_paid($db, (int)$a['registration_id'], (int)$a['id']);
+                continue;
+            }
+            /* 2) Coaxlure never saw a payment: close the attempt, and if no
+               attempt for the registration is pending/paid any more, the
+               registration is failed too. Registrations with no attempt at
+               all (staff-added / free coupon rows) are never touched. */
+            $db->beginTransaction();
+            $db->prepare("UPDATE payment_attempts SET status = 'failed', last_checked_at = NOW(), raw_status = ? WHERE id = ?")
+               ->execute(['expired link (unpaid after ' . OWLI_PENDING_DAYS . ' days)', (int)$a['id']]);
+            $live = $db->prepare("SELECT COUNT(*) FROM payment_attempts WHERE registration_id = ? AND status IN ('pending','paid')");
+            $live->execute([(int)$a['registration_id']]);
+            if ((int)$live->fetchColumn() === 0) {
+                $db->prepare("UPDATE registrations SET status = 'failed' WHERE id = ? AND status = 'pending'")->execute([(int)$a['registration_id']]);
+            }
+            $db->commit();
+            $n++;
+        } catch (Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            error_log('owli sweep: attempt #' . $a['id'] . ': ' . $e->getMessage());
+        }
+    }
+    return $n;
+}
+
 /** Best-effort confirmation email (never blocks or breaks the payment flow). */
 function owli_send_confirmation(PDO $db, int $regId): void
 {

@@ -187,16 +187,24 @@ try {
         owli_json(['ok' => false, 'error' => 'amount_too_low', 'message' => 'Please contact the organisers for this registration.'], 422);
     }
 
-    /* Reuse a pending registration for the same person (retry) instead of piling up rows. */
+    /* Reuse a pending OR abandoned-failed registration for the same person
+       (retry) instead of piling up rows. A failed row is revived: it is
+       flipped back to 'pending' first (a failed row must never look like a
+       live booking), then updated with the CURRENT tier price — the fresh
+       attempt is priced today, not at the price the old attempt died at. */
     $reg = null;
     $pend = $db->prepare(
-        "SELECT * FROM registrations WHERE mobile = ? AND email = ? AND status = 'pending'
-          AND created_at > (NOW() - INTERVAL 2 DAY) ORDER BY id DESC LIMIT 1"
+        "SELECT * FROM registrations WHERE mobile = ? AND email = ? AND status IN ('pending','failed')
+          ORDER BY id DESC LIMIT 1"
     );
     $pend->execute([$mobile, $email]);
     $reg = $pend->fetch() ?: null;
 
     if ($reg) {
+        if ((string)$reg['status'] === 'failed') {
+            $db->prepare("UPDATE registrations SET status = 'pending', paid_at = NULL WHERE id = ? AND status = 'failed'")
+               ->execute([(int)$reg['id']]);
+        }
         $db->prepare(
             "UPDATE registrations SET category=?, name=?, address=?, year_of_study=?, college=?, competitions=?,
                     chapter=?, organisation=?, qualification=?, clinic=?, coupon_code=?,

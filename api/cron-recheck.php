@@ -22,7 +22,9 @@ if (!owli_is_configured()) {
 }
 
 $db = owli_db();
-/* Attempts from the last 3 days; oldest-checked first; max 50 per run. */
+
+/* Pass 1 — late payments: attempts from the last 3 days; oldest-checked
+   first; max 50 per run. */
 $rows = $db->query(
     "SELECT * FROM payment_attempts
       WHERE status = 'pending' AND created_at > (NOW() - INTERVAL 3 DAY)
@@ -39,4 +41,19 @@ foreach ($rows as $row) {
         error_log('owli cron: ' . $e->getMessage());
     }
 }
-echo date('c') . " checked=" . count($rows) . " newly_paid=" . $paid . "\n";
+
+/* Pass 2 — abandoned payments (owner request 2026-10-25): registrations that
+   have sat pending far longer than any payment link lives get one LAST
+   verified look at Coaxlure, then flip to 'failed' so the dashboard stops
+   counting them as money that might still arrive. Coaxlure's own answer
+   still wins — the sweep can never mark a paid person failed. */
+$failed = 0;
+try {
+    $failed = owli_fail_stale_attempts($db);
+} catch (Throwable $e) {
+    error_log('owli cron sweep: ' . $e->getMessage());
+}
+
+echo date('c')
+    . " checked=" . count($rows) . " newly_paid=" . $paid
+    . " abandoned_failed=" . $failed . "\n";

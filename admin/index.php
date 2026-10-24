@@ -115,6 +115,12 @@ details{width:100%}
 summary{cursor:pointer;color:var(--color-accent);font-size:12.5px;font-weight:600;white-space:nowrap}
 .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
 .pill.paid{background:#DFF2E4;color:#1E5C33}.pill.pending{background:#FBF0D9;color:#7A5B12}.pill.failed{background:#F8E1E1;color:#8B2E2E}.pill.off{background:#eee;color:#666}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 2px}
+.chip{background:#fff;border:1px solid #e5ddcf;border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--color-dark-text);text-decoration:none;white-space:nowrap}
+.chip:hover{border-color:var(--color-secondary)}
+.chip b{color:var(--color-primary)}
+.chip.active{background:var(--color-primary);border-color:var(--color-primary);color:#fff}
+.chip.active b{color:#fff}
 form.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 form.filters label{display:flex;flex-direction:column;font-size:12px;color:var(--color-light-text);gap:4px}
 select,input[type=text],input[type=password]{border:1px solid #ccc;border-radius:8px;padding:8px 10px;font:14px Poppins,Arial,sans-serif;background:#fff;color:var(--color-dark-text)}
@@ -207,7 +213,10 @@ function admin_clear_fails(PDO $db): void
 /* ------------------------------------------------------------------ */
 /* Shared dashboard helpers                                            */
 /* ------------------------------------------------------------------ */
-/** Builds the WHERE clause (+ params) shared by the list, count and export. */
+/** Builds the WHERE clause (+ params) shared by the list, count and export.
+ *  Sorting (admin_speed) and source/coupon/age filters (admin_filters) build
+ *  on this. Everything is whitelist-driven — no SQL fragment ever comes
+ *  from the request, only bound parameters. */
 function admin_where(array $get): array
 {
     $where = [];
@@ -222,6 +231,24 @@ function admin_where(array $get): array
         $where[] = 'category = ?';
         $params[] = $cat;
     }
+    $src = (string)($get['source'] ?? '');
+    if (in_array($src, ['web', 'staff'], true)) {
+        $where[] = 'source = ?';
+        $params[] = $src;
+    }
+    $cpn = strtoupper(trim((string)($get['coupon'] ?? '')));
+    if ($cpn !== '' && preg_match('/^[A-Z0-9_-]{2,30}$/', $cpn) === 1) {
+        $where[] = 'coupon_code = ?';
+        $params[] = $cpn;
+    }
+    $age = (string)($get['age'] ?? '');
+    if (in_array($age, ['today', 'week', 'older'], true)) {
+        $where[] = match ($age) {
+            'today' => 'created_at >= (NOW() - INTERVAL 1 DAY)',
+            'week'  => 'created_at >= (NOW() - INTERVAL 7 DAY)',
+            default => 'created_at <  (NOW() - INTERVAL 7 DAY)',
+        };
+    }
     $q = trim((string)($get['q'] ?? ''));
     if ($q !== '') {
         $where[] = '(reference LIKE ? OR name LIKE ? OR mobile LIKE ? OR email LIKE ?)';
@@ -229,6 +256,36 @@ function admin_where(array $get): array
         array_push($params, $like, $like, $like, $like);
     }
     return [$where, $params];
+}
+
+/** Whitelisted ORDER BY for the list. Column names are code, not user input;
+ *  the only thing that varies is the direction. */
+function admin_order(array $get): string
+{
+    $cols = [
+        'newest'      => 'r.created_at DESC, r.id DESC',
+        'oldest'      => 'r.created_at ASC, r.id ASC',
+        'name'        => 'r.name ASC, r.id DESC',
+        'amount_high' => 'r.amount_paise DESC, r.id DESC',
+        'amount_low'  => 'r.amount_paise ASC, r.id DESC',
+        'status'      => "FIELD(r.status, 'pending', 'paid', 'failed'), r.id DESC",
+        'paid_recent' => 'r.paid_at DESC, r.id DESC',
+    ];
+    $k = (string)($get['sort'] ?? 'newest');
+    return $cols[$k] ?? $cols['newest'];
+}
+
+/** Quick-filter chip URLs for the dashboard: pre-baked combinations so the
+ *  useful questions ("unpaid", "who still owes money", "today's walk-ins")
+ *  are one click, and each chip shows its own live count. */
+function admin_chip(string $label, int $count, array $params, string $queryArg): string
+{
+    $qs = http_build_query(array_merge(['sort' => 'newest'], $params));
+    $active = ($queryArg === $qs) ? ' active' : '';
+    /* $label is a code constant and $count an int — the only user-influenced
+       part of the URL ($qs) is escaped. */
+    return '<a class="chip' . $active . '" href="./?' . e($qs) . '">' . e($label)
+         . ' <b>' . $count . '</b></a>';
 }
 
 /** Amount in paise -> "Rs 299" / "Rs 299.50" for the table. */
@@ -626,7 +683,7 @@ if ($loggedIn && ($_GET['export'] ?? '') === '1') {
                      WHERE pa2.registration_id = r.id ORDER BY pa2.id DESC LIMIT 1) AS last_attempt_raw
               FROM registrations r"
         . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
-        . " ORDER BY r.id DESC";
+        . " ORDER BY " . admin_order($_GET);
     $st = $db->prepare($sql);
     $st->execute($params);
     $rows = $st->fetchAll();
@@ -703,6 +760,36 @@ $sumSql = "SELECT COUNT(*) AS total,
     . "\n       FROM registrations";
 $sum = $db->query($sumSql)->fetch();
 
+/* --- pending-age breakdown + chip counts: the "how long is long" view ---
+   Pending is not one bucket: something 5 minutes old is being paid right
+   now, something 3 days old never will be. The summary splits pending by
+   age so the team can tell at a glance which need attention (and the
+   abandoned sweep will turn the stalest into 'failed' on its own). */
+$pendAges = $db->query(
+    "SELECT
+       COALESCE(SUM(created_at >= (NOW() - INTERVAL 1 HOUR)), 0)  AS p1h,
+       COALESCE(SUM(created_at <  (NOW() - INTERVAL 1 HOUR)), 0)   AS pStale
+       FROM registrations WHERE status = 'pending'"
+)->fetch();
+$p1h    = (int)($pendAges['p1h'] ?? 0);
+$pStale = (int)($pendAges['pStale'] ?? 0);
+
+/* chip counts (computed with the base filter set, not the page's filters,
+   so the numbers stay meaningful while a filter is active) */
+$chipCount = static function (array $get) use ($db): int {
+    [$w, $p] = admin_where($get);
+    $st = $db->prepare("SELECT COUNT(*) FROM registrations" . ($w ? ' WHERE ' . implode(' AND ', $w) : ''));
+    $st->execute($p);
+    return (int)$st->fetchColumn();
+};
+$chipAll      = $chipCount([]);
+$chipPaid     = $chipCount(['status' => 'paid']);
+$chipPending  = $chipCount(['status' => 'pending']);
+$chipFailed   = $chipCount(['status' => 'failed']);
+$chipStale    = $chipCount(['status' => 'pending', 'age' => 'older']);
+$chipToday    = $chipCount(['age' => 'today']);
+$chipStaff    = $hasSource ? $chipCount(['source' => 'staff']) : 0;
+
 /* --- filtered list, 50 per page --- */
 $perPage = 50;
 $pageNum = max(1, (int)($_GET['page'] ?? 1));
@@ -714,8 +801,8 @@ $pageNum = min($pageNum, $pages);
 $offset = ($pageNum - 1) * $perPage;
 
 $list = $db->prepare(
-    "SELECT * FROM registrations" . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
-    . " ORDER BY id DESC LIMIT $perPage OFFSET $offset"
+    "SELECT * FROM registrations r" . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
+    . " ORDER BY " . admin_order($_GET) . " LIMIT $perPage OFFSET $offset"
 );
 $list->execute($params);
 $rows = $list->fetchAll();
@@ -735,10 +822,34 @@ if ($rows) {
 /* --- filter form keeps its current values --- */
 $fStatus   = (string)($_GET['status'] ?? '');
 $fCategory = (string)($_GET['category'] ?? '');
+$fSource   = (string)($_GET['source'] ?? '');
+$fCoupon   = strtoupper(trim((string)($_GET['coupon'] ?? '')));
+$fAge      = (string)($_GET['age'] ?? '');
+$fSort     = (string)($_GET['sort'] ?? 'newest');
 $fQuery    = (string)($_GET['q'] ?? '');
 $queryArg  = http_build_query(array_filter([
-    'status' => $fStatus, 'category' => $fCategory, 'q' => $fQuery,
+    'status' => $fStatus, 'category' => $fCategory, 'source' => $fSource,
+    'coupon' => $fCoupon, 'age' => $fAge, 'sort' => $fSort, 'q' => $fQuery,
 ], static fn($v) => $v !== ''));
+
+/* --- the sticky parts the selects need to re-render correctly --- */
+$selSrcWeb    = 'web'    === $fSource ? ' selected' : '';
+$selSrcStaff  = 'staff'  === $fSource ? ' selected' : '';
+$selAgeToday  = 'today'  === $fAge    ? ' selected' : '';
+$selAgeWeek   = 'week'   === $fAge    ? ' selected' : '';
+$selAgeOlder  = 'older'  === $fAge    ? ' selected' : '';
+$sortOptions  = '';
+foreach ([
+    'newest'      => 'Newest first',
+    'oldest'      => 'Oldest first',
+    'name'        => 'Name A-Z',
+    'amount_high' => 'Amount: high to low',
+    'amount_low'  => 'Amount: low to high',
+    'status'      => 'Status: pending, paid, failed',
+    'paid_recent' => 'Most recently paid',
+] as $sk => $sl) {
+    $sortOptions .= '<option value="' . e((string)$sk) . '"' . ($sk === $fSort ? ' selected' : '') . '>' . e((string)$sl) . '</option>';
+}
 
 $noticeHtml = '';
 if (isset($notice)) {
@@ -1011,6 +1122,17 @@ $showing = $total === 0 ? '0' : ($offset + 1) . '–' . ($offset + count($rows))
 
 $mode = owli_registration_mode();
 
+/* --- chips: pre-baked one-click views (counts computed above) --- */
+$chipAllRow = admin_chip('All', $chipAll, [], $queryArg)
+    . admin_chip('Paid', $chipPaid, ['status' => 'paid'], $queryArg)
+    . admin_chip('Pending', $chipPending, ['status' => 'pending'], $queryArg)
+    . admin_chip('Failed', $chipFailed, ['status' => 'failed'], $queryArg)
+    . admin_chip('Stale pending (7+ days)', $chipStale, ['status' => 'pending', 'age' => 'older'], $queryArg)
+    . admin_chip('Last 24h', $chipToday, ['age' => 'today'], $queryArg)
+    . ($hasSource ? admin_chip('Staff-added', $chipStaff, ['source' => 'staff'], $queryArg) : '');
+
+$pendAgesHtml = $pStale > 0 ? 'an hour' : 'this whole time';
+
 /* --- values the heredoc below can only print as plain {$var} --- */
 $rupeesStr = static function (int $paise): string {
     $r = owli_rupees($paise);
@@ -1052,10 +1174,16 @@ page('Registrations', <<<HTML
     <div class="stat"><b>{$sum['total']}</b><span>Total registrations</span></div>
     <div class="stat"><b>{$sum['paid']}</b><span>Paid</span></div>
     <div class="stat"><b>{$sum['pending']}</b><span>Pending payment</span></div>
-    <div class="stat"><b>{$sum['failed']}</b><span>Failed</span></div>
+    <div class="stat"><b>{$sum['failed']}</b><span>Failed / abandoned</span></div>
     <div class="stat"><b>{$collectedStr}</b><span>Collected</span></div>
     <div class="stat"><b>{$awaitingStr}</b><span>Awaiting payment</span></div>
     {$staffStatHtml}
+  </div>
+
+  <p class="muted" style="margin:6px 0 0">Pending for {$pendAgesHtml}: {$p1h} within the last hour, {$pStale} older — the cron sweep moves anything still unpaid after 2 days to Failed automatically.</p>
+
+  <div class="chips">
+    {$chipAllRow}
   </div>
 
   <div class="card">
@@ -1065,7 +1193,7 @@ page('Registrations', <<<HTML
           <option value="">All</option>
           <option value="paid"{$selPaid}>Paid</option>
           <option value="pending"{$selPending}>Pending</option>
-          <option value="failed"{$selFailed}>Failed</option>
+          <option value="failed"{$selFailed}>Failed / abandoned</option>
         </select>
       </label>
       <label>Category
@@ -1073,6 +1201,27 @@ page('Registrations', <<<HTML
           <option value="">All</option>
           {$categoryOptions}
         </select>
+      </label>
+      <label>Source
+        <select name="source">
+          <option value="">All</option>
+          <option value="web"{$selSrcWeb}>Public website</option>
+          <option value="staff"{$selSrcStaff}>Added by staff</option>
+        </select>
+      </label>
+      <label>Coupon code
+        <input type="text" name="coupon" value="{$fCoupon}" placeholder="e.g. EARLY10">
+      </label>
+      <label>Registered
+        <select name="age">
+          <option value="">Any time</option>
+          <option value="today"{$selAgeToday}>Last 24 hours</option>
+          <option value="week"{$selAgeWeek}>Last 7 days</option>
+          <option value="older"{$selAgeOlder}>Older than 7 days</option>
+        </select>
+      </label>
+      <label>Sort by
+        <select name="sort">{$sortOptions}</select>
       </label>
       <label>Search
         <input type="text" name="q" value="{$fQuery}" placeholder="Reference, name, mobile or email">
@@ -1101,8 +1250,12 @@ page('Registrations', <<<HTML
 
   <footer>
     <p class="muted">Pending payments are re-checked automatically every 5 minutes by
-    api/cron-recheck.php (see README §10). “Recheck payment now” asks Coaxlure immediately
-    for one registration.</p>
+    api/cron-recheck.php. “Recheck payment now” asks Coaxlure immediately for one
+    registration. Registrations still pending after 2 days are moved to Failed by the
+    same cron (the abandoned-payment sweep) — after one final Coaxlure check, so a late
+    payment always wins. A failed pair can simply register again: the same row is
+    revived at the current price, and the failed history stays in the payment-attempt
+    log.</p>
   </footer>
 </div>
 HTML);
