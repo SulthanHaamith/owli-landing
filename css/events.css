@@ -515,7 +515,9 @@ body.events-page {
 }
 
 @media (min-width: 768px) {
-  .ev-audience-grid { grid-template-columns: repeat(3, 1fr); }
+  /* 4 columns since the 1000+ General Public card joined the grid (owner
+     request 2026-10-25) — the same 4-up pattern as the stats row above. */
+  .ev-audience-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 

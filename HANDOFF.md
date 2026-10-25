@@ -72,7 +72,7 @@ an admin digest every 2 days.
 | Check | Result |
 |---|---|
 | Deploy | ✅ `241a16f` live on Hostinger; assets match the repo |
-| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda + Google Form links live |
+| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda (all four speakers named) + competition form links live |
 | API | ✅ healthy — `mode:"open"`; docs + internal files all 403-blocked |
 | **Prices (live DB)** | ✅ **student ₹349 · doctor ₹399 · bni ₹399 · general ₹449** (real prices; no ₹10 tier remains) |
 | Coaxlure paid detection | ✅ live-proven with the real ₹10 payment (`AP26-WC4DV9`, paid) |
@@ -252,7 +252,7 @@ number exists — the attendee's mobile is what Coaxlure receives.
 | Check | Command | What it protects |
 |---|---|---|
 | Pre-deploy validation (**72 checks**) | `php scripts/validate.php` (or `docker exec owli-web php /srv/public_html/scripts/validate.php`) | Config, DB+schema, all endpoints, admin, cron, doc/internal-file web-blocks, lookup card, button-visibility CSS, box order, tier sanity (≥ ₹50), Coaxlure reachability (no creds sent) |
-| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**369 keys**, incl. agenda + competitions) |
+| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**371 keys**, incl. agenda + competitions) |
 | Pay-flow regression | `node scripts/check-pay-flow.js` | New-tab navigation contract, **label contract** (no invisible buttons), no reopen link, check-status button, WhatsApp/ticket action counts — scenarios A–H |
 | Lint | `php -l <file>` / `node --check <file>` | Syntax before any commit |
 | Mobile audit | headless-Chrome script — see `LOCAL-TESTING.md` §4.6 | 375/414/768px: no horizontal scroll, ≥40px tap targets |
@@ -321,7 +321,6 @@ case studies from this project.
 | Test rows | `AP26-WC4DV9` (paid ₹10) / `AP26-5DC2FK` (stale) — §4 step 6 |
 | Coaxlure "Test Mode" wording seen on checkout | confirm with Coaxlure support before heavy marketing |
 | Admin "last cron ran" display | offered, not built — hPanel cron page shows output instead |
-| 4th scientific session speaker TBA | placeholder sub-line on `/events/` — confirm with the team |
 | `arokyapayanam@…` Reply-To mailbox | confirm it exists (hPanel → Emails) so attendees can reply |
 
 ---
@@ -358,7 +357,7 @@ case studies from this project.
   the `wa.me` handoff (official number +91 63796 10554, event + Booking ID
   pre-typed) covers the need. Upgrade path documented in `CHANGE-LOG.md`.
 - **i18n:** all visible strings via `data-i18n` keys in `js/i18n.js`,
-  EN + TA parity enforced (**369 keys**). The admin console is English-only by
+  EN + TA parity enforced (**371 keys**). The admin console is English-only by
   design.
 - **Marketing price display:** the price list shows strikethrough
   "before" prices from `strikePrices` in `js/event-config.js` (2026-10-26
@@ -395,8 +394,10 @@ case studies from this project.
 
 ---
 
-*End of handoff. Refreshed 2026-10-26 after the owner-docx content deploy
-(official agenda, new emails, ₹349 student, strikethrough prices) and a fresh
-audit of the live site, local stack, and full test battery (72/72 validate,
-369/369 i18n, pay-flow PASS). Everything stated above was verified live
-except where marked as a pending owner action.*
+*End of handoff. Refreshed 2026-10-25 after filling in Scientific Session 4
+(Dr. L. Beena Theres + the hypertension topic) and adding the 1000+ General
+Public audience card, on top of the owner-docx content deploy (official
+agenda, new emails, ₹349 student, strikethrough prices). Fresh audit of the
+live site, local stack, and full test battery (72/72 validate, 371/371 i18n,
+pay-flow PASS). Everything stated above was verified live except where
+marked as a pending owner action.*
