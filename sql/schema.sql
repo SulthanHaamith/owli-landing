@@ -103,10 +103,12 @@ CREATE TABLE IF NOT EXISTS payment_attempts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ------------------------------------------------------------
--- Starting prices (INR): Students 299, BNI 399, Doctors 399, General 449
+-- Starting prices (INR): Students 349, BNI 399, Doctors 399, General 449
+-- (owner price update 2026-10-26; run sql/update-tiers-2026-price.sql on an
+--  existing database, or re-import this block for a fresh install)
 -- ------------------------------------------------------------
 INSERT INTO tiers (id, category, label, amount_paise) VALUES
-  (1, 'student', 'Standard', 29900),
+  (1, 'student', 'Standard', 34900),
   (2, 'bni',     'Standard', 39900),
   (3, 'doctor',  'Standard', 39900),
   (4, 'general', 'Standard', 44900)

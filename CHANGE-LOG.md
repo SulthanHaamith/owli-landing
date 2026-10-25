@@ -5,6 +5,55 @@
 > log** — it was split out on 2026-10-26 to keep context small (CLAUDE.md < 30k).
 > Every `.md` in this repo is web-blocked by the root `.htaccess`.
 
+## 2026-10-26 — Website corrections from owner docx + preserved price work
+
+**Source:** `/home/sulthan-20091/Downloads/website correction f.docx` (owner
+correction document) + the owner's request to push the pending uncommitted
+price work in the same commit.
+
+**Email corrections (all Gmail addresses retired):**
+- Homepage: `owli2026@gmail.com` → `support@owlihealthcare.com` (JSON-LD
+  schema, contact info card, booking-form fallback, footer; the JS fallback in
+  `contact.js` updated too).
+- Event page + API: `arokyapayanam@gmail.com` →
+  `arokyapayanam@owlihealthcare.com` (registration contact row, confirmation
+  email body + Reply-To in `_bootstrap.php`, ticket-PDF footer in
+  `ticket.php`). Docs updated to match (CLAUDE.md, docs/CLAUDE-*, PRD.md).
+  No Gmail address remains in any served file (verified).
+
+**Agenda replaced with the official programme (events page):**
+- 4 scientific sessions with named speakers + credentials as sub-lines
+  (Dr. Saranya D., Dr. Kalaiselvan G., Dr. Priya P., 4th TBA), 4 panel
+  discussions, yoga + cultural performances, Guest of Honour, felicitation,
+  prize distribution 3:20–3:45 P.M., separate anthem/photo close at 3:50–4:00.
+- Speaker sub-line styling added (`.ev-agenda-speaker`) — green on the dark
+  session rows, muted on light rows.
+- About text and meta description: "six 45-min sessions" → "four scientific
+  sessions + four panel discussions".
+- Stats: sessions 6→4, minutes 45→40, participants 350+ → expected footfall
+  1350+; audience footfall line updated to match.
+- Prize-distribution timing corrected to 3:20–3:45 P.M. everywhere.
+- Competition cards now carry the two Google-Form links from the docx
+  (competition registration form + reels-link submission form), 40px tap
+  targets, new tab + `noopener noreferrer`.
+
+**Preserved owner work (was uncommitted in the tree, now committed):**
+- Student tier ₹299 → ₹349 (schema.sql, README, PRD) — the live DB already has
+  this price applied by the owner.
+- Marketing strikethrough prices in the category price list
+  (`event-config.js` `strikePrices`, `event-register.js` render, events.css).
+- `sql/update-tiers-2026-price.sql` — the owner's phpMyAdmin recipe (₹349
+  student, ₹449 general restore) with check lines.
+- `validate.php` gained a leftover-test-price guard: any tier priced below
+  ₹50 (e.g. a forgotten ₹10 test price) fails validation with the restore
+  recipe — suite is now **72/72**.
+
+**Verified:** `php -l` on changed PHP, `node --check` on changed JS, i18n
+parity **369/369** (EN=TA, all page keys, all runtime keys), pay-flow
+regression PASS, `validate.php` **72/72**, no Gmail address in any served
+file, cache busts bumped (`i18n.js?v=9`, `event-config.js?v=8`,
+`events.css?v=4`).
+
 ## Entries
 
 - **2026-10-26 — HANDOFF.md: complete project handoff document (final session).** The owner requested a full, miss-nothing handoff as the final task. `HANDOFF.md` was written after a fresh live audit (deploy `d231d1b` verified on the real domain: assets byte-identical, `mode:"open"`, prices student 299/doctor 399/bni 393 — see below, ticket PDF streaming 200, docs 403-blocked, `www.` serving without redirect, `og-image.jpg` 404, no coupon codes in the live DB, test rows `AP26-WC4DV9` paid + `AP26-5DC2FK` stale pending). Contents: the five most urgent facts (registration LIVE at the ₹10 test price → the tier change is action #1), what the project is + architecture, the exact live status table, **the complete "change a tier price" procedure** (₹10 → ₹499 with the `UPDATE tiers SET amount_paise = 49900 WHERE category = 'general'` SQL, paise maths, instant-effect verification via `quote.php`, what it affects/doesn't, early-bird INSERT recipe, and the two doc lines to update once ₹499 is permanent), the ordered pending-owner-actions list (tier change → two ALTERs → validate → coupon packs → digest_to → mailbox check → optional test-row cleanup → Coaxlure live-mode confirmation → content items), operating instructions (two-switch system with the `'preview'` kill switch, where every secret/cron/config lives, money flow, identity rules), the full testing/verification matrix (all three checkers + lint + mobile audit + live smoke commands), eight non-negotiable safety rules (secrets hygiene, server-only pricing, web-row immutability, doc web-blocking, one-edit rollback, cache-busting discipline, schema/migration sync, dev/live credential separation), known open items, key technical facts (paise integers, `AP26-XXXXXX` refs, ticket internals, cron's 3 passes, new-tab navigation contract, page order contract, free-coupon flow, wa.me-over-Cloud-API decision), the document index, and the post-event retirement checklist. **Guard:** `scripts/validate.php` now also requires `HANDOFF.md` to be web-blocked (71 checks total) — the handoff contains live-server operational detail and must never be served. Cross-links added: README §2 file map lists `HANDOFF.md` as "START HERE", and CLAUDE.md §19's docs table points to it first. Verified: `php -l` clean on validate.php, suite 71/71 in the local Docker stack, `HANDOFF.md` returns 403/404 over HTTP (the `.htaccess` `*.md` block), no secrets in the committed file (it names the config path and user IDs but no credential values), and the repo pushed clean.

@@ -64,7 +64,7 @@ Name:      Owl I Health Care Centre
 Address:   1/120G1, Vishalachi Nagar, Kondanagaram, Suthamalli, Tirunelveli - 627604
 Phone:     +91 6379610554
 WhatsApp:  +91 6379610554
-Email:     owli2026@gmail.com
+Email:     support@owlihealthcare.com (homepage) · arokyapayanam@owlihealthcare.com (event)
 Hours:     Monday to Sunday: 9:00 AM – 8:00 PM
            Open all days.
 Domain:    owlihealthcare.com

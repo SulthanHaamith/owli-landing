@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var WHATSAPP_NUMBER = '916379610554';
 
   /** @type {string} Fallback email address */
-  var FALLBACK_EMAIL = 'owli2026@gmail.com';
+  var FALLBACK_EMAIL = 'support@owlihealthcare.com';
 
   /** @type {number} Rate limit cooldown in seconds */
   var RATE_LIMIT_SECONDS = 10;

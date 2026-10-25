@@ -20,6 +20,6 @@
 ### Email Link
 | Purpose           | URL                              |
 |--------------------|----------------------------------|
-| Fallback contact   | `mailto:owli2026@gmail.com`      |
+| Fallback contact   | `mailto:support@owlihealthcare.com` |
 
 ---

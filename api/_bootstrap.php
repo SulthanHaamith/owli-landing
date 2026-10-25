@@ -621,10 +621,10 @@ function owli_send_confirmation(PDO $db, int $regId): void
               . "You can re-download the ticket any time from the event page using your ID.\r\n"
               . "Date: Sunday, 15 November 2026, 9:00 A.M. - 4:00 P.M.\r\n"
               . "Venue: AR Group of Institutions, Kadayam, Tirunelveli\r\n\r\n"
-              . "Please keep this ID for the event. Questions? WhatsApp +91 6379610554 or arokyapayanam@gmail.com.\r\n\r\n"
+              . "Please keep this ID for the event. Questions? WhatsApp +91 6379610554 or arokyapayanam@owlihealthcare.com.\r\n\r\n"
               . "Owl I Health Care Centre";
         $headers = "From: Owl I Health Care Centre <" . $from . ">\r\n"
-                 . "Reply-To: arokyapayanam@gmail.com\r\n"
+                 . "Reply-To: arokyapayanam@owlihealthcare.com\r\n"
                  . "Content-Type: text/plain; charset=UTF-8";
         $subject = '=?UTF-8?B?' . base64_encode('Registration confirmed - Arokya Payanam 2026') . '?=';
         @mail($r['email'], $subject, $body, $headers);

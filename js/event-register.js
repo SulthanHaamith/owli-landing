@@ -131,6 +131,7 @@
 
   function renderPriceList(prices) {
     priceList.textContent = '';
+    var strike = (typeof cfg.strikePrices === 'object' && cfg.strikePrices) || {};
     CATS.forEach(function (c) {
       if (prices[c] === undefined) return;
       var li = document.createElement('li');
@@ -139,7 +140,17 @@
       label.setAttribute('data-i18n', 'evf_cat_' + c);   /* i18n.js keeps this translated */
       label.textContent = t('evf_cat_' + c);
       var amt = document.createElement('strong');
-      amt.textContent = money(prices[c]);
+      /* Marketing flair: crossed-out "original" price + the real price in a bright colour. */
+      if (strike[c] !== undefined && strike[c] > prices[c]) {
+        var del = document.createElement('del');
+        del.className = 'ev-price-old';
+        del.textContent = money(strike[c]);
+        amt.appendChild(del);
+      }
+      var cur = document.createElement('span');
+      cur.className = 'ev-price-now';
+      cur.textContent = money(prices[c]);
+      amt.appendChild(cur);
       li.appendChild(label);
       li.appendChild(amt);
       priceList.appendChild(li);

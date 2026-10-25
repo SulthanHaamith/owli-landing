@@ -303,7 +303,7 @@ The event lives in three places, all controlled from one switch:
 
 The form on `/events/` (`#register-form`) takes the attendee's details, works out the price **on the server**, and sends them to Coaxlure's hosted payment page. Registrations live in a MySQL database.
 
-**Prices (no GST):** Students ₹299 · BNI members ₹399 · Doctors ₹399 · General public ₹449. The dropdown shows these as a price list, highlights the selected category, and shows "Amount to pay". The browser never sends an amount; `api/register.php` looks it up in the `tiers` table.
+**Prices (no GST):** Students ₹349 · BNI members ₹399 · Doctors ₹399 · General public ₹449. The dropdown shows these as a price list, highlights the selected category, and shows "Amount to pay". The browser never sends an amount; `api/register.php` looks it up in the `tiers` table.
 
 | File | Role |
 |---|---|

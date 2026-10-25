@@ -41,6 +41,10 @@ window.OWLI_EVENT = {
   /* Optional external link (legacy). If set, buttons open it instead of the form. */
   registrationUrl: '',
 
+  /* DISPLAY-ONLY crossed-out "original" prices (marketing strikethrough).
+     The server always re-prices from the tiers table — this is never sent. */
+  strikePrices: { student: 449, general: 549, bni: 499, doctor: 499 },
+
   /* The banner stops showing after this moment (the day after the event, IST). */
   endDate: '2026-11-16T00:00:00+05:30'
 };

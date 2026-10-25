@@ -121,7 +121,7 @@
   - Expectation note under form: "Appointments are confirmed after our team responds."
   - Submit action: open WhatsApp with pre-filled message; success message is bilingual and appends the same confirmation line
   - URL format: `https://wa.me/916379610554?text=Name: ...%0APhone: ...%0AService: ...%0AMessage: ...`
-  - Fallback: mailto link to owli2026@gmail.com
+  - Fallback: mailto link to support@owlihealthcare.com
 - **Right column — Info:**
   - Address, Phone (tel: link), WhatsApp (wa.me link), Email (mailto: link), Hours
   - Google Maps embed (real coordinates: 8.7134811, 77.623205)

@@ -120,7 +120,7 @@ The homepage at `/` must provide:
 - Optional fields: email, service, and message.
 - Client-side validation for required fields, email format, and Indian mobile format.
 - Submission opens a pre-filled WhatsApp message.
-- A mailto fallback points to `owli2026@gmail.com`.
+- A mailto fallback points to `support@owlihealthcare.com`.
 - The UI must explain that appointments are confirmed only after the clinic responds.
 
 ### 4.4 Event information page
@@ -131,7 +131,7 @@ The page at `/events/` must present Arokya Payanam 2026 details:
 - Time: 9:00 A.M. – 4:00 P.M.
 - Venue: AR Group of Institutions, Kadayam, Tirunelveli.
 - Theme: Yoga and Naturopathy for a Stronger and Healthier You.
-- Six expert sessions and three competitions.
+- Four expert scientific sessions, four panel discussions and three competitions.
 - Full agenda, objectives, target audience, competition information, contact details, and registration area.
 - Event structured data using Schema.org `Event` markup.
 - Links back to the clinic homepage and the shared language toggle.
@@ -144,7 +144,7 @@ The page at `/events/` must present Arokya Payanam 2026 details:
   - BNI members: chapter and organisation.
   - Doctors: qualification and optional clinic/hospital.
 - Current starting prices, controlled by the database:
-  - Student: ₹299.
+  - Student: ₹349.
   - BNI: ₹399.
   - Doctor: ₹399.
   - General: ₹449.

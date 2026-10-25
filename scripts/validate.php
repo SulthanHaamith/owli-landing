@@ -166,6 +166,20 @@ if ($dbOk) {
         }
         check("price tier: $c", (bool)$row && (int)$row['n'] > 0, $row ? ('Rs ' . owli_rupees((int)$row['price'])) : 'no active tier');
     }
+    /* 2026-10-26 (owner price update via /home/sulthan-20091/Downloads docx):
+       the DB tier prices are OWNER-CONTROLLED at runtime (phpMyAdmin UPDATE,
+       see sql/update-tiers-2026-price.sql + HANDOFF.md §3) — student 349,
+       doctor 399, bni 399, general 449. The check above proves each tier
+       EXISTS and is active; this sanity check only flags a tier that has
+       drifted below Coaxlure's Rs 1 floor or looks like a leftover TEST
+       price (Rs 10/100) forgotten in production. */
+    $testPrices = [];
+    foreach ($cats as $x) {
+        $p = (int)$x['price'];
+        if ($p > 0 && $p < 5000) { $testPrices[] = $x['category'] . ' Rs ' . owli_rupees($p); }
+    }
+    check('no leftover test-tier prices (< Rs 50)', empty($testPrices),
+        $testPrices ? 'looks like a TEST price still set: ' . implode(', ', $testPrices) . ' — restore it via sql/update-tiers-2026-price.sql' : '');
     $regCount = (int)$db->query("SELECT COUNT(*) FROM registrations")->fetchColumn();
     note("registrations in DB: $regCount");
 }

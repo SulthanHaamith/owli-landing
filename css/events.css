@@ -584,6 +584,21 @@ body.events-page {
   margin-bottom: 2px;
 }
 
+/* Speaker sub-line under each scientific session (owner agenda update
+   2026-10-26: named speakers + credentials). Muted, smaller, wraps
+   gracefully on phones; green inside the dark .session rows. */
+.ev-agenda-speaker {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-light-text);
+  line-height: 1.45;
+}
+.ev-agenda-item.session .ev-agenda-speaker {
+  color: var(--color-light-green);
+}
+
 .ev-agenda-item.session {
   background-color: var(--color-primary);
 }
@@ -656,7 +671,26 @@ body.events-page {
 
 .ev-comp-card h3 {
   font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+/* Google-Form registration link inside each competition card
+   (owner request 2026-10-26). Green, tappable (40px), opens in a
+   new tab with rel="noopener noreferrer". */
+.ev-comp-link {
   margin-bottom: 0;
+}
+.ev-comp-link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+.ev-comp-link a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
 }
 
 .ev-comp-info {
@@ -876,6 +910,17 @@ body.events-page {
   color: var(--color-primary);
   font-weight: 600;
 }
+/* Marketing flair: crossed-out "original" price + the real price in a bright colour.
+   Values come from js/event-config.js (display only — the server always re-prices). */
+.ev-price-list .ev-price-old {
+  color: var(--color-light-text);
+  font-weight: 500;
+  font-size: 0.9em;
+  margin-right: 8px;
+  text-decoration: line-through;
+}
+.ev-price-list .ev-price-now { color: #e85d04; font-weight: 700; }
+.ev-price-list li.is-selected .ev-price-now { color: #d94f04; }
 .ev-pay-btn { width: 100%; min-height: 50px; font-size: 1.05rem; }
 .ev-pay-btn:disabled { opacity: 0.6; cursor: wait; }
 .ev-form-note { font-size: 0.82rem; color: var(--color-light-text); text-align: center; margin-top: 10px; }

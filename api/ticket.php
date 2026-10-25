@@ -250,7 +250,7 @@ function owli_ticket_pdf(array $reg): string
     $pdf->SetFont('MuktaMalar', '', 9);
     $pdf->SetTextColor(0x6B, 0x7B, 0x6B);
     $pdf->SetXY(20, 258);
-    $pdf->Cell(0, 5, 'Questions: WhatsApp +91 63796 10554  |  arokyapayanam@gmail.com', 0, 1, 'L');
+    $pdf->Cell(0, 5, 'Questions: WhatsApp +91 63796 10554  |  arokyapayanam@owlihealthcare.com', 0, 1, 'L');
     $pdf->SetXY(20, 265);
     $pdf->Cell(0, 5, 'This ticket is valid only with the payment recorded against this Booking ID.', 0, 1, 'L');
     $pdf->SetXY(20, 272);
