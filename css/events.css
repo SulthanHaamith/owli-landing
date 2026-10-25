@@ -693,6 +693,34 @@ body.events-page {
   text-decoration: underline;
 }
 
+/* One common registration link for ALL competitions (owner request
+   2026-10-25): the fireless-cooking and poster cards no longer carry
+   individual form links — this single button (below the grid) registers
+   for any of them. The reels card keeps its own submission link. */
+.ev-comp-common {
+  text-align: center;
+  margin: 4px 0 24px;
+}
+.ev-comp-common a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 24px;
+  border: 2px solid var(--color-secondary);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  background-color: var(--color-white);
+}
+.ev-comp-common a:hover,
+.ev-comp-common a:focus {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
 .ev-comp-info {
   display: grid;
   grid-template-columns: 1fr;

@@ -401,7 +401,8 @@ const translations = {
     ev_comp_arr_4: 'Each competition will also be organised independently to avoid interference between competitions.',
     ev_prize_title: 'Prize Distribution',
     ev_prize_text: 'Winners of the Reels Competition, Fireless Cooking Competition and Poster Presentation will be recognised on the main stage from 3:20 P.M. to 3:45 P.M.',
-    ev_comp_register: 'Register for the competition →',
+    ev_comp_register: 'Register for the competitions →',
+    ev_comp_reels: 'Submit your reels link →',
 
     /* --- Events page: organisers + misc --- */
     ev_org_title: 'Organised By / In Association With',
@@ -842,7 +843,8 @@ const translations = {
     ev_comp_arr_4: 'போட்டிகளுக்கிடையே குறுக்கீடு ஏற்படாமல் ஒவ்வொரு போட்டியும் தனித்தனியாக நடத்தப்படும்.',
     ev_prize_title: 'பரிசளிப்பு',
     ev_prize_text: 'ரீல்ஸ் போட்டி, நெருப்பில்லா சமையல் போட்டி மற்றும் போஸ்டர் விளக்கக்காட்சி வெற்றியாளர்கள் மாலை 3:20 முதல் 3:45 வரை முதன்மை மேடையில் கௌரவிக்கப்படுவார்கள்.',
-    ev_comp_register: 'போட்டிக்குப் பதிவு செய்யுங்கள் →',
+    ev_comp_register: 'போட்டிகளுக்குப் பதிவு செய்யுங்கள் →',
+    ev_comp_reels: 'உங்கள் ரீல்ஸ் இணைப்பைச் சமர்ப்பிக்கவும் →',
 
     /* --- நிகழ்வுப் பக்கம்: ஏற்பாட்டாளர்கள் + பிற --- */
     ev_org_title: 'ஏற்பாடு / இணைந்து நடத்துவோர்',
