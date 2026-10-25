@@ -515,9 +515,11 @@ body.events-page {
 }
 
 @media (min-width: 768px) {
-  /* 4 columns since the 1000+ General Public card joined the grid (owner
-     request 2026-10-25) — the same 4-up pattern as the stats row above. */
-  .ev-audience-grid { grid-template-columns: repeat(4, 1fr); }
+  /* 3 columns again — the General Public count card was removed and the
+     Students card raised to 1000+ (owner correction 2026-10-26). Four
+     columns would leave an empty slot beside three cards. The full-width
+     General Public description card below the grid is unchanged. */
+  .ev-audience-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 

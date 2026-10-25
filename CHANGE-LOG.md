@@ -5,6 +5,16 @@
 > log** — it was split out on 2026-10-26 to keep context small (CLAUDE.md < 30k).
 > Every `.md` in this repo is web-blocked by the root `.htaccess`.
 
+## 2026-10-26 — Audience figures corrected (owner follow-up)
+
+**Owner message:** *"Remove the general Public and put 1000+ students that will do. Don't complicate and push quickly."* This supersedes the "1000+ General Public" audience card added earlier the same day.
+
+- **General Public count card removed** from the "Who Will Attend" grid (`ev_aud_public_count`) — back to three cards. The full-width General Public *description* card below the grid and the "General Public" registration category are unchanged.
+- **Students card raised 200+ → 1000+**, and the footfall sentence (`ev_aud_footfall`, EN + தமிழ் + HTML fallback) now reads "including 1000+ students" so the card and the sentence agree. Total expected footfall stays 1350+.
+- **Grid back to 3 columns** on ≥768px (`events.css`) — a 4-column grid would leave an empty slot beside three cards. The orphaned `ev_aud_public_count` key was removed from both i18n blocks (parity 370/370).
+- **Cache bumps:** `i18n.js?v=11→12` (both pages), `events.css?v=6→7` (events page).
+- **Verified:** `node --check` clean, `check-i18n.js` PASS, `check-pay-flow.js` all scenarios PASS, `validate.php` 72/72 in the local Docker stack; the served page shows 1000+ Students / 100+ Doctors / 50+ BNI with no General Public count card.
+
 ## 2026-10-26 — Website corrections from owner docx + preserved price work
 
 **Source:** `/home/sulthan-20091/Downloads/website correction f.docx` (owner

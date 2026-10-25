@@ -351,10 +351,9 @@ const translations = {
     ev_aud_students: 'Naturopathy Students',
     ev_aud_doctors: 'Doctors & Healthcare Professionals',
     ev_aud_bni: 'BNI Members & Business Community',
-    ev_aud_public_count: 'General Public',
     ev_aud_public_title: 'General Public',
     ev_aud_public: 'Health-conscious individuals, families and people interested in healthy living, Yoga, Naturopathy and preventive wellness.',
-    ev_aud_footfall: 'Expected total footfall: 1350+ participants, including 200+ students, doctors, BNI members and the general public.',
+    ev_aud_footfall: 'Expected total footfall: 1350+ participants, including 1000+ students, doctors, BNI members and the general public.',
 
     /* --- Events page: agenda --- */
     ev_agenda_title: 'Agenda of the Event',
@@ -794,10 +793,9 @@ const translations = {
     ev_aud_students: 'இயற்கை மருத்துவ மாணவர்கள்',
     ev_aud_doctors: 'மருத்துவர்கள் & சுகாதார நிபுணர்கள்',
     ev_aud_bni: 'BNI உறுப்பினர்கள் & வணிக சமூகத்தினர்',
-    ev_aud_public_count: 'பொதுமக்கள்',
     ev_aud_public_title: 'பொதுமக்கள்',
     ev_aud_public: 'ஆரோக்கியத்தில் அக்கறையுள்ளவர்கள், குடும்பங்கள் மற்றும் ஆரோக்கிய வாழ்வு, யோகா, இயற்கை மருத்துவம், நோய்த் தடுப்பு நல்வாழ்வில் ஆர்வமுள்ளவர்கள்.',
-    ev_aud_footfall: 'எதிர்பார்க்கப்படும் மொத்த வருகை: 1350+ பங்கேற்பாளர்கள் — 200+ மாணவர்கள், மருத்துவர்கள், BNI உறுப்பினர்கள் மற்றும் பொதுமக்கள் உட்பட.',
+    ev_aud_footfall: 'எதிர்பார்க்கப்படும் மொத்த வருகை: 1350+ பங்கேற்பாளர்கள் — 1000+ மாணவர்கள், மருத்துவர்கள், BNI உறுப்பினர்கள் மற்றும் பொதுமக்கள் உட்பட.',
 
     /* --- நிகழ்வுப் பக்கம்: நிகழ்ச்சி நிரல் --- */
     ev_agenda_title: 'நிகழ்ச்சி நிரல்',
