@@ -7,8 +7,10 @@
 > specification), `GO-LIVE-STEPS.md` (the payment-test runbook),
 > `API-TROUBLESHOOTING.md` (the debugging runbook).
 >
-> **Last updated: 2026-10-24.** Git: `main` = 980d624 (clean, pushed, deployed).
-> This file is web-blocked by the root `.htaccess` — it is for the team, not the public.
+> **Last updated: 2026-10-26 (status refresh; for the newest numbers see
+> `HANDOFF.md` — it supersedes this file's figures).** Git: `main` is clean,
+> pushed, deployed. This file is web-blocked by the root `.htaccess` — it is
+> for the team, not the public.
 
 ---
 
@@ -34,17 +36,17 @@ with an event registration + payment backend for **Arokya Payanam 2026**:
 
 ---
 
-## 2. Current live status — verified 2026-10-24
+## 2. Current live status — verified 2026-10-24 (numbers refreshed 2026-10-26)
 
 | Check | Result |
 |---|---|
 | Deploy (latest code on Hostinger) | ✅ live — assets match the repo exactly (`event-config.js`, `event-register.js`, `i18n.js`) |
-| Repo → GitHub → Hostinger | ✅ `main` clean & pushed (980d624) |
-| Public site, events page, admin, robots | ✅ all HTTP 200 |
-| API | ✅ healthy — `mode:"open"` — **registration is LIVE at ₹10 (General)** |
-| Prices (live DB) | student ₹299 · doctor ₹399 · bni ₹399 · **general ₹10 (test price)** |
+| Repo → GitHub → Hostinger | ✅ `main` clean & pushed |
+| Public site, events page, admin, robots | ✅ all HTTP 200 — incl. the **official agenda, named speakers, competition Google-Form links and the new `support@`/`arokyapayanam@` emails** (owner docx, 2026-10-26; no Gmail address remains in any served file) |
+| API | ✅ healthy — `mode:"open"` — **registration is LIVE at the real prices** |
+| Prices (live DB) | ✅ **student ₹349 · doctor ₹399 · bni ₹399 · general ₹449** (the ₹10 test tier has been restored — nothing below ₹50 remains, and `validate.php` now guards that) |
 | Docs off the web | ✅ `GO-LIVE-STEPS.md`, `README.md`, `scripts/`, `sql/`, `api/_bootstrap.php` → all HTTP 403 |
-| Validation suite (local) | ✅ **59/59 checks passed** · pay-flow regression `check-pay-flow.js` **all scenarios PASS** (incl. the new label contract) |
+| Validation suite (local) | ✅ **72/72 checks passed** · i18n parity **369/369** · pay-flow regression `check-pay-flow.js` **all scenarios PASS** (incl. the label contract) |
 | Coaxlure integration | ✅ live-tested — the ₹10 test payment was captured and detected as paid |
 | Payment navigation (new tab only) | ✅ fixed 2026-10-24 — the form page no longer hijacks itself to the payment page (was a `noopener`+`window.open` return-value bug); guarded by `scripts/check-pay-flow.js` |
 | Coupons in live DB | ❌ **none yet** (`EARLY10`/`PAYANAM20` → `invalid`) |
@@ -59,6 +61,12 @@ attempt found were fixed and verified live (see §4).
 pending for more than **2 days** are moved to `failed` by the cron's sweep
 (after one final Coaxlure check — a late payment still wins), and the admin
 console gained **sorting + one-click filter chips + new filters** (see §4).
+
+**New (2026-10-26): the owner-docx corrections are live** — official programme
+(4 scientific sessions with named speakers, prize distribution 3:20–3:45 PM),
+stats updated to the real footfall figures, both Google-Form competition
+links, the email corrections, and the preserved price work (₹349 student +
+marketing strikethrough prices). Details in `CHANGE-LOG.md`.
 
 ---
 
@@ -98,16 +106,13 @@ was publicly served — that hole is now closed, see §4.)
 
 ### Step 3 — decide the registration window
 
-Both switches are `open` right now. General is ₹10 for your testing — anyone who
-finds the form in that window pays ₹10. So either:
-
-- **Keep testing** — leave everything as is; restore the tier when done:
-  ```sql
-  UPDATE tiers SET amount_paise = 44900 WHERE category = 'general';
-  ```
-- **Or pause registrations** — File Manager → `owli-config.php` → change
-  `'mode' => 'open'` to `'preview'` (instant; the form locks, no deploy needed).
-  Restore to `'open'` whenever you want to accept registrations again.
+Both switches are `open` and **the real prices are live** (student ₹349 ·
+doctor ₹399 · BNI ₹399 · general ₹449 — the ₹10 test tier was restored on
+2026-10-26). Registration is fully live at real prices. To pause it at any
+time: File Manager → `owli-config.php` → change `'mode' => 'open'` to
+`'preview'` (instant; the form locks, no deploy needed). Restore to `'open'`
+whenever you want to accept registrations again. To change any price, see
+`HANDOFF.md` §3 (one SQL line, instant).
 
 ### Step 4 (optional) — clean up the two test rows
 
@@ -341,9 +346,15 @@ re-skin scoped to `.ev-status-box .btn-secondary`).
 
 1. Run the **two ALTERs** in §3 Step 1 (phpMyAdmin).
 2. Generate the **three coupon packs** in the admin console (§3 Step 2).
-3. Decide the ₹10 test-price window (§3 Step 3 — General is still ₹10).
-4. Set **`digest_to`** in `owli-config.php` (§3 Step 5) — enables the 2-day admin email.
-5. Re-run `php public_html/scripts/validate.php` after the ALTERs (§3 Step 6).
+3. Set **`digest_to`** in `owli-config.php` (§3 Step 5) — enables the 2-day admin email
+   (use the new `arokyapayanam@owlihealthcare.com` address).
+4. Re-run `php public_html/scripts/validate.php` after the ALTERs (§3 Step 6).
+5. Confirm the three mailboxes exist in hPanel → Emails:
+   `registrations@`, `support@`, `arokyapayanam@owlihealthcare.com`.
+6. *(Optional)* clean the two test rows — §3 Step 4.
+
+(Prices: nothing left to decide — the real tiers are live. See `HANDOFF.md`
+§4 for the full, current list.)
 
 ---
 

@@ -1,35 +1,41 @@
 # HANDOFF.md — Owl I Health Care Centre / Arokya Payanam 2026
 
 > **What this file is:** the complete project handoff — the single document to
-> read first when taking over this project. It records the live state at
-> handoff, how to operate everything, every pending action, and every rule
-> that must never be broken. It supersedes the numbers in older docs.
+> read first when taking over this project. It records the live state, how to
+> operate everything, every pending action, and every rule that must never be
+> broken. It supersedes the numbers in older docs.
 >
-> **Handoff date: 2026-10-26. Git: `main` = `d231d1b` (clean, pushed, deployed).**
+> **Last refreshed: 2026-10-26. Git: `main` = `241a16f` (clean, pushed, deployed).**
 > Site: `https://owlihealthcare.com` (Hostinger Premium, GitHub auto-deploy on
 > push → `public_html/`). DB: `u810328541_owlievents` (user `u810328541_owli`).
 > This file is web-blocked (403) by the root `.htaccess`, like every `.md`.
 
 ---
 
-## 0. Read this first — five facts
+## 0. Read this first — six facts
 
-1. **Registration is LIVE right now** — both switches are `open` and the
-   **General tier is still ₹10** (the payment-test price). **Step 1 below
-   (change the tier to ₹499, or pause registration) is the most urgent
-   action.** Anyone who finds `/events/` today can register at ₹10.
-2. **Everything else works end-to-end.** The full chain is live-proven with
-   real money: register → Coaxlure checkout (new tab) → server-verified paid
-   detection → PDF ticket with QR → admin console → cron rechecks → emails.
+1. **Registration is LIVE** — both switches are `open`. The **current prices
+   are the real ones**: student ₹349 · doctor ₹399 · BNI ₹399 ·
+   **general ₹449** (the ₹10 test tier has been restored — live-verified:
+   `quote.php` returns `student:349 … general:449`). No leftover test price.
+2. **The full chain is live-proven with real money**: register → Coaxlure
+   checkout (new tab, working singular URL) → server-verified paid detection
+   (by order id, Coaxlure's real wording matched) → PDF ticket with QR →
+   confirmation email with ticket link → admin console → cron rechecks →
+   abandoned-payment sweep → 2-day digest.
 3. **Two switches control registration** (§5). The server switch
    (`owli-config.php` on Hostinger) is the authority and changes take effect
    instantly, without any deploy. The client switch
    (`js/event-config.js`) needs a Git push (~5 min deploy).
 4. **No secrets are in this repo** and it must stay that way: DB credentials,
-   Coaxlure Client ID/Secret, the admin password hash, and coupon codes all
-   live ONLY on the server (git-ignored config) or in the database.
+   Coaxlure Client ID/Secret, the admin password hash, digest recipient, and
+   coupon codes live ONLY on the server (git-ignored config) or in the DB.
 5. **Prices are database rows, not code.** Changing a price = one SQL
    statement in phpMyAdmin. No deploy, instant effect (§3).
+6. **Official emails changed (2026-10-26):** homepage contact is
+   `support@owlihealthcare.com`; the event side (form + confirmation mail +
+   ticket footer) is `arokyapayanam@owlihealthcare.com`. Both Gmail addresses
+   are retired — verify those two mailboxes exist in hPanel → Emails.
 
 ---
 
@@ -43,7 +49,7 @@ and payments for **Arokya Payanam 2026** (wellness event, Sunday
 | Piece | Where | Notes |
 |---|---|---|
 | Clinic homepage | `/` (`index.html`) | All sections in one page; i18n via `js/i18n.js` |
-| Event page | `/events/` | Details + registration form + Booking-ID lookup |
+| Event page | `/events/` | Details + official agenda (4 scientific sessions with named speakers) + competitions (Google Form links) + registration form + payment-status box + Booking-ID lookup |
 | Registration API | `api/*.php` | quote / register / status / ticket / cron / helpers |
 | Admin console | `/admin/` | Password-protected staff tool (unlinked, noindex) |
 | Payments | Coaxlure (hosted checkout) | Server-only pricing; browser never sends an amount |
@@ -54,40 +60,41 @@ Architecture in one line: the browser submits details → `register.php`
 validates and **re-prices from the DB** → creates a pending row + Coaxlure
 order → the Coaxlure page opens in a new tab → the form page polls
 `status.php` (server verifies with Coaxlure by **order id**) → paid flips the
-row, sends the confirmation email, and offers the **PDF ticket**
-(`api/ticket.php`, Booking ID + QR) → cron catches paid-but-closed browsers
-within 5 min, sweeps abandoned pendings after 2 days, and emails an admin
-digest every 2 days.
+row, sends the confirmation email (with ticket link), and offers the **PDF
+ticket** (`api/ticket.php`, Booking ID + QR) → cron (every 5 min) catches
+paid-but-closed browsers, sweeps abandoned pendings after 2 days, and emails
+an admin digest every 2 days.
 
 ---
 
-## 2. Live status at handoff (verified 2026-10-26)
+## 2. Live status (verified 2026-10-26)
 
 | Check | Result |
 |---|---|
-| Deploy | ✅ `d231d1b` live on Hostinger; assets byte-identical to repo |
-| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200 |
+| Deploy | ✅ `241a16f` live on Hostinger; assets match the repo |
+| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda + Google Form links live |
 | API | ✅ healthy — `mode:"open"`; docs + internal files all 403-blocked |
-| Prices (live DB) | student ₹299 · doctor ₹399 · bni ₹399 · **general ₹10 (test price — change it)** |
+| **Prices (live DB)** | ✅ **student ₹349 · doctor ₹399 · bni ₹399 · general ₹449** (real prices; no ₹10 tier remains) |
 | Coaxlure paid detection | ✅ live-proven with the real ₹10 payment (`AP26-WC4DV9`, paid) |
-| Ticket PDF | ✅ streams for paid refs (paid-only, 404 otherwise) |
+| Ticket PDF | ✅ streams for paid refs (paid-only, 404 otherwise); link also in the confirmation email |
 | Cron (5 min) | ✅ running; 3 passes: recheck ≤3-day pendings, sweep >2-day stale, digest every 2 days |
-| Admin console | ✅ login + dashboard + filters/sorts + CSV + tickets + coupons + staff entries |
-| Coupon packs in live DB | ❌ **none created yet** (owner step 4) |
+| Admin console | ✅ login + dashboard + chips/filters/sorts + CSV + tickets + coupons + staff entries |
+| Validation suite | ✅ **72/72** locally (incl. the ₹50-minimum tier guard, lookup card, button-visibility CSS, box order) |
+| Emails on the site | ✅ `support@…` / `arokyapayanam@…` live; **no Gmail address in any served file** |
+| Coupons in live DB | ❌ **none created yet** (owner step 3) — `EARLY10`/`PAYANAM20` probe as `invalid` |
 | `registrations.source` column | ❌ **ALTER not run yet on live DB** (owner step 2) |
-| `payment_attempts.status` ENUM incl. `failed` | ❌ **ALTER not run yet** (owner step 2) |
-| `admin.digest_to` in config | ❌ **not set yet** (owner step 5) |
+| `payment_attempts.status` ENUM incl. `failed` | ❌ **ALTER not run yet** (owner step 2) — the sweep stays politely disabled until it runs |
+| `admin.digest_to` in config | ❌ **not set yet** (owner step 4) |
 | Test rows in live DB | `AP26-WC4DV9` (paid ₹10 — valid record, keep or delete) · `AP26-5DC2FK` (stale pending — will flip to failed by the sweep once the ENUM ALTER runs) |
-| Validation suite | ✅ 70/70 locally; run on Hostinger after the ALTERs |
 
 ---
 
-## 3. How to change a price (tier) — including ₹10 → ₹499
+## 3. How to change a price (tier)
 
-**All money is stored in PAISE: ₹499 = `49900`, ₹10 = `1000`.**
+**All money is stored in PAISE: ₹449 = `44900`, ₹349 = `34900`.**
 
 1. hPanel → **Databases → phpMyAdmin** → select `u810328541_owlievents` → **SQL** tab.
-2. Run:
+2. Run (example: general → ₹499):
 
 ```sql
 UPDATE tiers SET amount_paise = 49900 WHERE category = 'general';
@@ -97,53 +104,40 @@ UPDATE tiers SET amount_paise = 49900 WHERE category = 'general';
 
 ```
 https://owlihealthcare.com/api/quote.php?category=all
-→ {"ok":true,"mode":"open","open":true,"prices":{"student":299,"doctor":399,"bni":399,"general":499}}
+→ {"ok":true,"mode":"open","open":true,"prices":{"student":349,"doctor":399,"bni":399,"general":499}}
 ```
 
-Hard-refresh `/events/` — the dropdown price list and "Amount to pay" show ₹499.
+Hard-refresh `/events/` — the price list and "Amount to pay" show the new price.
 
-**What it affects:**
-- **New registrations** — priced at the new amount.
-- **Pending/failed retries** — when the same mobile+email resubmits, the row is
-  **re-priced to the current tier** (the old attempt's stored amount stays in
-  the attempt history — that's fine and correct).
-- The admin console's **Add entry** preview and the digest/CSV amounts — all
-  read the current tier or the row's stored amount respectively.
+**What it affects:** new registrations, and any pending/failed retry (re-priced
+to the current tier on resubmit). **What it does NOT change:** already-paid
+rows (immutable records) or anything in Git.
 
-**What it does NOT change:**
-- Already-**paid** rows (their `amount_paise` is the immutable record — e.g.
-  `AP26-WC4DV9` stays ₹10).
-- Anything in Git — prices are never in code.
-
-**Other price recipes** (phpMyAdmin → SQL):
+**Recipes:**
 
 ```sql
--- any other category (paise: 29900=₹299, 39900=₹399, 49900=₹499)
-UPDATE tiers SET amount_paise = 44900 WHERE category = 'general';
--- temporary early-bird instead of overwriting: INSERT a second row with
--- valid_from/valid_until (the newest in-window row wins — see owli_quote()):
-INSERT INTO tiers (category, label, amount_paise, valid_from, valid_until)
-VALUES ('general', 'Early bird', 39900, NOW(), '2026-11-01 23:59:59');
 -- review current tiers
 SELECT id, category, label, amount_paise, valid_from, valid_until, active FROM tiers;
+-- temporary early-bird (the newest in-window row wins; see owli_quote())
+INSERT INTO tiers (category, label, amount_paise, valid_from, valid_until)
+VALUES ('general', 'Early bird', 39900, NOW(), '2026-11-01 23:59:59');
 ```
 
-**If the price becomes permanent (₹499), update the two doc lines that say
-₹449**: `README.md` §10 ("Prices (no GST): … General public ₹449") and
-`PRD.md` §4.5 ("General: ₹449"). That IS a Git change (commit + push) —
-docs only, no behaviour.
+**Guard shipped 2026-10-26:** `scripts/validate.php` now **fails** if any tier
+is priced below ₹50 (5000 paise) — a forgotten ₹10 test price can never slip
+through again. The owner's recipe file `sql/update-tiers-2026-price.sql`
+(₹349 student / ₹449 general restore) documents the current values.
+
+**Doc lines to keep in sync when prices change:** `README.md` §10 "Prices (no
+GST)" and `PRD.md` §4.5 — both currently say Students ₹349 · BNI ₹399 ·
+Doctors ₹399 · General ₹449 (correct as of 2026-10-26).
 
 ---
 
 ## 4. Pending owner actions — in this order
 
-1. **Change the tier** ₹10 → ₹499 (§3) — or, if not ready to take live
-   registrations yet, pause instead: File Manager →
-   `domains/owlihealthcare.com/owli-config.php` → `'mode' => 'preview'`
-   (instant; the form locks, prices stay visible).
-2. **Run the two one-time ALTERs** (phpMyAdmin → SQL) — they enable the
-   admin console's staff entries + delete-staff-only, and the
-   abandoned-payment sweep:
+1. **Run the two one-time ALTERs** (phpMyAdmin → SQL) — they enable the admin
+   console's staff entries + delete-staff-only, and the abandoned-payment sweep:
 
 ```sql
 ALTER TABLE registrations
@@ -153,32 +147,31 @@ ALTER TABLE payment_attempts
   MODIFY status ENUM('pending','paid','failed') NOT NULL DEFAULT 'pending';
 ```
 
-3. **Re-run validation** (hPanel → Terminal) — expect all green incl. the
+2. **Re-run validation** (hPanel → Terminal) — expect all green incl. the
    `registrations.source` check:
 
 ```bash
 php domains/owlihealthcare.com/public_html/scripts/validate.php
 ```
 
-4. **Create the coupon packs** — admin console → **Coupons → Generate codes**
-   (codes print once; they live only in the DB — never write them into any
-   committed file):
+3. **Create the coupon packs** — admin console → **Coupons → Generate codes**
+   (codes print once; they live only in the DB — never in any committed file):
 
 | Type | Value | How many | Uses per code | Prefix |
 |---|---|---|---|---|
 | percent | 10 | 1 | unlimited | `EARLY` |
 | percent | 20 | 1 | unlimited | `PAYANAM` |
-| percent | 100 | 20 | 1 | `FREEAP26-` |
+| percent | 100 | 20 | 1 (single-use) | `FREEAP26-` |
 
-5. **Set the digest recipient** — `owli-config.php` → `'admin'` block →
-   `'digest_to' => 'arokyapayanam@gmail.com'` (falls back to `mail_from`).
-   The 2-day digest then emails automatically (first one triggers on the next
-   cron run if ≥2 days have passed).
-6. **Confirm the mailbox `registrations@owlihealthcare.com` exists**
-   (hPanel → Emails) — confirmation emails + digests are silently skipped
-   otherwise (payments are unaffected). To test:
-   `php .../api/cron-recheck.php` from the hPanel Terminal.
-7. *(Optional)* **Clean the test rows** (attempts first — foreign key):
+4. **Set the digest recipient** — `owli-config.php` → `'admin'` block →
+   `'digest_to' => 'arokyapayanam@owlihealthcare.com'` (falls back to
+   `mail_from`). The 2-day digest then emails automatically.
+5. **Confirm the mailboxes exist** (hPanel → Emails):
+   `registrations@owlihealthcare.com` (sender for confirmations + digests),
+   `support@owlihealthcare.com` and `arokyapayanam@owlihealthcare.com`
+   (the two new contact addresses). Emails are silently skipped if the
+   sender mailbox is missing — payments are unaffected.
+6. *(Optional)* **Clean the two test rows** (attempts first — foreign key):
 
 ```sql
 DELETE FROM payment_attempts WHERE registration_id IN
@@ -186,13 +179,25 @@ DELETE FROM payment_attempts WHERE registration_id IN
 DELETE FROM registrations WHERE reference IN ('AP26-WC4DV9','AP26-5DC2FK');
 ```
 
-8. **Confirm live Coaxlure mode.** During the ₹10 run the checkout displayed
+   The **pre-launch full wipe** (only while no real registrations exist —
+   never after launch; website rows are permanent records) is:
+
+```sql
+DELETE FROM payment_attempts;
+DELETE FROM registrations;
+ALTER TABLE registrations  AUTO_INCREMENT = 1;
+ALTER TABLE payment_attempts AUTO_INCREMENT = 1;
+```
+
+   Leave `tiers`, `coupons`, `settings` untouched. Verify with
+   `status.php?ref=AP26-WC4DV9` → 404 and a 0-row admin console.
+7. **Confirm live Coaxlure mode.** During the ₹10 run the checkout displayed
    "Test Mode" wording — ask Coaxlure support to confirm the account is
    live-ready for real sales before marketing starts.
-9. *(Content, before marketing)* `images/og-image.jpg` is missing (social
+8. *(Content, before marketing)* `images/og-image.jpg` is missing (social
    shares show no image — add 1200×630 JPG); gallery/blog images and
    testimonials are still placeholders; decide whether the Site24x7 RUM
-   beacon stays (`index.html` — flagged "remove before production").
+   beacon stays (`index.html` — self-labelled "remove before production").
 
 ---
 
@@ -203,7 +208,7 @@ DELETE FROM registrations WHERE reference IN ('AP26-WC4DV9','AP26-5DC2FK');
 | Switch | File | Change speed |
 |---|---|---|
 | Server (authority) | Hostinger `/home/u810328541/domains/owlihealthcare.com/owli-config.php` → `'registration' => ['mode' => …]` | instant, no deploy |
-| Client (UI) | `js/event-config.js` → `registrationMode: 'open'` (currently `open`, `?v=6`) | commit + push → ~5 min deploy |
+| Client (UI) | `js/event-config.js` → `registrationMode: 'open'` (currently `open`, `?v=8`) | commit + push → ~5 min deploy |
 
 Modes: `closed` ("Registration Opens Soon") · `preview` (prices + form demo,
 server refuses 503 `not_open` — the safe state) · `open` (live payments).
@@ -218,8 +223,8 @@ mode value.
 | Secrets (DB creds, Coaxlure client_id/secret, admin hash, digest_to) | `/home/u810328541/domains/owlihealthcare.com/owli-config.php` — above `public_html`, git-ignored. Template: `api/config.sample.php` |
 | Cron (every 5 min) | `/usr/bin/php /home/u810328541/domains/owlihealthcare.com/public_html/api/cron-recheck.php` — output visible in the hPanel cron page |
 | Admin console | `https://owlihealthcare.com/admin/` — password = `php api/admin-pass.php 'new-password'` → paste the printed `$2y$…` hash into the config's `admin.password_hash` (empty hash = console disabled/403) |
-| Prices / coupons | DB tables `tiers` / `coupons` (§3; coupons also manageable in the console) |
-| Validation | `php public_html/scripts/validate.php` (70 checks; exit 1 on failure) |
+| Prices / coupons | DB tables `tiers` / `coupons` (§3; coupons manageable in the console) |
+| Validation | `php public_html/scripts/validate.php` (**72 checks**; exit 1 on failure) |
 | PHP errors (live) | hPanel → Advanced → PHP Error Log — every line is prefixed `owli ` (prefix table: `API-TROUBLESHOOTING.md` §4) |
 | Web protection | root `.htaccess` blocks `*.md`, `*.sql`, `*.log`, `*.ini` (403); `api/.htaccess` + in-file guards block internal PHP; `scripts/.htaccess` denies all |
 
@@ -246,20 +251,21 @@ number exists — the attendee's mobile is what Coaxlure receives.
 
 | Check | Command | What it protects |
 |---|---|---|
-| Pre-deploy validation (70 checks) | `php scripts/validate.php` (or `docker exec owli-web php /srv/public_html/scripts/validate.php`) | Config, DB+schema, all endpoints, admin, cron, doc/internal-file web-blocks, lookup card, button-visibility CSS, box order, Coaxlure reachability (no creds sent) |
-| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (357 keys) |
-| Pay-flow regression | `node scripts/check-pay-flow.js` | New-tab navigation contract, label contract (no invisible buttons), no reopen link, check-status button — scenarios A–H |
+| Pre-deploy validation (**72 checks**) | `php scripts/validate.php` (or `docker exec owli-web php /srv/public_html/scripts/validate.php`) | Config, DB+schema, all endpoints, admin, cron, doc/internal-file web-blocks, lookup card, button-visibility CSS, box order, tier sanity (≥ ₹50), Coaxlure reachability (no creds sent) |
+| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**369 keys**, incl. agenda + competitions) |
+| Pay-flow regression | `node scripts/check-pay-flow.js` | New-tab navigation contract, **label contract** (no invisible buttons), no reopen link, check-status button, WhatsApp/ticket action counts — scenarios A–H |
 | Lint | `php -l <file>` / `node --check <file>` | Syntax before any commit |
 | Mobile audit | headless-Chrome script — see `LOCAL-TESTING.md` §4.6 | 375/414/768px: no horizontal scroll, ≥40px tap targets |
 | Live smoke | `curl -s https://owlihealthcare.com/api/quote.php?category=all` | Prices + mode; `status.php?ref=…` for a booking; `/api/ticket.php?ref=…` for a paid PDF |
 
 **Local stack** (full guide: `LOCAL-TESTING.md`): Docker `owli-web` (Apache,
 `http://localhost:8800/`, repo bind-mounted at `/srv/public_html`) + `owli-db`
-(MariaDB, db `owli`, user `owliuser`). The local config is
-`~/work/owli-config-freetest.php` (currently **dev Coaxlure + `open` mode**,
-mounted read-only into the container). Canonical local config:
-`~/work/owli-config.php`. **Never POST to `register.php` on the LIVE server
-while it's `open` — it creates real registrations/orders; test locally.**
+(MariaDB, db `owli`, user `owliuser`). The local config currently mounted
+read-only into the container is `~/work/owli-config-freetest.php` (**dev
+Coaxlure + `open` mode** — for exercising the sweep/ticket flow locally);
+canonical local config: `~/work/owli-config.php`. **Never POST to
+`register.php` on the LIVE server while it's `open` — it creates real
+registrations/orders; test locally.**
 
 **The three rules of a good deploy:** run the checkers locally → commit only
 reviewed files → after ~5 min verify live (`quote.php`, the changed asset,
@@ -283,16 +289,17 @@ case studies from this project.
    server-side from `tiers`/`coupons`; a payment redirect is never treated as
    proof of payment — only Coaxlure's API answer is.
 3. **Website-sourced rows (`source='web'`) are undeletable** from the admin —
-   the SQL itself carries `AND source='staff'`. Only staff-added entries can be
-   deleted. Do not "fix" this by removing the guard.
+   the SQL itself carries `AND source='staff'`. Only staff-added entries can
+   be deleted. Do not "fix" this by removing the guard.
 4. **Never serve `.md`/`.sql`/`.log`/`ini` files** — the root `.htaccess` +
    `validate.php` enforce this (they once leaked every coupon code via
    `/GO-LIVE-STEPS.md`; closed, guarded, and now gated).
 5. **Rollback is always one edit:** server switch → `'preview'`. No deploy.
 6. **Cache-busting:** when editing any public CSS/JS, bump its `?v=` in the
-   HTML (`event-config.js?v=6`, `event-register.js?v=11`, `i18n.js?v=8`,
-   `events.css?v=3`, `styles.css`/`main.js`/`contact.js` have none yet) and
-   purge Hostinger's CDN cache if assets look stale.
+   HTML. Current versions: `event-config.js?v=8`, `event-register.js?v=12`,
+   `i18n.js?v=9`, `events.css?v=4`, `event-banner.css?v=2`,
+   `event-banner.js?v=2` (`styles.css`/`main.js`/`contact.js` have none yet).
+   Purge Hostinger's CDN cache if assets look stale.
 7. **Schema changes:** `sql/schema.sql` is the source of truth for fresh
    installs — keep it in sync with any ALTER run on the live DB, and document
    the live-DB migration beside it (as done for `source` and the ENUM).
@@ -311,9 +318,11 @@ case studies from this project.
 | Site24x7 RUM beacon | decide keep/remove (`index.html`, self-labelled pre-prod note) |
 | `sitemap.xml` `lastmod` | update on the final content release |
 | Event hard-close | `register.php` self-closes after `2026-11-15T16:00+05:30` (410 `closed`) — no action needed |
-| Test rows | `AP26-WC4DV9` (paid ₹10) / `AP26-5DC2FK` (stale) — §4 step 7 |
+| Test rows | `AP26-WC4DV9` (paid ₹10) / `AP26-5DC2FK` (stale) — §4 step 6 |
 | Coaxlure "Test Mode" wording seen on checkout | confirm with Coaxlure support before heavy marketing |
 | Admin "last cron ran" display | offered, not built — hPanel cron page shows output instead |
+| 4th scientific session speaker TBA | placeholder sub-line on `/events/` — confirm with the team |
+| `arokyapayanam@…` Reply-To mailbox | confirm it exists (hPanel → Emails) so attendees can reply |
 
 ---
 
@@ -339,14 +348,21 @@ case studies from this project.
   payment status now" button; NO reopen link (by owner decision).
 - **Page order contract:** form → payment status box → Booking-ID lookup card
   (enforced by validation).
+- **Booking-ID lookup** (`#ticket-lookup`): paid → the three paid actions
+  (Download ticket · Get ticket on WhatsApp · Done); anything else → one
+  uniform invalid message (leaks nothing).
 - **Free coupon flow:** 100% coupon → `{ok:true, free:true}` → instant paid,
-  same three actions (Download ticket · Get ticket on WhatsApp → official
-  number +91 63796 10554 with Booking ID pre-typed · Done). No payment page.
+  no payment tab. Coupon codes are server-verified only — shipping hashed
+  codes to the browser was deliberately **rejected** (offline brute-force).
 - **WhatsApp automation** was deliberately NOT built (Meta onboarding + fees);
-  the `wa.me` handoff covers the need. Upgrade path documented in
-  `CHANGE-LOG.md` (2026-10-25 entry).
+  the `wa.me` handoff (official number +91 63796 10554, event + Booking ID
+  pre-typed) covers the need. Upgrade path documented in `CHANGE-LOG.md`.
 - **i18n:** all visible strings via `data-i18n` keys in `js/i18n.js`,
-  EN + TA parity enforced (357 keys). The admin console is English-only by design.
+  EN + TA parity enforced (**369 keys**). The admin console is English-only by
+  design.
+- **Marketing price display:** the price list shows strikethrough
+  "before" prices from `strikePrices` in `js/event-config.js` (2026-10-26
+  owner change) — keep them in sync with tier changes.
 
 ---
 
@@ -359,7 +375,7 @@ case studies from this project.
 | Full developer spec (structure, palette, rules, API map) | `CLAUDE.md` (+ `docs/CLAUDE-*.md`) |
 | Product requirements + launch criteria | `PRD.md` |
 | Go-live / ₹10 test history / switch flips / DB migrations | `GO-LIVE-STEPS.md` |
-| Live status snapshot + decision log (pre-handoff numbers) | `PROJECT-STATUS.md` |
+| Live status snapshot + decision log (pre-refresh numbers) | `PROJECT-STATUS.md` |
 | API debugging runbook (workflow, codes, log prefixes, case studies) | `API-TROUBLESHOOTING.md` |
 | Local Docker stack + checkers + verification techniques | `LOCAL-TESTING.md` |
 | Every dated change, why + how verified | `CHANGE-LOG.md` |
@@ -379,6 +395,8 @@ case studies from this project.
 
 ---
 
-*End of handoff. Prepared after a full audit of the repo, the live site, and
-the local stack on 2026-10-26. Everything stated above was verified live
-(except where marked as a pending owner action).*
+*End of handoff. Refreshed 2026-10-26 after the owner-docx content deploy
+(official agenda, new emails, ₹349 student, strikethrough prices) and a fresh
+audit of the live site, local stack, and full test battery (72/72 validate,
+369/369 i18n, pay-flow PASS). Everything stated above was verified live
+except where marked as a pending owner action.*
