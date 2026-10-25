@@ -5,7 +5,8 @@
 > operate everything, every pending action, and every rule that must never be
 > broken. It supersedes the numbers in older docs.
 >
-> **Last refreshed: 2026-10-26. Git: `main` = `241a16f` (clean, pushed, deployed).**
+> **Final handoff — refreshed 2026-10-25 17:20 IST. Git: `main` = `1ff04ca`
+> (clean, pushed, deployed).**
 > Site: `https://owlihealthcare.com` (Hostinger Premium, GitHub auto-deploy on
 > push → `public_html/`). DB: `u810328541_owlievents` (user `u810328541_owli`).
 > This file is web-blocked (403) by the root `.htaccess`, like every `.md`.
@@ -71,8 +72,8 @@ an admin digest every 2 days.
 
 | Check | Result |
 |---|---|
-| Deploy | ✅ `241a16f` live on Hostinger; assets match the repo |
-| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda (all four speakers named) + competition form links live |
+| Deploy | ✅ `1ff04ca` live on Hostinger; assets match the repo |
+| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda (all four speakers named); **one common competition-registration link + one reels-submission link**; audience cards: 1000+ students / 100+ doctors / 50+ BNI |
 | API | ✅ healthy — `mode:"open"`; docs + internal files all 403-blocked |
 | **Prices (live DB)** | ✅ **student ₹349 · doctor ₹399 · bni ₹399 · general ₹449** (real prices; no ₹10 tier remains) |
 | Coaxlure paid detection | ✅ live-proven with the real ₹10 payment (`AP26-WC4DV9`, paid) |
@@ -81,10 +82,11 @@ an admin digest every 2 days.
 | Admin console | ✅ login + dashboard + chips/filters/sorts + CSV + tickets + coupons + staff entries |
 | Validation suite | ✅ **72/72** locally (incl. the ₹50-minimum tier guard, lookup card, button-visibility CSS, box order) |
 | Emails on the site | ✅ `support@…` / `arokyapayanam@…` live; **no Gmail address in any served file** |
-| Coupons in live DB | ❌ **none created yet** (owner step 3) — `EARLY10`/`PAYANAM20` probe as `invalid` |
 | `registrations.source` column | ❌ **ALTER not run yet on live DB** (owner step 2) |
 | `payment_attempts.status` ENUM incl. `failed` | ❌ **ALTER not run yet** (owner step 2) — the sweep stays politely disabled until it runs |
 | `admin.digest_to` in config | ❌ **not set yet** (owner step 4) |
+| Local battery (final refresh) | ✅ `validate.php` **72/72** · i18n **370/370** · pay-flow A–H PASS · live asset versions match (`?v=` table in §7.6) |
+| Coupons in live DB | ❌ **none created yet** (owner step 3) — `EARLY10`/`PAYANAM20` probe as `invalid` |
 | Test rows in live DB | `AP26-WC4DV9` (paid ₹10 — valid record, keep or delete) · `AP26-5DC2FK` (stale pending — will flip to failed by the sweep once the ENUM ALTER runs) |
 
 ---
@@ -252,7 +254,7 @@ number exists — the attendee's mobile is what Coaxlure receives.
 | Check | Command | What it protects |
 |---|---|---|
 | Pre-deploy validation (**72 checks**) | `php scripts/validate.php` (or `docker exec owli-web php /srv/public_html/scripts/validate.php`) | Config, DB+schema, all endpoints, admin, cron, doc/internal-file web-blocks, lookup card, button-visibility CSS, box order, tier sanity (≥ ₹50), Coaxlure reachability (no creds sent) |
-| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**371 keys**, incl. agenda + competitions) |
+| i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**370 keys**, incl. agenda + competitions) |
 | Pay-flow regression | `node scripts/check-pay-flow.js` | New-tab navigation contract, **label contract** (no invisible buttons), no reopen link, check-status button, WhatsApp/ticket action counts — scenarios A–H |
 | Lint | `php -l <file>` / `node --check <file>` | Syntax before any commit |
 | Mobile audit | headless-Chrome script — see `LOCAL-TESTING.md` §4.6 | 375/414/768px: no horizontal scroll, ≥40px tap targets |
@@ -297,8 +299,10 @@ case studies from this project.
 5. **Rollback is always one edit:** server switch → `'preview'`. No deploy.
 6. **Cache-busting:** when editing any public CSS/JS, bump its `?v=` in the
    HTML. Current versions: `event-config.js?v=8`, `event-register.js?v=12`,
-   `i18n.js?v=9`, `events.css?v=4`, `event-banner.css?v=2`,
-   `event-banner.js?v=2` (`styles.css`/`main.js`/`contact.js` have none yet).
+   `i18n.js?v=12`, `events.css?v=7`, `event-banner.css?v=2`,
+   `event-banner.js?v=2`. (`styles.css`, `responsive.css`, `main.js`,
+   `contact.js`, `lightbox.js`, `testimonials.js`, `treatment-details.js`
+   have no `?v=` yet — add one the next time any of them is edited.)
    Purge Hostinger's CDN cache if assets look stale.
 7. **Schema changes:** `sql/schema.sql` is the source of truth for fresh
    installs — keep it in sync with any ALTER run on the live DB, and document
@@ -347,6 +351,20 @@ case studies from this project.
   payment status now" button; NO reopen link (by owner decision).
 - **Page order contract:** form → payment status box → Booking-ID lookup card
   (enforced by validation).
+- **Content (final state, 2026-10-25):** official agenda from the owner's
+  docx — 4 scientific sessions, all named (Dr. Saranya D. 10:30 · Dr.
+  Kalaiselvan G. 11:10 · Dr. Priya P. 13:30 · **Dr. L. Beena Theres 14:20**,
+  "The Heart Under Pressure: Yoga and Naturopathy in Hypertensive Heart
+  Disease"); 4 panel discussions; prize distribution 15:20–15:45; stats
+  1350+ total footfall. Competitions: **one common Google-Form registration
+  link** below the three cards + the separate reels-submission link on the
+  reels card (owner decision 2026-10-25). Audience grid: **1000+ students ·
+  100+ doctors · 50+ BNI** (General Public count card removed by owner; the
+  General Public description card and its registration category remain).
+  Contact emails: `support@owlihealthcare.com` (homepage) ·
+  `arokyapayanam@owlihealthcare.com` (event + confirmation Reply-To + ticket
+  footer). Marketing strikethrough prices live in `strikePrices`
+  (`js/event-config.js`).
 - **Booking-ID lookup** (`#ticket-lookup`): paid → the three paid actions
   (Download ticket · Get ticket on WhatsApp · Done); anything else → one
   uniform invalid message (leaks nothing).
@@ -357,7 +375,7 @@ case studies from this project.
   the `wa.me` handoff (official number +91 63796 10554, event + Booking ID
   pre-typed) covers the need. Upgrade path documented in `CHANGE-LOG.md`.
 - **i18n:** all visible strings via `data-i18n` keys in `js/i18n.js`,
-  EN + TA parity enforced (**371 keys**). The admin console is English-only by
+  EN + TA parity enforced (**370 keys**). The admin console is English-only by
   design.
 - **Marketing price display:** the price list shows strikethrough
   "before" prices from `strikePrices` in `js/event-config.js` (2026-10-26
@@ -394,10 +412,16 @@ case studies from this project.
 
 ---
 
-*End of handoff. Refreshed 2026-10-25 after filling in Scientific Session 4
-(Dr. L. Beena Theres + the hypertension topic) and adding the 1000+ General
-Public audience card, on top of the owner-docx content deploy (official
-agenda, new emails, ₹349 student, strikethrough prices). Fresh audit of the
-live site, local stack, and full test battery (72/72 validate, 371/371 i18n,
+*End of handoff. Refreshed 2026-10-25 17:15 IST — the final handoff. Covers
+the complete project history: preview/open modes, the ₹10 live payment test
+(real money, paid detection proven), the checkout blank-page fix (plural→
+singular URL) and token-rotation fix (order-id verification), the invisible-
+button bug class (closed by the label + light-surface guards), the docx
+content deploy (official agenda, new emails, ₹349 student, strikethrough
+prices, competition links consolidated to one common form + reels),
+Scientific Session 4 (Dr. L. Beena Theres) and the final audience cards
+(1000+ students / 100+ doctors / 50+ BNI; General Public count card
+removed by owner decision, description card kept). Fresh audit of the live
+site, local stack, and full test battery (72/72 validate, 370/370 i18n,
 pay-flow PASS). Everything stated above was verified live except where
 marked as a pending owner action.*
