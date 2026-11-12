@@ -343,6 +343,8 @@ if ($siteUrl !== '') {
     check('cancelled full event page is blocked', in_array($fullEventCode, [403, 404], true), 'HTTP ' . $fullEventCode);
     [$eventImageCode] = probe($siteUrl . '/images/events/arokya-payanam-logo.webp');
     check('cancelled event artwork is blocked', in_array($eventImageCode, [403, 404], true), 'HTTP ' . $eventImageCode);
+    [$eventPhotoCode] = probe($siteUrl . '/images/events/session-speakers/doctor-1.webp');
+    check('cancelled nested event artwork is blocked', in_array($eventPhotoCode, [403, 404], true), 'HTTP ' . $eventPhotoCode);
     foreach (['/js/event-config.js', '/js/event-register.js', '/js/event-banner.js', '/css/events.css', '/css/event-banner.css'] as $asset) {
         [$assetCode] = probe($siteUrl . $asset);
         check("cancelled event asset $asset blocked", in_array($assetCode, [403, 404], true), 'HTTP ' . $assetCode);

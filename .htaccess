@@ -26,3 +26,10 @@
 <FilesMatch "\.(md|sql|log|ini)$">
   Require all denied
 </FilesMatch>
+
+# Nested .htaccess rules for event artwork are not consistently honoured by
+# shared hosting. Deny the cancelled event asset path at the document root.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^images/events(?:/|$) - [F,L,NC]
+</IfModule>
