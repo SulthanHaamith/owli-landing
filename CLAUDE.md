@@ -7,8 +7,8 @@
 
 ## 1. PROJECT SUMMARY
 
-**What:** A bilingual (English/Tamil) clinic website with a static homepage and a PHP/MySQL-backed event registration flow for Arokya Payanam 2026.
-**Goal:** Maintain the clinic website and provide secure event registration with server-side pricing and Coaxlure payment verification.
+**What:** A bilingual (English/Tamil) clinic website; the Arokya Payanam 2026 event was cancelled.
+**Goal:** Maintain the clinic website and preserve the event's existing records/support tools; new event registrations remain disabled.
 **Approach:** The clinic pages are static HTML/CSS/vanilla JavaScript. Event registration uses PHP endpoints and MySQL on Hostinger; local development uses Docker. Payment credentials must remain outside the repository and public web root.
 
 ---
@@ -254,7 +254,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 ## 18. RULES FOR CLAUDE CODE
 
-1. **Read this file first** before every task.
+1. **Read this file first** before every task. The Arokya Payanam event was cancelled. Hostinger registration mode is closed, but public promotion and the full event page remain live until the uncommitted cancellation patch is deployed. Avoid live admin write actions before deployment.
 2. **Keep the public clinic pages static**, with no front-end build step. The event registration form requires the PHP/MySQL backend when served; direct `file://` opening can preview static content but cannot exercise the API.
 3. **All text bilingual** — every display string goes through the i18n system.
 4. **Mark every placeholder** with `<!-- [PLACEHOLDER] -->` comments.
@@ -280,9 +280,7 @@ Single-page layout. Navigation uses anchor links to scroll between sections.
 
 The essentials, in one paragraph each:
 
-- **Two switches must agree:** the client (`js/event-config.js` → `registrationMode`) and the
-  server (`owli-config.php` → `registration.mode`). Flipping the client alone can never open
-  payments — `register.php` refuses with 503 `not_open` while the server says `preview`.
+- **Event cancellation:** Hostinger registration config is closed. Local `OWLI_EVENT_CANCELLED`, client mode, asset blocks, booking-recovery route and admin restrictions are not deployed. Avoid live admin entry/coupon-generation/reactivation until deploy; preserve records. The local guard still allows switching active coupons off.
 - **Identity:** the mobile+email pair is the booking identity. Pending rows are reused (same
   reference), paid pairs are refused with 409, failed rows revive on re-registration.
 - **Ticket:** `api/ticket.php?ref=AP26-XXXXXX` streams a paid-only A4 PDF (Booking ID + QR

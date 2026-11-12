@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ============================================
-  SITEMAP.XML
-  PURPOSE: Helps search engines discover and index
-           all pages on the website.
-  NOTES: Since this is a single-page site, there
-         is only one URL entry. Update the <lastmod>
-         date whenever you make changes to the site.
-  ============================================
--->
+<!-- Public clinic homepage only; cancelled event routes are excluded. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <!-- The homepage — our only page since this is a single-page site -->
@@ -19,12 +10,5 @@
     <changefreq>weekly</changefreq>
     <!-- Priority relative to other pages (1.0 = highest) -->
     <priority>1.0</priority>
-  </url>
-  <!-- Arokya Payanam 2026 event page -->
-  <url>
-    <loc>https://owlihealthcare.com/events/</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
 </urlset>

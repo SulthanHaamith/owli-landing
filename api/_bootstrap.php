@@ -20,6 +20,9 @@ if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
 date_default_timezone_set('Asia/Kolkata');
 mb_internal_encoding('UTF-8');
 
+/* Event cancelled by owner. Keep existing payment/status/ticket/admin tools
+   available for records and attendee support, but never accept new bookings. */
+const OWLI_EVENT_CANCELLED = true;
 const OWLI_CATEGORIES    = ['student', 'doctor', 'bni', 'general'];
 const OWLI_STUDENT_YEARS = ['part1', 'part2', '2nd', '3rd', '4th', 'internship'];
 const OWLI_COMPETITIONS  = ['poster', 'fireless_cooking'];
@@ -76,6 +79,9 @@ function owli_is_configured(): bool
  */
 function owli_registration_mode(): string
 {
+    if (OWLI_EVENT_CANCELLED) {
+        return 'closed';
+    }
     $mode = strtolower(trim((string)(owli_config()['registration']['mode'] ?? '')));
     if ($mode === 'preview') {
         return owli_is_configured() ? 'preview' : 'closed';

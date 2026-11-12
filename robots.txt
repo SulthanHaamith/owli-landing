@@ -1,13 +1,13 @@
 # ──────────────────────────────────────────────
 # ROBOTS.TXT
-# Tells search engine crawlers which pages they
-# can and cannot access on this website.
-# We allow all crawlers to access everything.
+# Public clinic pages are crawlable. The cancelled
+# event routes are blocked and excluded from sitemap.
 # ──────────────────────────────────────────────
 
-# Allow all search engines to crawl the entire site
+# Allow the clinic site, but keep cancelled event routes out of crawlers.
 User-agent: *
 Allow: /
+Disallow: /images/events/
 
 # The admin console is for staff only (it is also password-protected
 # by admin/index.php) — keep it out of search results.

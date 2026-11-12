@@ -6,8 +6,10 @@ A professional, bilingual (English/Tamil) landing page for a naturopathy clinic 
 
 ## 1. Project Overview
 
+> **Event cancellation notice:** Arokya Payanam 2026 has been cancelled. Hostinger registration is closed and new submissions are refused; the public promotion and full event page remain visible until the local cancellation patch is deployed. The patch preserves existing-booking status/ticket recovery and admin records. See `HANDOFF.md` for the verified current state and deployment checklist.
+
 **What is this?**
-A bilingual clinic website for Owl I Health Care Centre. The clinic homepage and event information pages are static; the Arokya Payanam 2026 registration flow uses a PHP/MySQL backend for server-priced registration and payment verification.
+A bilingual clinic website for Owl I Health Care Centre. Clinic information remains public; Arokya Payanam 2026 was cancelled. Existing attendee support uses retained PHP/MySQL payment/status and ticket records, but new event registration is disabled.
 
 **Who is it for?**
 The clinic owner and staff, to establish an online presence and allow patients to learn about services, meet the doctors, and book appointments via WhatsApp or phone.
@@ -28,7 +30,7 @@ The clinic owner and staff, to establish an online presence and allow patients t
 - SEO optimized (meta tags, Open Graph, JSON-LD structured data)
 - Accessible (ARIA labels, keyboard navigation, focus traps, skip link)
 
-The clinic pages need no build step and can be previewed as static files. To test event registration and its API, serve the project with PHP and connect it to MySQL/MariaDB; the current local preview uses Docker at `http://localhost:8800/`.
+The clinic pages need no build step and can be previewed as static files. The cancelled event page remains in source control for records but is not publicly served after the cancellation deployment; preserve its database/payment history for attendee support.
 
 ---
 
@@ -291,17 +293,16 @@ If you edit a CSS or JS file and the live site still shows the old version after
 
 ---
 
-## 10. How to Manage the Arokya Payanam 2026 Event
+## 10. Arokya Payanam 2026 — cancelled / historical operations
 
-The event lives in three places, all controlled from one switch:
+**Event cancelled.** Hostinger `registration.mode` is `'closed'`: live `register.php` returns HTTP 503 `not_open`, but the quote endpoint still returns stored prices. The local cancellation patch is not deployed, so the old `/events/` page, artwork and event assets remain public. Local validation passes 85/85. Review/deploy the patch and verify the recovery page, blocked promotion/assets, closed/no-price quote, and retained ticket support. Avoid admin Add Entry/coupon generation/reactivation until deployment; preserve all attendee/payment records.
 
-1. **`js/event-config.js`** — the browser-side switch, `registrationMode: 'preview' | 'open' | 'closed'`. **`open` is the current, committed state** (the go-live flip — see `GO-LIVE-STEPS.md`); the server switch in `owli-config.php` still controls whether registrations are actually accepted. The **server has its own matching switch** — `registration => ['mode' => ...]` in `owli-config.php` — and `api/register.php` refuses with HTTP 503 unless the server switch itself says `'open'`. The form only becomes fully active when BOTH sides say `'open'`, so flipping the JS file alone can never open payments. `registrationUrl` is an optional legacy external-link override and should normally remain empty for the built-in PHP form.
-2. **`events/index.html`** — the full event page at `/events/`: agenda, competitions, organisers, contact details.
-3. **Homepage popup** (`index.html` → `<div id="event-banner">`, styled by `css/event-banner.css`, behavior in `js/event-banner.js`) — a centered announcement that appears ~800ms after the homepage loads, showing the event logo and a link to `/events/`. It closes via the × button, clicking outside it, or the Escape key, and stays hidden for 24 hours after a visitor closes it. It also stops appearing entirely after the date in `OWLI_EVENT.endDate` (`js/event-config.js`) — update that if the event date ever changes.
 
-### Registration form + online payment (Coaxlure)
 
-The form on `/events/` (`#register-form`) takes the attendee's details, works out the price **on the server**, and sends them to Coaxlure's hosted payment page. Registrations live in a MySQL database.
+
+### Historical registration and payment implementation
+
+New event registrations are disabled. Existing paid ticket download, status lookups, and financial records remain supported. The former form on `/events/` used server-priced tiers and Coaxlure; see the table below only for historical maintenance context.
 
 **Prices (no GST):** Students ₹349 · BNI members ₹399 · Doctors ₹399 · General public ₹449. The dropdown shows these as a price list, highlights the selected category, and shows "Amount to pay". The browser never sends an amount; `api/register.php` looks it up in the `tiers` table.
 
@@ -355,29 +356,16 @@ php public_html/scripts/validate.php                             # Hostinger (hP
 
 It verifies: PHP ≥ 8.2 + required extensions, config presence/shape, DB connection, all 5 tables, the 4 price tiers, live endpoint behaviour (`quote.php` prices; `register.php` correctly refusing with 503 while in preview/closed — the probe is skipped when the server is open so it never creates a real order on a live system; `status.php` rejecting unknown refs), admin console reachability + that it leaks no data before login, cron job file + its web-block, internal-file protection, Coaxlure host reachability (empty request, no credentials), and the static pages. Exit code 1 on any failure, so it can gate deploys. **Run it on Hostinger right after the first deploy and before opening registration.** For translation parity: `node scripts/check-i18n.js` (exits 1 on any missing key). For the payment navigation contract (the Pay button opens exactly one new tab and the form page never navigates to the payment page; popup blocked is the only exception): `node scripts/check-pay-flow.js` (exits 1 on any violation). Run both after any change to `js/event-register.js`.
 
-**Go-live steps**
+**Historical go-live documentation (superseded by cancellation):** `GO-LIVE-STEPS.md` records the old payment-test procedure. Do not run its SQL, create coupons, or flip registration open. Current cancellation/support state is in `HANDOFF.md` and `PROJECT-STATUS.md`.
 
-> For the current deployment there is a concrete operator runbook with the exact SQL, switch flips and verification checklist: **`GO-LIVE-STEPS.md`** (steps 5–6 below in expanded, current-state form). For the one-page "where everything stands right now" snapshot — verified live state, remaining owner steps, and every decision taken — see **`PROJECT-STATUS.md`**.
+**Cancelled event — do not perform the old launch steps below.** Keep the production config at `registration.mode = 'closed'`, preserve attendee/payment data, and use `HANDOFF.md` for the current deployment/support checklist. The following are retained as historical setup notes only.
 
-1. hPanel → Databases: create the MySQL database + user. phpMyAdmin → Import `sql/schema.sql`.
-2. Copy `api/config.sample.php` to `owli-config.php` in the folder **above** `public_html` and fill in the DB details and the Coaxlure Client ID + Secret (Coaxlure → Business API → Integration). Never put these in Git. Set `registration.mode` to `'preview'` first — the event page then shows ticket prices and a working form demo, while the server still refuses submissions.
-   - Also set the admin password hash here (`php api/admin-pass.php 'password'` → paste into the `'admin'` block) so `/admin/` is usable.
-   - **Testing:** Coaxlure support says to test on the dev server. Add `'api_base' => 'https://dev.coaxlure.com/merchant/business-api'` under `coaxlure` and use the test credentials. Dev and live tokens are separate, and the token cache is keyed by `api_base`, so switching never reuses the wrong one.
-   - A hand-generated token can be set as `'static_token'` to skip `/auth`; however, the current registration readiness check still requires both `client_id` and `secret`, so a static token alone does **not** open registration. The test credentials include a Secret and `/auth` works against the dev server (verified locally on 2026-10-23), so `static_token` is normally left empty.
-   - If the dev server returns a payment link on a host other than `app.coaxlure.com`, the redirect is refused and the host is written to the PHP error log. Add that host to `allowed_pay_host` (now a list) for testing only.
-   - **Before launch:** remove the `api_base` override (or set it back to the live URL), use live credentials, and remove `static_token`.
-3. hPanel → Advanced → Cron Jobs: run `php /home/<user>/domains/owlihealthcare.com/public_html/api/cron-recheck.php` every 5 minutes.
-4. Run the validation script from hPanel → Terminal: `php public_html/scripts/validate.php` — everything must pass (it exits 1 if anything fails). Then sign in at `https://owlihealthcare.com/admin/` and confirm the console loads after login and that **Export CSV** downloads a valid file (in preview there may be zero registrations — that is fine).
-5. Make a **real ₹10 test payment** first if Coaxlure has no sandbox (temporarily set a tier to `1000` paise, then restore). Confirm the registration turns *paid*. The `paymentStatus` wording is not documented by Coaxlure, so check `payment_attempts.raw_status` in the database (the admin console shows the same "Coaxlure said" value per attempt). If paid is not detected, adjust `coax_fetch_status()` in `api/_bootstrap.php`.
-6. After a successful dev-credential test, confirm the production database and live Coaxlure credentials are configured securely, then flip **both switches** to open: `registration.mode => 'open'` in `owli-config.php` (no deploy needed — the file is read on every request) and `registrationMode: 'open'` in `js/event-config.js` (bump its `?v=` cache version). Do not publish test credentials or tokens.
-
-Until step 6, keep `registration.mode` at `'preview'`: the page shows prices and the form as a demo, and the server refuses every submission with 503 `not_open`. Registration is also refused by the server when the Coaxlure credentials are missing, regardless of any client-side flag.
 
 **Local Docker setup and preview**
 
-The current development preview runs in Docker; PHP does not need to be installed on the host computer. The website is available at `http://localhost:8800/`, and the event page is `http://localhost:8800/events/` while the `owli-web` container is running.
+The clinic's local Docker containers are currently stopped. A temporary Apache review container can serve the cancellation patch on `http://localhost:18800/` with the repository mounted. The full validation suite requires a local MariaDB container and matching local config; see `LOCAL-TESTING.md`.
 
-The local PHP app connects to MariaDB over Docker's private network. For the current test configuration, use:
+The local PHP app connects to MariaDB over Docker's private network. Cancellation validation can run against the local web container with `OWLI_VALIDATE_SITE_URL=http://owli-cancel-review`; full `validate.php` still requires a reachable DB. For the current test configuration, use:
 
 | Setting | Local Docker value |
 |---|---|
@@ -395,11 +383,9 @@ The local PHP app connects to MariaDB over Docker's private network. For the cur
 
 The local config (`/home/<you>/work/owli-config.php`) currently sets `registration.mode => 'preview'`, matching `js/event-config.js`. The site shows prices and the form, but submissions are refused (503) — the correct state while the payment integration is being verified. To exercise a real submission locally, set `registration.mode` to `'open'` **in that local file only** (never commit an `'open'` JS flag), and put it back to `'preview'` afterwards. Never use real attendee data in tests.
 
-### To remove the event entirely once it's over
-1. Delete the `<div id="event-banner">` block from `index.html` (search for `EVENT BANNER`) and its two `<script>` tags (`event-config.js`, `event-banner.js`) and the `<link>` to `css/event-banner.css`.
-2. Delete the `events/` folder, `css/events.css`, `images/events/`, and the one footer link to it in `index.html`.
-3. Remove the `/events/` entry from `sitemap.xml`.
-4. The `ev_*` keys in `js/i18n.js` can stay (unused keys are harmless) or be removed for tidiness.
+### Event cancellation / hiding
+Arokya Payanam 2026 is cancelled. Hostinger registration is closed, but cancellation UI/asset/API/admin guards are still local until this patch is deployed. Do not use live admin Add Entry/coupon actions before then. The patch keeps `/events/` as a noindex existing-booking recovery route and preserves all payment records. Reinstatement requires explicit owner approval, code review, and careful reversal of the cancellation guards and validation checks.
+
 
 ---
 

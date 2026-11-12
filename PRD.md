@@ -1,8 +1,10 @@
 # Product Requirements Document
 
+> **Current status:** Arokya Payanam 2026 has been cancelled. Hostinger `registration.mode` is `closed`, so new registrations are refused (HTTP 503). The code changes to hide promotion and serve existing-booking recovery are local and not deployed. Local cancellation validation passes 85/85. Preserve attendee/payment/ticket/status/reconciliation records; avoid admin write actions until deployment.
+
 ## Owl I Health Care Centre Website & Arokya Payanam 2026 Registration
 
-**Document status:** Draft / implementation-aligned  
+**Document status:** Historical requirements — event cancelled; current cancellation notice at top supersedes event-launch requirements.
 **Assessment date:** 23 October 2026  
 **Repository:** `owli-landing`  
 **Production domain:** `https://owlihealthcare.com/`

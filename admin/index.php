@@ -339,6 +339,11 @@ try {
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     need_csrf($csrf);
     $action = (string)($_POST['action'] ?? '');
+    if (OWLI_EVENT_CANCELLED && $loggedIn && in_array($action, ['add', 'coupon_gen'], true)) {
+        $notice = 'The event is cancelled; new entries and coupon changes are disabled. Existing records remain available for support and reconciliation.';
+        $noticeOk = false;
+        $action = 'cancelled_action';
+    }
 
     if ($action === 'login' && !$loggedIn) {
         $left = admin_lock_left($db);
@@ -418,7 +423,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
        coupon — a coupon that covers the whole price records the entry as
        FREE (Rs 0). No confirmation email is sent for staff entries (the
        organiser is right there when they add it). ---- */
-    if ($action === 'add' && $loggedIn) {
+    if ($action === 'add' && $loggedIn && !OWLI_EVENT_CANCELLED) {
         $noticeOk = false;
         if (!$hasSource) {
             $notice = 'Adding entries needs the "source" column — run the one-line migration in GO-LIVE-STEPS.md, then retry.';
@@ -590,7 +595,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     /* ---- Coupon management: generate + toggle. Codes live ONLY in the
        database; the repo deliberately never contains them. The generator
        invents the suffixes so no real code needs to be typed by hand. ---- */
-    if ($action === 'coupon_gen' && $loggedIn) {
+    if ($action === 'coupon_gen' && $loggedIn && !OWLI_EVENT_CANCELLED) {
         $noticeOk = false;
         $notice = '';
         $ctype    = (string)($_POST['ctype'] ?? '');
@@ -659,9 +664,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 $c = $st->fetch();
                 if ($c) {
                     $newActive = ((int)$c['active']) === 1 ? 0 : 1;
-                    $db->prepare("UPDATE coupons SET active = ? WHERE id = ?")->execute([$newActive, $cid]);
-                    $notice = ($newActive === 1 ? 'Coupon ' . $c['code'] . ' switched ON.' : 'Coupon ' . $c['code'] . ' switched OFF.');
-                    $noticeOk = true;
+                    if (OWLI_EVENT_CANCELLED && $newActive === 1) {
+                        $notice = 'Coupons cannot be activated while the event is cancelled.';
+                    } else {
+                        $db->prepare("UPDATE coupons SET active = ? WHERE id = ?")->execute([$newActive, $cid]);
+                        $notice = ($newActive === 1 ? 'Coupon ' . $c['code'] . ' switched ON.' : 'Coupon ' . $c['code'] . ' switched OFF.');
+                        $noticeOk = true;
+                    }
                 } else {
                     $notice = 'Coupon not found.';
                 }
@@ -856,7 +865,7 @@ foreach ([
 
 $noticeHtml = '';
 if (isset($notice)) {
-    $noticeHtml = '<div class="notice ' . ($noticeOk ? 'ok' : 'err') . '">' . e($notice) . '</div>';
+    $noticeHtml = '<div class="notice ' . (!empty($noticeOk) ? 'ok' : 'err') . '">' . e($notice) . '</div>';
 }
 
 /* --- "Add entry" form (offline payments) --- */
@@ -891,7 +900,9 @@ foreach (OWLI_COMPETITIONS as $c) {
         . e(ucfirst(str_replace('_', ' ', $c))) . '</span>';
 }
 
-$addFormHtml = <<<HTML
+$addFormHtml = '';
+if (!OWLI_EVENT_CANCELLED) {
+    $addFormHtml = <<<HTML
 <p class="muted">Records a PAID registration for someone who paid offline (cash / UPI at the counter).
 The amount comes from the current price tier — the panel below shows what will be recorded — and a coupon
 can be applied; if a coupon covers the whole price, the entry is recorded as FREE (Rs 0). Staff entries are
@@ -953,6 +964,7 @@ the <b>only</b> rows this console can delete. Website rows are permanent.</p>
 })();
 </script>
 HTML;
+}
 
 /* --- Coupons panel: live list + generator (codes exist only in the DB) --- */
 $couponRows = [];
@@ -981,20 +993,25 @@ foreach ($couponRows as $c) {
           . '<input type="hidden" name="csrf" value="' . e($csrf) . '">'
           . '<input type="hidden" name="action" value="coupon_toggle">'
           . '<input type="hidden" name="cid" value="' . (int)$c['id'] . '">'
-          . '<button class="btn small ghost" type="submit">' . ((int)$c['active'] === 1 ? 'Switch off' : 'Switch on') . '</button></form></td>'
+          . '<button class="btn small ghost" type="submit"' . (OWLI_EVENT_CANCELLED && (int)$c['active'] === 0 ? ' disabled' : '') . '>' . ((int)$c['active'] === 1 ? 'Switch off' : 'Switch on') . '</button></form></td>'
         . '</tr>';
 }
 $couponListHtml = $couponTr !== ''
     ? '<table><thead><tr><th>Code</th><th>Discount</th><th>Category</th><th>Uses (paid)</th><th>Status</th><th></th></tr></thead><tbody>' . $couponTr . '</tbody></table>'
     : '<p class="muted">No coupons in the database yet.</p>';
 
+$cancelledCouponNotice = OWLI_EVENT_CANCELLED
+    ? '<p class="notice">Event cancelled: coupon generation and activation are disabled. Existing codes and usage remain visible for audit.</p>'
+    : '';
+$couponFormHidden = OWLI_EVENT_CANCELLED ? 'hidden' : '';
 $couponPanelHtml = <<<HTML
 <details class="card" id="coupons">
   <summary>Coupons — view, generate &amp; switch codes</summary>
+  {$cancelledCouponNotice}
   <p class="muted">Codes live only in this database — never in the Git repository or any public
   page. "Uses" counts PAID registrations only; a FREE ticket (100% coupon) counts as a paid row,
   so a single-use code dies after its one guest registers.</p>
-  <form method="post" action="" style="margin:10px 0 16px">
+  <form method="post" action="" style="margin:10px 0 16px" {$couponFormHidden}>
     <input type="hidden" name="csrf" value="{$csrf}">
     <input type="hidden" name="action" value="coupon_gen">
     <div class="addgrid">
@@ -1152,6 +1169,8 @@ foreach (OWLI_CATEGORIES as $c) {
         . e(ucfirst($c)) . '</option>';
 }
 
+$addEntryPanelHtml = OWLI_EVENT_CANCELLED ? '' : '<details class="card" id="add-entry"><summary>+ Add entry — record an offline payment (cash / UPI)</summary>' . $addFormHtml . '</details>';
+
 page('Registrations', <<<HTML
 <div class="top">
   <div class="wrap">
@@ -1168,10 +1187,7 @@ page('Registrations', <<<HTML
 </div>
 <div class="wrap">
   {$noticeHtml}
-  <details class="card" id="add-entry">
-    <summary>+ Add entry — record an offline payment (cash / UPI)</summary>
-    {$addFormHtml}
-  </details>
+  {$addEntryPanelHtml}
   {$couponPanelHtml}
   <div class="stats">
     <div class="stat"><b>{$sum['total']}</b><span>Total registrations</span></div>

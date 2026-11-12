@@ -18,7 +18,7 @@ $mode     = owli_registration_mode();   /* 'open' | 'preview' | 'closed' */
 
 /* category=all -> current price of every category (used to label the dropdown). */
 if ($category === 'all') {
-    if (!owli_db_configured()) {
+    if ($mode === 'closed' || !owli_db_configured()) {
         owli_json(['ok' => true, 'mode' => 'closed', 'open' => false, 'prices' => new stdClass()]);
     }
     try {
@@ -40,7 +40,7 @@ if ($category === 'all') {
 if (!in_array($category, OWLI_CATEGORIES, true)) {
     owli_json(['ok' => false, 'error' => 'category'], 422);
 }
-if (!owli_db_configured()) {
+if ($mode === 'closed' || !owli_db_configured()) {
     owli_json(['ok' => true, 'mode' => 'closed', 'open' => false]);
 }
 

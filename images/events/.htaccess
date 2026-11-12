@@ -1,0 +1,3 @@
+# Event artwork is retained in the repository but hidden from public requests
+# after cancellation.
+Require all denied

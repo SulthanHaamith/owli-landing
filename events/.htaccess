@@ -1,0 +1,8 @@
+# The full event page is retained in Git but must never be served after
+# cancellation. /events/ serves only index.php, the minimal existing-booking
+# status/ticket recovery page, so already-issued QR codes continue to work.
+Options -Indexes
+DirectoryIndex index.php
+<Files "index.html">
+  Require all denied
+</Files>

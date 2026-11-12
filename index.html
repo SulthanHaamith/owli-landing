@@ -57,10 +57,6 @@
   <!-- Responsive stylesheet — media queries for mobile/tablet/desktop -->
   <link rel="stylesheet" href="css/responsive.css">
 
-  <!-- Event banner stylesheet — closable "Arokya Payanam 2026" popup (see js/event-banner.js).
-       The ?v= query string busts stale browser/CDN caches whenever this file changes —
-       bump it (e.g. v=3) any time event-banner.css is edited again. -->
-  <link rel="stylesheet" href="css/event-banner.css?v=2">
 
   <!-- ============================================
        STRUCTURED DATA (JSON-LD)
@@ -163,9 +159,6 @@
             <span>EN | தமிழ்</span>
           </button>
 
-          <!-- Event link — distinct accent color so it stands out from Book Now -->
-          <a href="events/" class="btn btn-event nav-event" data-i18n="ev_nav_event">Arokya Payanam 2026</a>
-
           <!-- Book Now CTA — scrolls to contact/booking section -->
           <a href="#contact" class="btn btn-primary nav-cta" data-i18n="nav_book_now">Book Now</a>
         </div>
@@ -218,17 +211,6 @@
             <!-- Explore Services scrolls down to services section -->
             <a href="#services" class="btn btn-secondary" data-i18n="hero_cta_explore">Explore Services</a>
 
-            <!-- Links to the Arokya Payanam 2026 event page (events/index.html) —
-                 a persistent way to reach it besides the closable popup/nav link -->
-            <a href="events/" class="btn btn-event">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              <span data-i18n="hero_cta_event">Arokya Payanam 2026</span>
-            </a>
           </div>
         </div>
       </div>
@@ -1212,7 +1194,6 @@
             <li><a href="#team" data-i18n="nav_team">Our Team</a></li>
             <li><a href="#faq" data-i18n="nav_faq">FAQ</a></li>
             <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-            <li><a href="events/" data-i18n="ev_nav_event">Arokya Payanam 2026</a></li>
           </ul>
         </div>
 
@@ -1292,40 +1273,6 @@
   </div>
 
   <!-- ============================================
-       EVENT BANNER: AROKYA PAYANAM 2026
-       PURPOSE: Centered popup announcement that appears shortly
-                after the homepage loads, with the event logo,
-                supporting text, and a button to the /events/ page.
-                Hidden until js/event-banner.js reveals it;
-                visitors can close it with the × button, by clicking
-                the dark backdrop, or by pressing Escape.
-       NOTES: - The status pill follows the registration mode from
-                js/event-config.js: "Registration opens soon" (closed /
-                preview) or "Registration open" (open). Preview shows
-                the event's progress without opening payments.
-              - To remove the banner, delete this whole block.
-       ============================================ -->
-  <div id="event-banner" class="event-modal-overlay" hidden>
-    <div class="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
-      <button type="button" id="event-banner-close" class="event-modal-close" aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-
-      <span class="event-modal-status" data-reg-soon="ev_banner_status_soon" data-reg-preview="ev_banner_status_preview" data-reg-open="ev_banner_status_open" data-i18n="ev_banner_status_soon">Registration opens soon</span>
-
-      <img src="images/events/arokya-payanam-logo.webp" alt="Arokya Payanam 2026" class="event-modal-logo" width="1238" height="706">
-
-      <h2 id="event-modal-title" class="sr-only" data-i18n="ev_banner_title">Arokya Payanam 2026</h2>
-      <p class="event-modal-text" data-i18n="ev_banner_text">Yoga &amp; Naturopathy conference · 15 Nov 2026 · Kadayam, Tirunelveli</p>
-
-      <a href="events/" class="btn btn-primary event-modal-cta" data-i18n="ev_banner_cta">View event details →</a>
-    </div>
-  </div>
-
-  <!-- ============================================
        JAVASCRIPT FILES
        PURPOSE: Loaded at the end of <body> so the
                 HTML is fully parsed before scripts run.
@@ -1338,10 +1285,6 @@
   <script src="js/lightbox.js"></script>
   <script src="js/contact.js"></script>
   <script src="js/treatment-details.js"></script>
-  <!-- Event: registration state (js/event-config.js) + closable banner.
-       ?v= busts stale caches — bump it any time these files are edited again. -->
-  <script src="js/event-config.js?v=8"></script>
-  <script src="js/event-banner.js?v=2"></script>
 
 </body>
 </html>

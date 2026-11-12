@@ -1,0 +1,4 @@
+# Hide styles used only by the cancelled event experience; retain them in Git.
+<FilesMatch "^(events|event-banner)\.css$">
+  Require all denied
+</FilesMatch>

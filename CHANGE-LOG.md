@@ -1,5 +1,11 @@
 # CHANGE-LOG.md — Owl I Health Care Centre — project change log
 
+## 2026-11-12 — Arokya Payanam 2026 cancelled: hide promotion, close new transactions, preserve booking recovery
+
+The owner reported that the event was cancelled and asked to hide event-related public changes. Local patch removes homepage event links/banner and hides event-only assets; blocks the full `/events/index.html` and artwork/scripts/styles; serves `/events/` as a minimal noindex booking recovery page; removes the event from the sitemap; adds an API cancellation guard to close quotes/registration; and blocks admin entries/coupon generation/reactivation while still allowing staff to switch active coupons off. Existing history, exports and paid-ticket/status support remain; no database data is deleted. `scripts/validate.php` covers these contracts. The owner set Hostinger and local `registration.mode` to `closed` ahead of deployment.
+
+**Deployment status:** the owner set Hostinger `registration.mode` to `closed` (config values were not copied or printed), and the local config is also closed with permissions `0600`. Live probes: quote HTTP 200 `mode:closed` but the deployed old handler still returns prices; register HTTP 503 `not_open`; invalid status/ticket references HTTP 422. No API 500 reproduced. The patch remains uncommitted, so the homepage event promotion, full event page/artwork/assets and old admin write controls are still live; do not use live admin Add Entry/coupon generation/reactivation until deployment (coupon deactivation remains available). Verification: PHP lint, JS syntax, i18n **370/370**, pay-flow regression PASS, and cancellation suite **85/85** against a temporary local Apache + isolated MariaDB initialized from schema. No local registration rows were created. Existing production registration/payment data must be retained until Coaxlure orders/refunds and retention obligations are resolved.
+
 > The full dated change log for this repository. Newest first. Each entry records
 > what changed, why, and how it was verified. **CLAUDE.md no longer carries this
 > log** — it was split out on 2026-10-26 to keep context small (CLAUDE.md < 30k).

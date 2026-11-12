@@ -17,7 +17,7 @@
 
 ## Current state (all verified 2026-10-24)
 
-| Component | State |
+| Component | Historical state before cancellation |
 |---|---|
 | Deploy (GitHub → Hostinger `public_html/`) | ✅ Live, including the ₹1-minimum patch (`f379888`) |
 | Database `u810328541_owlievents` | ✅ 5 tables; prices student 299 / bni 399 / doctor 399 / general 449 |
@@ -33,7 +33,9 @@
 
 ## Read this first — the two switches
 
-Registration is live **only when BOTH say `'open'`**:
+> **SUPERSEDED:** Arokya Payanam 2026 has been cancelled. Do not follow the old ₹10 test or switch-flip steps below. Hostinger `registration.mode` is `closed`; keep it that way. The independent cancellation code guard exists locally but is not deployed. Avoid live admin write actions until deploy. Existing status/ticket/admin data must be retained. Current instructions are in `HANDOFF.md` §4.
+
+Registration was live historically **only when BOTH said `'open'`**:
 
 | Switch | File | Change takes effect |
 |---|---|---|

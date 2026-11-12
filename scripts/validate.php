@@ -10,9 +10,10 @@
  *               mysqlnd/PDO, session, JSON)
  *            2. Config file presence (never printed: only found/missing)
  *            3. Database connection + every table + expected columns
- *            4. Starting price rows for all 4 categories
- *            5. API health: quote (prices), register (must refuse in
- *               preview/closed), status (reference format)
+ *            4. Tier rows remain in the DB for historical records (quotes are
+ *               expected closed after cancellation; no price is public)
+ *            5. API health: quote (closed with no public prices), register
+ *               (must refuse), status (reference format)
  *            6. Admin console reachability + auth state
  *            7. Cron job file present and web-protected
  *            8. Web protection of internal files (Apache .htaccess 403, or the
@@ -20,9 +21,9 @@
  *            9. Coaxlure reachability — WITHOUT sending credentials.
  *               (Only the API host is contacted with an empty auth call.
  *               The real credentials/tokens never appear in any output.)
- *           10. Booking-ID lookup on /events/ (#ticket-lookup present; the
- *               three ticket actions appear for a paid ID, the invalid
- *               message for anything else — owner request 2026-10-26)
+ *           10. Booking-ID recovery at /events/ remains available for already
+ *               issued tickets after cancellation; the full event page/assets
+ *               are blocked and new quotes/registrations remain closed.
  *           11. Documentation split: CHANGE-LOG.md + docs/CLAUDE-*.md must
  *               be web-blocked like every other .md (root .htaccess covers
  *               them; these checks make a silent regression impossible).
@@ -195,7 +196,14 @@ echo "\n4) API endpoints\n";
    A candidate counts only if quote.php answers HTTP 200 — i.e. the PHP API
    is actually deployed there, not just a static page. */
 $siteUrl = '';
-foreach (['http://localhost:8800', 'http://localhost', 'https://owlihealthcare.com'] as $u) {
+/* Use an explicit target for temporary/local review stacks; otherwise prefer
+   the standard Docker URL, hPanel localhost, then the production domain. */
+$siteOverride = trim((string)getenv('OWLI_VALIDATE_SITE_URL'));
+$siteCandidates = $siteOverride !== '' && filter_var($siteOverride, FILTER_VALIDATE_URL)
+    && in_array((string)parse_url($siteOverride, PHP_URL_SCHEME), ['http', 'https'], true)
+        ? [rtrim($siteOverride, '/')]
+        : ['http://localhost:8800', 'http://localhost', 'https://owlihealthcare.com'];
+foreach ($siteCandidates as $u) {
     [$code] = probe($u . '/api/quote.php?category=all');
     if ($code === 200) {
         $siteUrl = $u;
@@ -210,7 +218,9 @@ if ($siteUrl !== '') {
     if (is_array($q) && isset($q['mode'])) {
         note('server registration mode: ' . $q['mode']);
     }
-    if (is_array($q) && isset($q['prices']) && is_array($q['prices'])) {
+    if (($q['mode'] ?? '') === 'closed') {
+        check('closed quote hides tier prices', is_array($q['prices'] ?? null) && $q['prices'] === []);
+    } elseif (is_array($q) && isset($q['prices']) && is_array($q['prices'])) {
         foreach (['student', 'doctor', 'bni', 'general'] as $c) {
             check("quote.php price: $c", isset($q['prices'][$c]), 'Rs ' . ($q['prices'][$c] ?? '?'));
         }
@@ -317,55 +327,56 @@ note('No credentials were sent or printed by this check.');
 
 /* 9 ─ Static site files ---------------------------------------------- */
 echo "\n9) Static site\n";
+$supportPage = (string)@file_get_contents(__DIR__ . '/../events/index.php');
 if ($siteUrl !== '') {
-    foreach (['/index.html', '/events/', '/robots.txt', '/js/event-config.js'] as $p) {
+    foreach (['/index.html', '/robots.txt'] as $p) {
         [$code5] = probe($siteUrl . $p);
         check("public page $p", $code5 === 200, 'HTTP ' . $code5);
     }
+    [$eventCode, $eventBody] = probe($siteUrl . '/events/');
+    check('existing-booking support page remains available at /events/', $eventCode === 200 && str_contains($eventBody, 'Existing booking support'), 'HTTP ' . $eventCode);
+    $homeHtml = (string)@file_get_contents(__DIR__ . '/../index.html');
+    check('homepage event banner and links removed', !str_contains($homeHtml, 'id="event-banner"') && !preg_match('~href="(?:/)?events/~', $homeHtml));
+    $sitemap = (string)@file_get_contents(__DIR__ . '/../sitemap.xml');
+    check('sitemap excludes the cancelled event URL', !str_contains($sitemap, 'owlihealthcare.com/events/'));
+    [$fullEventCode] = probe($siteUrl . '/events/index.html');
+    check('cancelled full event page is blocked', in_array($fullEventCode, [403, 404], true), 'HTTP ' . $fullEventCode);
+    [$eventImageCode] = probe($siteUrl . '/images/events/arokya-payanam-logo.webp');
+    check('cancelled event artwork is blocked', in_array($eventImageCode, [403, 404], true), 'HTTP ' . $eventImageCode);
+    foreach (['/js/event-config.js', '/js/event-register.js', '/js/event-banner.js', '/css/events.css', '/css/event-banner.css'] as $asset) {
+        [$assetCode] = probe($siteUrl . $asset);
+        check("cancelled event asset $asset blocked", in_array($assetCode, [403, 404], true), 'HTTP ' . $assetCode);
+    }
+    [$quoteCode, $quoteBody] = probe($siteUrl . '/api/quote.php?category=all');
+    $cancelQuote = json_decode($quoteBody, true);
+    check('cancelled event quotes return closed mode', $quoteCode === 200 && is_array($cancelQuote)
+        && ($cancelQuote['mode'] ?? '') === 'closed' && empty($cancelQuote['prices']));
+    $cancelGuard = (string)@file_get_contents(__DIR__ . '/../api/_bootstrap.php');
+    check('server cancellation guard is enabled', str_contains($cancelGuard, 'OWLI_EVENT_CANCELLED = true'));
+    $adminSource = (string)@file_get_contents(__DIR__ . '/../admin/index.php');
+    check('admin cancellation blocks new entries/coupons but preserves coupon deactivation',
+        str_contains($adminSource, "in_array(\$action, ['add', 'coupon_gen']")
+        && str_contains($adminSource, 'if (OWLI_EVENT_CANCELLED && $newActive === 1)'));
+    $robots = (string)@file_get_contents(__DIR__ . '/../robots.txt');
+    check('robots lets crawlers see noindex recovery page', !str_contains($robots, 'Disallow: /events/'));
+    check('robots excludes cancelled event artwork', str_contains($robots, 'Disallow: /images/events/'));
+    check('recovery page is marked noindex', str_contains($supportPage, 'name="robots" content="noindex,nofollow"'));
 } else {
     check('public pages reachable', false, 'site unreachable');
 }
-check('js/event-config.js exists', is_file(__DIR__ . '/../js/event-config.js'));
+check('js/event-config.js exists in source', is_file(__DIR__ . '/../js/event-config.js'));
 $ec = (string)@file_get_contents(__DIR__ . '/../js/event-config.js');
 check('js/event-config.js declares registrationMode', str_contains($ec, 'registrationMode'));
 note('committed client mode: ' . (preg_match("~registrationMode:\s*'(\w+)'~", $ec, $m) ? $m[1] : 'unknown'));
 
-/* 10 ─ Booking-ID lookup section (owner request 2026-10-26) --------- */
-/* The "Already registered? Get your ticket" card must exist and carry
-   its i18n hooks; the JS must render the paid actions for a paid ID.
-   ORDER CONTRACT (owner request 2026-10-26, second report): the payment
-   status box (#evf-status — the "Payment verified" box) must sit
-   DIRECTLY after the registration form, BEFORE the lookup card. */
-$evp = (string)@file_get_contents(__DIR__ . '/../events/index.html');
-check('events page has the #ticket-lookup card', str_contains($evp, 'id="ticket-lookup"'));
-$posForm  = strpos($evp, '</form>');                    /* the register form closes here */
-$posStat  = strpos($evp, 'id="evf-status"');
-$posLook  = strpos($evp, 'id="ticket-lookup"');
-check('payment status box directly after the register form (before the lookup card)',
-    $posForm !== false && $posStat !== false && $posLook !== false
-    && $posStat > $posForm && $posStat < $posLook,
-    $posForm === false || $posStat === false || $posLook === false
-        ? 'missing element(s)'
-        : ($posStat > $posLook ? 'status box is AFTER the lookup card — swap them back' : 'form < status < lookup'));
-check('events page has #ticket-lookup-form', str_contains($evp, 'id="ticket-lookup-form"'));
-$evr = (string)@file_get_contents(__DIR__ . '/../js/event-register.js');
-check('event-register.js wires the lookup (status.php + evf_lookup_bad)', str_contains($evr, 'ticket-lookup-form') && str_contains($evr, 'evf_lookup_bad'));
-$i18 = (string)@file_get_contents(__DIR__ . '/../js/i18n.js');
-check('lookup strings exist in BOTH languages', str_contains($i18, 'evf_lookup_ok') && substr_count($i18, 'evf_lookup_bad') === 2);
-$ecss = (string)@file_get_contents(__DIR__ . '/../css/events.css');
-check('lookup card styled in events.css', str_contains($ecss, '.ev-ticket-lookup'));
-/* Invisible-button regression guard (owner reports 2026-10-25 + 2026-10-26):
-   the site's .btn-secondary is WHITE-on-transparent (a dark-surface style),
-   so inside the white cards on /events/ it rendered white-on-white — the
-   "Find my ticket" and coupon "Apply" buttons were invisible until hover.
-   events.css must re-skin it on every white surface, and these regex
-   checks make a removal or colour regression fail the deploy. */
-$reSkin = '/\.ev-form \.btn-secondary,\s*\.ev-status-box \.btn-secondary,\s*'
-    . '\.ev-ticket-lookup \.btn-secondary\s*\{[^}]*?color:\s*var\(--color-primary\)/s';
-check('white-card .btn-secondary re-skinned green (Apply, Find my ticket, status-box, lookup actions)', (bool)preg_match($reSkin, $ecss));
-$reHover = '/\.ev-form \.btn-secondary:hover,[\s\S]*?\.ev-ticket-lookup \.btn-secondary:focus-visible'
-    . '\s*\{[^}]*?background-color:\s*var\(--color-secondary\)/s';
-check('re-skinned secondary buttons fill green on hover/focus', (bool)preg_match($reHover, $ecss));
+/* 10 ─ Post-cancellation support route contracts -------------------- */
+/* The public /events/ page is now a minimal existing-booking recovery page;
+   its former full page is denied by events/.htaccess. */
+check('post-cancellation booking recovery page exists', str_contains($supportPage, 'Existing booking support') && str_contains($supportPage, '/api/status.php?ref='));
+$eventAccess = (string)@file_get_contents(__DIR__ . '/../events/.htaccess');
+check('full event HTML is denied by events/.htaccess', str_contains($eventAccess, 'Require all denied') && str_contains($eventAccess, 'index.html'));
+$eventConfig = (string)@file_get_contents(__DIR__ . '/../js/event-config.js');
+check('client event mode is closed', (bool)preg_match("~registrationMode:\\s*'closed'~", $eventConfig));
 
 /* ------------------------------------------------------------------ */
 /* Report                                                              */

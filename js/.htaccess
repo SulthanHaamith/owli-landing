@@ -1,0 +1,5 @@
+# Hide scripts used only by the cancelled event experience. They remain in Git
+# for a possible owner-approved reinstatement; other clinic scripts stay public.
+<FilesMatch "^(event-config|event-register|event-banner)\.js$">
+  Require all denied
+</FilesMatch>

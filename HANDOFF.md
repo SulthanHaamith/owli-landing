@@ -1,12 +1,13 @@
 # HANDOFF.md — Owl I Health Care Centre / Arokya Payanam 2026
 
+> **URGENT CURRENT STATE:** The event is cancelled. Hostinger registration mode is confirmed closed and live submissions return HTTP 503. The cancellation patch is uncommitted and not deployed: homepage promotion, full `/events/`, event assets and admin cancellation guards remain public/active in the deployed code; quote mode is closed but still returns prices. Do not use admin Add Entry/coupon controls until the patch deploys. Review/deploy to hide these surfaces. Keep attendee/payment records and existing ticket/status support.
+
 > **What this file is:** the complete project handoff — the single document to
 > read first when taking over this project. It records the live state, how to
 > operate everything, every pending action, and every rule that must never be
 > broken. It supersedes the numbers in older docs.
 >
-> **Final handoff — refreshed 2026-10-25 17:20 IST. Git: `main` = `1ff04ca`
-> (clean, pushed, deployed).**
+> **Last handoff refresh: 2026-11-12. Current workspace: cancellation patch is under review and not deployed. Hostinger's server mode is closed.**
 > Site: `https://owlihealthcare.com` (Hostinger Premium, GitHub auto-deploy on
 > push → `public_html/`). DB: `u810328541_owlievents` (user `u810328541_owli`).
 > This file is web-blocked (403) by the root `.htaccess`, like every `.md`.
@@ -15,24 +16,17 @@
 
 ## 0. Read this first — six facts
 
-1. **Registration is LIVE** — both switches are `open`. The **current prices
-   are the real ones**: student ₹349 · doctor ₹399 · BNI ₹399 ·
-   **general ₹449** (the ₹10 test tier has been restored — live-verified:
-   `quote.php` returns `student:349 … general:449`). No leftover test price.
+1. **The event is CANCELLED.** Hostinger `registration.mode` is confirmed `closed`; live registration returns 503 `not_open`. The local cancellation patch removes promotion, blocks event assets, replaces `/events/` with booking recovery, and prevents quotes from exposing prices. It has not been deployed: live probes show the full event page/assets still return 200 and quote still includes prices. Local patch passes 85/85 validation. Preserve all attendee/payment records; avoid live admin Add Entry/coupon actions until deployment.
 2. **The full chain is live-proven with real money**: register → Coaxlure
    checkout (new tab, working singular URL) → server-verified paid detection
    (by order id, Coaxlure's real wording matched) → PDF ticket with QR →
    confirmation email with ticket link → admin console → cron rechecks →
    abandoned-payment sweep → 2-day digest.
-3. **Two switches control registration** (§5). The server switch
-   (`owli-config.php` on Hostinger) is the authority and changes take effect
-   instantly, without any deploy. The client switch
-   (`js/event-config.js`) needs a Git push (~5 min deploy).
+3. **Cancellation code guard is local only** until deployment. Hostinger's `registration.mode = 'closed'` is the currently verified server-side safety switch; keep it closed.
 4. **No secrets are in this repo** and it must stay that way: DB credentials,
    Coaxlure Client ID/Secret, the admin password hash, digest recipient, and
    coupon codes live ONLY on the server (git-ignored config) or in the DB.
-5. **Prices are database rows, not code.** Changing a price = one SQL
-   statement in phpMyAdmin. No deploy, instant effect (§3).
+5. **The old event price tiers remain historical database data.** Do not change them for sales or reopen registration unless the owner explicitly reinstates the event.
 6. **Official emails changed (2026-10-26):** homepage contact is
    `support@owlihealthcare.com`; the event side (form + confirmation mail +
    ticket footer) is `arokyapayanam@owlihealthcare.com`. Both Gmail addresses
@@ -42,101 +36,68 @@
 
 ## 1. What this project is
 
-A bilingual (English/தமிழ்) static website for **Owl I Health Care Centre**
-(naturopathy clinic, Tirunelveli) + a PHP 8.3/MySQL backend for registration
-and payments for **Arokya Payanam 2026** (wellness event, Sunday
-**15 November 2026**, AR Group of Institutions, Kadayam — 9:00–16:00).
+A bilingual (English/தமிழ்) clinic website for **Owl I Health Care Centre**
+(naturopathy clinic, Tirunelveli). The former PHP/MySQL Arokya Payanam 2026
+registration/payment system is retained for existing attendee support and
+financial reconciliation; the event is cancelled. Hostinger's config blocks new registrations, but the local hide/recovery patch has not yet been deployed.
 
 | Piece | Where | Notes |
 |---|---|---|
-| Clinic homepage | `/` (`index.html`) | All sections in one page; i18n via `js/i18n.js` |
-| Event page | `/events/` | Details + official agenda (4 scientific sessions with named speakers) + competitions (Google Form links) + registration form + payment-status box + Booking-ID lookup |
-| Registration API | `api/*.php` | quote / register / status / ticket / cron / helpers |
-| Admin console | `/admin/` | Password-protected staff tool (unlinked, noindex) |
-| Payments | Coaxlure (hosted checkout) | Server-only pricing; browser never sends an amount |
-| Deploy | GitHub → Hostinger `public_html/` | Auto-deploy on every push to `main` |
+| Clinic homepage | `/` (`index.html`) | Live clinic page still contains event references until the cancellation patch deploys |
+| Event page | `/events/` | Live currently serves the full event page; local patch replaces it with existing-booking recovery |
+| Registration API | `api/*.php` | Live config refuses new registrations; cancellation quote guard is local pending deploy |
+| Admin console | `/admin/` | Password-protected; cancellation guards are local and not deployed, so avoid write actions until deploy |
+| Payments | Coaxlure (hosted checkout) | No new public registrations (server mode closed); retain status/ticket/reconciliation tools |
+| Deploy | GitHub → Hostinger `public_html/` | Auto-deploy on push to `main`; cancellation changes still need deployment |
 | Docs | this repo's `.md` files | Index in §10 |
 
-Architecture in one line: the browser submits details → `register.php`
-validates and **re-prices from the DB** → creates a pending row + Coaxlure
-order → the Coaxlure page opens in a new tab → the form page polls
-`status.php` (server verifies with Coaxlure by **order id**) → paid flips the
-row, sends the confirmation email (with ticket link), and offers the **PDF
-ticket** (`api/ticket.php`, Booking ID + QR) → cron (every 5 min) catches
-paid-but-closed browsers, sweeps abandoned pendings after 2 days, and emails
-an admin digest every 2 days.
+Historical architecture: the former registration flow created a pending row, opened Coaxlure checkout, verified by order ID, and issued a PDF ticket. **Current post-cancellation public flow:** no new quotes or registrations; `/events/?ref=AP26-XXXXXX` remains available to look up an existing booking and download a paid ticket. Admin/cron/payment history remain for reconciliation.
 
 ---
 
-## 2. Live status (verified 2026-10-26)
+## 2. Current status (live probed 2026-11-12; cancellation patch not deployed)
 
 | Check | Result |
 |---|---|
-| Deploy | ✅ `1ff04ca` live on Hostinger; assets match the repo |
-| Public site | ✅ `/`, `/events/`, `/admin/`, `robots.txt` all 200; official agenda (all four speakers named); **one common competition-registration link + one reels-submission link**; audience cards: 1000+ students / 100+ doctors / 50+ BNI |
-| API | ✅ healthy — `mode:"open"`; docs + internal files all 403-blocked |
-| **Prices (live DB)** | ✅ **student ₹349 · doctor ₹399 · bni ₹399 · general ₹449** (real prices; no ₹10 tier remains) |
+| Git/workspace | Cancellation patch is uncommitted on `main`; latest base commit is `9d494f9` |
+| Hostinger config/API | `registration.mode` set to `closed`; live register safely returns HTTP 503 `not_open` |
+| Live quote | HTTP 200, `mode:closed`, but current deployed quote endpoint still returns stored prices (cancellation code not deployed) |
+| Live public pages/assets | `/events/`, `/events/index.html`, event artwork, event JS/CSS return HTTP 200; homepage still contains event references |
+| Local cancellation code | Removes homepage promotion, blocks full event/artwork/assets, makes `/events/` a booking-support page, hides closed quotes, blocks admin entries/coupon generation/activation (deactivation remains available) |
+| Prices | Historical DB values; quote API still exposes values until cancellation patch deploys; do not adjust or use for sales |
 | Coaxlure paid detection | ✅ live-proven with the real ₹10 payment (`AP26-WC4DV9`, paid) |
 | Ticket PDF | ✅ streams for paid refs (paid-only, 404 otherwise); link also in the confirmation email |
 | Cron (5 min) | ✅ running; 3 passes: recheck ≤3-day pendings, sweep >2-day stale, digest every 2 days |
-| Admin console | ✅ login + dashboard + chips/filters/sorts + CSV + tickets + coupons + staff entries |
-| Validation suite | ✅ **72/72** locally (incl. the ₹50-minimum tier guard, lookup card, button-visibility CSS, box order) |
+| Admin console | Live admin remains deployed; cancellation-only add/coupon guards are not deployed, so staff write actions remain available—avoid using them until the patch lands |
+| Validation suite | PHP lint, JS syntax, i18n, pay-flow, and local HTTP/DB cancellation suite pass (**85/85**) using a temporary isolated local DB; live hide/admin-guard verification awaits deploy |
 | Emails on the site | ✅ `support@…` / `arokyapayanam@…` live; **no Gmail address in any served file** |
-| `registrations.source` column | ❌ **ALTER not run yet on live DB** (owner step 2) |
-| `payment_attempts.status` ENUM incl. `failed` | ❌ **ALTER not run yet** (owner step 2) — the sweep stays politely disabled until it runs |
-| `admin.digest_to` in config | ❌ **not set yet** (owner step 4) |
-| Local battery (final refresh) | ✅ `validate.php` **72/72** · i18n **370/370** · pay-flow A–H PASS · live asset versions match (`?v=` table in §7.6) |
-| Coupons in live DB | ❌ **none created yet** (owner step 3) — `EARLY10`/`PAYANAM20` probe as `invalid` |
-| Test rows in live DB | `AP26-WC4DV9` (paid ₹10 — valid record, keep or delete) · `AP26-5DC2FK` (stale pending — will flip to failed by the sweep once the ENUM ALTER runs) |
+| DB migrations/digest recipient | Historical setup only; do not run schema changes during cancellation unless reviewed for reconciliation |
+| Coupons | Existing codes/usage retained for records; generation and reactivation disabled while cancelled |
+| Existing payment records | Preserve all rows; reconcile pending orders/refunds. Do not run historical test-row deletion SQL |
 
 ---
 
-## 3. How to change a price (tier)
+## 3. Tier prices — historical reference only
 
-**All money is stored in PAISE: ₹449 = `44900`, ₹349 = `34900`.**
-
-1. hPanel → **Databases → phpMyAdmin** → select `u810328541_owlievents` → **SQL** tab.
-2. Run (example: general → ₹499):
-
-```sql
-UPDATE tiers SET amount_paise = 49900 WHERE category = 'general';
-```
-
-3. **Verify instantly** (no deploy, no Git, effective immediately):
-
-```
-https://owlihealthcare.com/api/quote.php?category=all
-→ {"ok":true,"mode":"open","open":true,"prices":{"student":349,"doctor":399,"bni":399,"general":499}}
-```
-
-Hard-refresh `/events/` — the price list and "Amount to pay" show the new price.
-
-**What it affects:** new registrations, and any pending/failed retry (re-priced
-to the current tier on resubmit). **What it does NOT change:** already-paid
-rows (immutable records) or anything in Git.
-
-**Recipes:**
-
-```sql
--- review current tiers
-SELECT id, category, label, amount_paise, valid_from, valid_until, active FROM tiers;
--- temporary early-bird (the newest in-window row wins; see owli_quote())
-INSERT INTO tiers (category, label, amount_paise, valid_from, valid_until)
-VALUES ('general', 'Early bird', 39900, NOW(), '2026-11-01 23:59:59');
-```
-
-**Guard shipped 2026-10-26:** `scripts/validate.php` now **fails** if any tier
-is priced below ₹50 (5000 paise) — a forgotten ₹10 test price can never slip
-through again. The owner's recipe file `sql/update-tiers-2026-price.sql`
-(₹349 student / ₹449 general restore) documents the current values.
-
-**Doc lines to keep in sync when prices change:** `README.md` §10 "Prices (no
-GST)" and `PRD.md` §4.5 — both currently say Students ₹349 · BNI ₹399 ·
-Doctors ₹399 · General ₹449 (correct as of 2026-10-26).
+Prices were stored in the `tiers` database table as integer paise (₹1 = 100 paise). The last pre-cancellation values reported were Student ₹349, Doctor ₹399, BNI ₹399, General ₹449. **Do not update prices, enable coupons, or reopen registration while cancelled.** If the owner formally reinstates the event, first review this handoff/runbook and only then use the prior tier SQL procedure from Git history. Existing paid rows remain immutable; preserve all records.
 
 ---
 
-## 4. Pending owner actions — in this order
+## 4. Owner actions after cancellation
+
+Hostinger `owli-config.php` has been checked safely: `registration.mode` is now `'closed'`. The live API immediately refuses new registrations. The local cancellation patch has passed 85/85 full-stack validation against an isolated local DB.
+
+1. **Review the uncommitted patch** (homepage, API quote guard, `/events/` recovery page, `.htaccess` asset blocks, admin guards, validator and docs). Until it deploys, do not use the live admin Add Entry/coupon write controls.
+2. **Checks already run:** PHP lint, JS syntax, i18n parity, pay-flow regression, and local Docker cancellation validation (85/85).
+3. **Commit/push/deploy after review.** Then verify `/events/` serves the minimal existing-booking status/ticket page; `/events/index.html`, event artwork, and event-only JS/CSS return 403/404; `quote.php?category=all` returns `mode:closed` with empty prices; admin history/ticket support remains available but entry/coupon writes are disabled.
+4. **Reconcile outstanding payments/refunds** with Coaxlure and contact affected attendees. Keep the 5-minute cron running until pending orders/refunds are resolved.
+5. **Preserve all database records.** Do not run historical test-row deletion, table wipe, coupon-generation, or tier-update procedures during cancellation. Data retention/deletion requires a separate owner decision after financial/support obligations are settled.
+
+---
+
+## 5. Historical owner setup actions — ARCHIVE ONLY
+
+The following legacy launch setup SQL is kept as project history and **must not be executed** as part of cancellation. Do not run the ALTERs, coupon generation, price changes, test-row deletion, or full-table wipe now. Preserve records. The actionable cancellation steps are in §4.
 
 1. **Run the two one-time ALTERs** (phpMyAdmin → SQL) — they enable the admin
    console's staff entries + delete-staff-only, and the abandoned-payment sweep:
@@ -173,7 +134,7 @@ php domains/owlihealthcare.com/public_html/scripts/validate.php
    `support@owlihealthcare.com` and `arokyapayanam@owlihealthcare.com`
    (the two new contact addresses). Emails are silently skipped if the
    sender mailbox is missing — payments are unaffected.
-6. *(Optional)* **Clean the two test rows** (attempts first — foreign key):
+6. *(Historical only; do NOT run after cancellation)* Clean the two test rows (attempts first — foreign key):
 
 ```sql
 DELETE FROM payment_attempts WHERE registration_id IN
@@ -181,8 +142,7 @@ DELETE FROM payment_attempts WHERE registration_id IN
 DELETE FROM registrations WHERE reference IN ('AP26-WC4DV9','AP26-5DC2FK');
 ```
 
-   The **pre-launch full wipe** (only while no real registrations exist —
-   never after launch; website rows are permanent records) is:
+   **Never run this full wipe while cancelled** (historical pre-launch recipe only):
 
 ```sql
 DELETE FROM payment_attempts;
@@ -203,20 +163,10 @@ ALTER TABLE payment_attempts AUTO_INCREMENT = 1;
 
 ---
 
-## 5. Operating the system
+## 6. Operating the system after cancellation
 
-**The two switches** — registration is live only when BOTH say `open`:
+**Live safety switch:** Hostinger `owli-config.php` is currently set to `registration.mode = 'closed'`; the live register endpoint confirms HTTP 503 `not_open`. The local `OWLI_EVENT_CANCELLED` guard closes quotes and registrations regardless of config, but is not live until deployed. The local patch also removes homepage event UI, blocks event page/artwork/assets, preserves `/events/?ref=…` booking recovery, and disables admin entry/coupon writes. Until deploy, do not assume those presentation/admin changes are active in production.
 
-| Switch | File | Change speed |
-|---|---|---|
-| Server (authority) | Hostinger `/home/u810328541/domains/owlihealthcare.com/owli-config.php` → `'registration' => ['mode' => …]` | instant, no deploy |
-| Client (UI) | `js/event-config.js` → `registrationMode: 'open'` (currently `open`, `?v=8`) | commit + push → ~5 min deploy |
-
-Modes: `closed` ("Registration Opens Soon") · `preview` (prices + form demo,
-server refuses 503 `not_open` — the safe state) · `open` (live payments).
-**Emergency stop = flip the server switch to `'preview'`.** One edit, no
-deploy, instant. Never `git checkout`/rewrite `js/event-config.js` beyond the
-mode value.
 
 **Where things live:**
 
@@ -226,7 +176,7 @@ mode value.
 | Cron (every 5 min) | `/usr/bin/php /home/u810328541/domains/owlihealthcare.com/public_html/api/cron-recheck.php` — output visible in the hPanel cron page |
 | Admin console | `https://owlihealthcare.com/admin/` — password = `php api/admin-pass.php 'new-password'` → paste the printed `$2y$…` hash into the config's `admin.password_hash` (empty hash = console disabled/403) |
 | Prices / coupons | DB tables `tiers` / `coupons` (§3; coupons manageable in the console) |
-| Validation | `php public_html/scripts/validate.php` (**72 checks**; exit 1 on failure) |
+| Validation | `php public_html/scripts/validate.php` (**85 checks**; exit 1 on failure) |
 | PHP errors (live) | hPanel → Advanced → PHP Error Log — every line is prefixed `owli ` (prefix table: `API-TROUBLESHOOTING.md` §4) |
 | Web protection | root `.htaccess` blocks `*.md`, `*.sql`, `*.log`, `*.ini` (403); `api/.htaccess` + in-file guards block internal PHP; `scripts/.htaccess` denies all |
 
@@ -249,16 +199,16 @@ number exists — the attendee's mobile is what Coaxlure receives.
 
 ---
 
-## 6. Verification & testing — what exists, how to run it
+## 7. Verification & testing — what exists, how to run it
 
 | Check | Command | What it protects |
 |---|---|---|
-| Pre-deploy validation (**72 checks**) | `php scripts/validate.php` (or `docker exec owli-web php /srv/public_html/scripts/validate.php`) | Config, DB+schema, all endpoints, admin, cron, doc/internal-file web-blocks, lookup card, button-visibility CSS, box order, tier sanity (≥ ₹50), Coaxlure reachability (no creds sent) |
+| Pre-deploy validation | `php scripts/validate.php` (or Docker equivalent) | Config, DB/schema, APIs/admin/protections, booking recovery route, cancellation guard, blocked event assets; 85/85 locally |
 | i18n parity | `node scripts/check-i18n.js` | Every `data-i18n` key exists in BOTH EN + TA (**370 keys**, incl. agenda + competitions) |
 | Pay-flow regression | `node scripts/check-pay-flow.js` | New-tab navigation contract, **label contract** (no invisible buttons), no reopen link, check-status button, WhatsApp/ticket action counts — scenarios A–H |
 | Lint | `php -l <file>` / `node --check <file>` | Syntax before any commit |
 | Mobile audit | headless-Chrome script — see `LOCAL-TESTING.md` §4.6 | 375/414/768px: no horizontal scroll, ≥40px tap targets |
-| Live smoke | `curl -s https://owlihealthcare.com/api/quote.php?category=all` | Prices + mode; `status.php?ref=…` for a booking; `/api/ticket.php?ref=…` for a paid PDF |
+| Live smoke (after deploy) | quote endpoint + `/events/?ref=<ID>` + `/admin/` | quote is closed/no prices; existing paid ref remains checkable/downloadable; admin read/export works |
 
 **Local stack** (full guide: `LOCAL-TESTING.md`): Docker `owli-web` (Apache,
 `http://localhost:8800/`, repo bind-mounted at `/srv/public_html`) + `owli-db`
@@ -281,7 +231,7 @@ case studies from this project.
 
 ---
 
-## 7. Safety rules — never break these
+## 8. Safety rules — never break these
 
 1. **Never commit secrets or coupon codes.** The repo is public via GitHub
    deploy; live Coaxlure credentials exist only in the server config and the
@@ -296,7 +246,7 @@ case studies from this project.
 4. **Never serve `.md`/`.sql`/`.log`/`ini` files** — the root `.htaccess` +
    `validate.php` enforce this (they once leaked every coupon code via
    `/GO-LIVE-STEPS.md`; closed, guarded, and now gated).
-5. **Rollback is always one edit:** server switch → `'preview'`. No deploy.
+5. **Cancellation backup:** keep Hostinger server switch at `'closed'`; do not set it to `preview` or `open` without explicit owner reinstatement.
 6. **Cache-busting:** when editing any public CSS/JS, bump its `?v=` in the
    HTML. Current versions: `event-config.js?v=8`, `event-register.js?v=12`,
    `i18n.js?v=12`, `events.css?v=7`, `event-banner.css?v=2`,
@@ -312,7 +262,7 @@ case studies from this project.
 
 ---
 
-## 8. Known open items (all non-blocking, tracked)
+## 9. Known open items (historical)
 
 | Item | Where |
 |---|---|
@@ -322,14 +272,14 @@ case studies from this project.
 | Site24x7 RUM beacon | decide keep/remove (`index.html`, self-labelled pre-prod note) |
 | `sitemap.xml` `lastmod` | update on the final content release |
 | Event hard-close | `register.php` self-closes after `2026-11-15T16:00+05:30` (410 `closed`) — no action needed |
-| Test rows | `AP26-WC4DV9` (paid ₹10) / `AP26-5DC2FK` (stale) — §4 step 6 |
-| Coaxlure "Test Mode" wording seen on checkout | confirm with Coaxlure support before heavy marketing |
-| Admin "last cron ran" display | offered, not built — hPanel cron page shows output instead |
-| `arokyapayanam@…` Reply-To mailbox | confirm it exists (hPanel → Emails) so attendees can reply |
+| Test rows | Historical references only; preserve until payment/refund reconciliation and retention review |
+| Coaxlure historical checkout wording | retain as a historical reconciliation note |
+| Admin "last cron ran" display | not built — hPanel cron page shows output instead |
+| Event mailbox | confirm `arokyapayanam@…` exists if needed for attendee support |
 
 ---
 
-## 9. Key technical facts (fast context)
+## 10. Key technical facts (fast context)
 
 - **Stack:** static HTML/CSS/vanilla JS (no build step) · PHP 8.3.35 ·
   MariaDB 11.8.9 · Coaxlure Business API (no Composer, no GD/Imagick needed).
@@ -383,7 +333,7 @@ case studies from this project.
 
 ---
 
-## 10. Document index — which file answers what
+## 11. Document index — which file answers what
 
 | Need | File |
 |---|---|
@@ -399,20 +349,24 @@ case studies from this project.
 
 ---
 
-## 11. After the event (retirement checklist)
+## 12. Cancellation status and retained support
 
-1. Flip the server switch to `'closed'` (or `'preview'` to keep the page as a
-   record). The API also self-closes after 15 Nov 2026, 16:00 IST.
-2. Export the final CSV from the admin console (keeps the full dataset).
-3. Remove the event banner + its script/link tags, `events/`, `events.css`,
-   `images/events/`, the footer link, and the `/events/` sitemap entry —
-   full checklist in `README.md` §10 "To remove the event entirely".
-4. Keep the DB rows (financial record) or export + archive; the `registrations`
-   table can then be left as-is.
+Arokya Payanam 2026 is cancelled. The local patch removes homepage promotion, blocks the former full event page/artwork/event-only assets, removes the sitemap entry, and serves a noindex `/events/` booking-recovery page. It closes quotes, keeps registrations refused, and disables new admin entries/coupon activation or generation while preserving history/status/tickets. **These code changes are not deployed yet.** Live currently has the server registration switch closed, but the old event promotion/page/assets remain public and quote still returns stored prices. No database rows are deleted by the patch.
+
+## 13. After the event (retirement checklist)
+
+1. Reconcile/refund pending Coaxlure orders and respond to attendee enquiries.
+2. Export final registration/payment data from the admin console for records.
+3. Once support/refund and retention obligations are settled, separately decide whether to archive/retain data. Do not run a bulk wipe as part of cancellation.
+4. Keep the minimal `/events/?ref=…` recovery route available as long as existing tickets may need validation/download.
 
 ---
 
-*End of handoff. Refreshed 2026-10-25 17:15 IST — the final handoff. Covers
+*End of handoff. Updated 2026-11-12 after confirming Hostinger `registration.mode` is closed and probing live endpoints. New registration is refused, but event promotion/page/assets are still public until the uncommitted cancellation patch is reviewed and deployed. No API 500 was reproduced. Preserve existing attendee/payment records; do not run historical launch or cleanup instructions.*
+
+<!-- Historical project handoff text follows; current operator state is in sections 0–12 above. -->
+
+<!--
 the complete project history: preview/open modes, the ₹10 live payment test
 (real money, paid detection proven), the checkout blank-page fix (plural→
 singular URL) and token-rotation fix (order-id verification), the invisible-
@@ -424,4 +378,5 @@ Scientific Session 4 (Dr. L. Beena Theres) and the final audience cards
 removed by owner decision, description card kept). Fresh audit of the live
 site, local stack, and full test battery (72/72 validate, 370/370 i18n,
 pay-flow PASS). Everything stated above was verified live except where
-marked as a pending owner action.*
+marked as a pending owner action.
+-->
